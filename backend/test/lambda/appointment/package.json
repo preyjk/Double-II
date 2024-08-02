@@ -1,0 +1,13 @@
+{
+  "name": "api-testing",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "mocha --require mocha --file api.test.mjs"
+  },
+  "dependencies": {
+    "chai": "^5.1.1",
+    "mocha": "^10.7.0",
+    "supertest": "^7.0.0"
+  }
+}
