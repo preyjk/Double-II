@@ -10,7 +10,7 @@ services:
       - double-ii
   backend:
     image: public.ecr.aws/sam/build-nodejs18.x
-    command: sh -c "sam build && sam local start-api --container-host host.docker.internal --docker-network double-ii --host 0.0.0.0 --debug"
+    command: sh -c "sam build && sam local start-api --container-host host.docker.internal --docker-network double-ii --host 0.0.0.0 --debug --warm-containers EAGER"
     working_dir: ${PWD}/backend
     volumes:
       - ./backend:${PWD}/backend
