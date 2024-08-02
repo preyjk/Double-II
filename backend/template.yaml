@@ -31,6 +31,21 @@ Resources:
         MaxReadRequestUnits: 1
         MaxWriteRequestUnits: 1
 
+  UsersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Users
+      AttributeDefinitions:
+        - AttributeName: username
+          AttributeType: S
+      KeySchema:
+        - AttributeName: username
+          KeyType: HASH
+      BillingMode: 'PAY_PER_REQUEST'
+      OnDemandThroughput:
+        MaxReadRequestUnits: 1
+        MaxWriteRequestUnits: 1
+
   ListAppointmentsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -113,6 +128,34 @@ Resources:
           Properties:
             Path: /appointments/{appointmentId}/cancel
             Method: put
+            RestApiId: !Ref BackendApi
+        
+  SignupFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: auth.signupHandler
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        SignupApi:
+          Type: Api
+          Properties:
+            Path: /signup
+            Method: post
+            RestApiId: !Ref BackendApi
+
+  LoginFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: auth.loginHandler
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        LoginApi:
+          Type: Api
+          Properties:
+            Path: /login
+            Method: post
             RestApiId: !Ref BackendApi
 
   BackendApi:
