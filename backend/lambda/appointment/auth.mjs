@@ -1,6 +1,9 @@
 import crypto from 'crypto';
 import { DynamoDB } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'JWT_SECRET';
 
 const dynamodb = DynamoDBDocument.from(
   process.env.ENV == 'local' ?
@@ -65,9 +68,10 @@ export const loginHandler = async (event) => {
   try {
     const result = await dynamodb.get(params);
     if (result.Item && result.Item.password === hashedPassword) {
+      const token = jwt.sign({ username: username }, JWT_SECRET, { expiresIn: '1h' });
       return {
         statusCode: 200,
-        body: JSON.stringify('Login successful')
+        body: JSON.stringify({ token: token })
       };
     } else {
       return {

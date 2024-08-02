@@ -35,7 +35,9 @@ describe('User Authentication API', function() {
         .send({ username, password })
         .expect(200)
         .then(response => {
-          expect(response.text).to.equal('"Login successful"');
+          expect(response.body).to.have.property('token');
+          const token = response.body.token;
+          expect(token).to.be.a('string');
         });
     });
   
