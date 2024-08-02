@@ -181,7 +181,8 @@ paths:
         '500':
           description: Internal server error
       x-amazon-apigateway-integration:
-        uri: arn:aws:apigateway:{region}:lambda:path/2015-03-31/functions/arn:aws:lambda:{region}:{account_id}:function:SignupFunction/invocations
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SignupFunction.Arn}/invocations
         httpMethod: POST
         type: aws_proxy
   /login:
@@ -209,7 +210,8 @@ paths:
         '500':
           description: Internal server error
       x-amazon-apigateway-integration:
-        uri: arn:aws:apigateway:{region}:lambda:path/2015-03-31/functions/arn:aws:lambda:{region}:{account_id}:function:LoginFunction/invocations
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LoginFunction.Arn}/invocations
         httpMethod: POST
         type: aws_proxy
 
