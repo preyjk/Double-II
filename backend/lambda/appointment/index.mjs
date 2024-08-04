@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const dynamo = DynamoDBDocument.from(
   process.env.ENV == 'local' ?
-    new DynamoDB({endpoint: process.env.DYNAMODB_ENDPOINT}) :
+    new DynamoDB({ endpoint: process.env.DYNAMODB_ENDPOINT }) :
     new DynamoDB()
 );
 
@@ -35,12 +35,8 @@ export const createAppointment = async (event) => {
     const body = JSON.parse(event.body);
     const item = {
       id: uuidv4(),
-      patientName: body.patientName,
-      gpName: body.gpName,
-      date: body.date,
-      time: body.time,
-      reason: body.reason,
       status: 'pending',
+      ...body,
     };
     const params = {
       TableName: TABLE_NAME,
@@ -95,20 +91,23 @@ export const updateAppointment = async (event) => {
     const params = {
       TableName: TABLE_NAME,
       Key: { id: appointmentId },
-      UpdateExpression: 'set patientName = :pn, gpName = :gp, #date = :d, #time = :t, reason = :r',
-      ExpressionAttributeNames: {
-        '#date': 'date',
-        '#time': 'time',
-      },
-      ExpressionAttributeValues: {
-        ':pn': body.patientName,
-        ':gp': body.gpName,
-        ':d': body.date,
-        ':t': body.time,
-        ':r': body.reason,
-      },
+      UpdateExpression: '',
+      ExpressionAttributeNames: {},
+      ExpressionAttributeValues: {},
       ReturnValues: 'ALL_NEW'
     };
+
+    const updateExpressions = [];
+    Object.keys(body).forEach((key, index) => {
+      const attributeKey = `#attr${index}`;
+      const valueKey = `:val${index}`;
+      updateExpressions.push(`${attributeKey} = ${valueKey}`);
+      params.ExpressionAttributeNames[attributeKey] = key;
+      params.ExpressionAttributeValues[valueKey] = body[key];
+    });
+
+    params.UpdateExpression = 'set ' + updateExpressions.join(', ');
+
     const data = await dynamo.update(params);
     return {
       statusCode: 200,

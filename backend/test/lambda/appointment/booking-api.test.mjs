@@ -1,9 +1,7 @@
-// test/api.test.mjs
 import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import request from 'supertest';
 
-// Replace with your API URL
 const apiUrl = 'http://backend:3000';
 
 describe('GP Appointment Management API', () => {
