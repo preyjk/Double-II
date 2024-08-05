@@ -127,32 +127,6 @@ paths:
         '404':
           description: Appointment not found
 
-  /appointments/{appointmentId}/cancel:
-    put:
-      summary: Cancel an appointment
-      operationId: cancelAppointment
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CancelAppointmentFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
-      parameters:
-        - name: appointmentId
-          in: path
-          required: true
-          description: ID of the appointment to cancel
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Appointment cancelled successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Appointment'
-        '404':
-          description: Appointment not found
-
 #
 # signup and login api
 #
