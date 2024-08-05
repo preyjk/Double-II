@@ -1,0 +1,31 @@
+<template>
+  <div>
+    <nav>
+      <router-link to="/"></router-link>
+      <router-link to="/online-booking"></router-link>
+    </nav>
+    <router-view></router-view>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "App",
+  components: {},
+};
+</script>
+
+<style>
+* {
+  margin: 0 0;
+  padding: 0 0;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+ul li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+</style>
