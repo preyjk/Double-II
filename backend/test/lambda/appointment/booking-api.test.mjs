@@ -22,6 +22,7 @@ describe('GP Appointment Management API', () => {
       date: "2023-08-02",
       time: "11:00",
       reason: "Follow-up check",
+      status: "pending",
     };
 
     const res = await request(apiUrl)
@@ -65,15 +66,6 @@ describe('GP Appointment Management API', () => {
       .expect(200);
 
     expect(res.body).to.have.property('patientName', 'Jane Doe Updated');
-  });
-
-  it('should cancel an appointment', async () => {
-    const res = await request(apiUrl)
-      .put(`/appointments/${appointmentId}/cancel`)
-      .expect('Content-Type', /json/)
-      .expect(200);
-
-    expect(res.body).to.have.property('status', 'cancelled');
   });
 
   it('should delete an appointment', async () => {

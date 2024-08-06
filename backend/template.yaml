@@ -8,7 +8,7 @@ Globals:
     Timeout: 30
     MemorySize: 128
     Runtime: nodejs18.x
-    CodeUri: ./lambda/appointment
+    CodeUri: ./app
     Environment:
       Variables:
         TABLE_NAME: !Ref AppointmentsTable
@@ -46,10 +46,21 @@ Resources:
         MaxReadRequestUnits: 1
         MaxWriteRequestUnits: 1
 
+  NodeDepLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: nodejs-dependencies
+      Description: Node.js dependencies layer
+      ContentUri: ./app
+      CompatibleRuntimes:
+        - nodejs18.x
+    Metadata:
+      BuildMethod: makefile
+
   ListAppointmentsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: index.listAppointments
+      Handler: src/controller/aws-lambda/AppointmentController.listAppointments
       Policies:
         - AmazonDynamoDBReadOnlyAccess
       Events:
@@ -59,11 +70,15 @@ Resources:
             Path: /appointments
             Method: get
             RestApiId: !Ref BackendApi
+      Layers:
+        - !Ref NodeDepLayer
+    Metadata:
+      BuildMethod: makefile
 
   CreateAppointmentFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: index.createAppointment
+      Handler: src/controller/aws-lambda/AppointmentController.createAppointment
       Policies:
         - AmazonDynamoDBFullAccess
       Events:
@@ -73,11 +88,15 @@ Resources:
             Path: /appointments
             Method: post
             RestApiId: !Ref BackendApi
+      Layers:
+        - !Ref NodeDepLayer
+    Metadata:
+      BuildMethod: makefile
 
   GetAppointmentByIdFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: index.getAppointmentById
+      Handler: src/controller/aws-lambda/AppointmentController.getAppointmentById
       Policies:
         - AmazonDynamoDBReadOnlyAccess
       Events:
@@ -87,11 +106,15 @@ Resources:
             Path: /appointments/{appointmentId}
             Method: get
             RestApiId: !Ref BackendApi
+      Layers:
+        - !Ref NodeDepLayer
+    Metadata:
+      BuildMethod: makefile
 
   UpdateAppointmentFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: index.updateAppointment
+      Handler: src/controller/aws-lambda/AppointmentController.updateAppointment
       Policies:
         - AmazonDynamoDBFullAccess
       Events:
@@ -101,11 +124,15 @@ Resources:
             Path: /appointments/{appointmentId}
             Method: put
             RestApiId: !Ref BackendApi
+      Layers:
+        - !Ref NodeDepLayer
+    Metadata:
+      BuildMethod: makefile
 
   DeleteAppointmentFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: index.deleteAppointment
+      Handler: src/controller/aws-lambda/AppointmentController.deleteAppointment
       Policies:
         - AmazonDynamoDBFullAccess
       Events:
@@ -115,25 +142,15 @@ Resources:
             Path: /appointments/{appointmentId}
             Method: delete
             RestApiId: !Ref BackendApi
-
-  CancelAppointmentFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: index.cancelAppointment
-      Policies:
-        - AmazonDynamoDBFullAccess
-      Events:
-        CancelAppointment:
-          Type: Api
-          Properties:
-            Path: /appointments/{appointmentId}/cancel
-            Method: put
-            RestApiId: !Ref BackendApi
-        
+      Layers:
+        - !Ref NodeDepLayer
+    Metadata:
+      BuildMethod: makefile
+  
   SignupFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: auth.signupHandler
+      Handler: src/controller/aws-lambda/AuthController.signupHandler
       Policies:
         - AmazonDynamoDBFullAccess
       Events:
@@ -143,11 +160,15 @@ Resources:
             Path: /signup
             Method: post
             RestApiId: !Ref BackendApi
+      Layers:
+        - !Ref NodeDepLayer
+    Metadata:
+      BuildMethod: makefile
 
   LoginFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: auth.loginHandler
+      Handler: src/controller/aws-lambda/AuthController.loginHandler
       Policies:
         - AmazonDynamoDBFullAccess
       Events:
@@ -157,6 +178,10 @@ Resources:
             Path: /login
             Method: post
             RestApiId: !Ref BackendApi
+      Layers:
+        - !Ref NodeDepLayer
+    Metadata:
+      BuildMethod: makefile
 
   BackendApi:
     Type: 'AWS::Serverless::Api'

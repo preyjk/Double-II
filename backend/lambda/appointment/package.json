@@ -1,9 +1,0 @@
-{
-  "name": "appointment-api",
-  "version": "1.0.0",
-  "type": "module",
-  "dependencies": {
-    "jsonwebtoken": "^9.0.2",
-    "uuid": "^10.0.0"
-  }
-}
