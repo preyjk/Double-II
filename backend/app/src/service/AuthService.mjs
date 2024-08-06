@@ -10,13 +10,18 @@ class AuthService {
   }
 
   static verifyPassword(inputPassword, storedPassword) {
-    const hashedInputPassword = crypto.createHash('sha256').update(inputPassword).digest('hex');
+    const hashedInputPassword = this.hashPassword(inputPassword);
     return hashedInputPassword === storedPassword;
+  }
+
+  static hashPassword(password) {
+    return crypto.createHash('sha256').update(password).digest('hex');
   }
 
   static async signup({ username, password }) {
     try {
-      await User.create({ username, password });
+      const hashedPassword = this.hashPassword(password);
+      await User.create({ username, password: hashedPassword });
       return { success: true, message: 'Signup successful' };
     } catch (error) {
       if (error.name === 'ConditionalCheckFailedException') {
@@ -30,8 +35,8 @@ class AuthService {
   static async login({ username, password }) {
     try {
       const result = await User.findByUsername(username);
-      if (result.Item && AuthService.verifyPassword(password, result.Item.password)) {
-        const token = AuthService.generateToken(username);
+      if (result.Item && this.verifyPassword(password, result.Item.password)) {
+        const token = this.generateToken(username);
         return { success: true, token };
       } else {
         return { success: false, message: 'Unauthorized' };

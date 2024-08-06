@@ -11,14 +11,10 @@ const dynamo = DynamoDBDocument.from(
 const TABLE_NAME = 'Users';
 
 class User {
-  static async create({ username, password }) {
-    const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
+  static async create(item) {
     const params = {
       TableName: TABLE_NAME,
-      Item: {
-        username: username,
-        password: hashedPassword
-      },
+      Item: item,
       ConditionExpression: 'attribute_not_exists(username)'
     };
     return dynamo.put(params);
