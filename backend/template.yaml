@@ -30,6 +30,21 @@ Resources:
       OnDemandThroughput:
         MaxReadRequestUnits: 1
         MaxWriteRequestUnits: 1
+  
+  DoctorsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      TableName: Doctors
+      BillingMode: 'PAY_PER_REQUEST'
+      OnDemandThroughput:
+        MaxReadRequestUnits: 1
+        MaxWriteRequestUnits: 1
 
   UsersTable:
     Type: AWS::DynamoDB::Table
@@ -146,7 +161,97 @@ Resources:
         - !Ref NodeDepLayer
     Metadata:
       BuildMethod: makefile
-  
+
+  ListDoctorsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/controller/aws-lambda/DoctorController.listDoctors
+      Policies:
+        - AmazonDynamoDBReadOnlyAccess
+      Events:
+        ListDoctors:
+          Type: Api
+          Properties:
+            Path: /doctors
+            Method: get
+            RestApiId: !Ref BackendApi
+      Layers:
+        - !Ref NodeDepLayer
+    Metadata:
+      BuildMethod: makefile
+
+  CreateDoctorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/controller/aws-lambda/DoctorController.createDoctor
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        CreateDoctor:
+          Type: Api
+          Properties:
+            Path: /doctors
+            Method: post
+            RestApiId: !Ref BackendApi
+      Layers:
+        - !Ref NodeDepLayer
+    Metadata:
+      BuildMethod: makefile
+
+  GetDoctorByIdFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/controller/aws-lambda/DoctorController.getDoctorById
+      Policies:
+        - AmazonDynamoDBReadOnlyAccess
+      Events:
+        GetDoctorById:
+          Type: Api
+          Properties:
+            Path: /doctors/{doctorId}
+            Method: get
+            RestApiId: !Ref BackendApi
+      Layers:
+        - !Ref NodeDepLayer
+    Metadata:
+      BuildMethod: makefile
+
+  UpdateDoctorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/controller/aws-lambda/DoctorController.updateDoctor
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        UpdateDoctor:
+          Type: Api
+          Properties:
+            Path: /doctors/{doctorId}
+            Method: put
+            RestApiId: !Ref BackendApi
+      Layers:
+        - !Ref NodeDepLayer
+    Metadata:
+      BuildMethod: makefile
+
+  DeleteDoctorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/controller/aws-lambda/DoctorController.deleteDoctor
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Events:
+        DeleteDoctor:
+          Type: Api
+          Properties:
+            Path: /doctors/{doctorId}
+            Method: delete
+            RestApiId: !Ref BackendApi
+      Layers:
+        - !Ref NodeDepLayer
+    Metadata:
+      BuildMethod: makefile
+
   SignupFunction:
     Type: AWS::Serverless::Function
     Properties:
