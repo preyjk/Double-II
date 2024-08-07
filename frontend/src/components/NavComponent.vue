@@ -11,15 +11,20 @@
         <span>About Us</span>
       </li>
       <li>
-        <span>Sign in</span>
+        <LoginComponent class="login-component"></LoginComponent>
       </li>
     </ul>
   </nav>
 </template>
 
 <script>
+import LoginComponent from "@/components/LoginComponent.vue";
+
 export default {
   name: "NavComponent",
+  components: {
+    LoginComponent,
+  },
   methods: {},
 };
 </script>
@@ -27,22 +32,39 @@ export default {
 <style scoped>
 .nav-list {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   height: 100%;
-  width: 60vw;
+  width: 50vw;
   padding: 28px 52px;
+  gap: 20px;
 }
 
 .nav-list li {
-  flex: 1;
+  list-style: none;
+}
+
+.nav-list li span {
   font-size: 20px;
   font-weight: bold;
-  align-content: center;
-}
-.nav-list li span {
   color: rgb(62, 62, 62);
   cursor: pointer;
+  text-align: center;
 }
+
 .nav-list li span:hover {
+  color: rgb(246, 137, 137);
+}
+
+.login-component {
+  font-size: 20px;
+  font-weight: bold;
+  color: rgb(62, 62, 62);
+  cursor: pointer;
+  text-align: center;
+}
+
+.login-component:hover {
   color: rgb(246, 137, 137);
 }
 </style>
