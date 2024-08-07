@@ -1,6 +1,6 @@
 <template>
   <div>
-    <sign @click="showModal = true">Sign In</sign>
+    <span @click="showModal = true" class="sign-in-button">Sign In</span>
 
     <div v-if="showModal" class="modal-overlay">
       <div class="modal">
@@ -15,53 +15,69 @@
             <input type="password" id="password" v-model="password" required />
           </div>
           <div class="form-actions">
-            <button type="submit">Submit</button>
-            <button type="button" @click="showModal = false">Cancel</button>
+            <button type="submit" class="submit-button">Submit</button>
+            <button
+              type="button"
+              @click="showModal = false"
+              class="cancel-button"
+            >
+              Cancel
+            </button>
           </div>
+          <p class="toggle-text">
+            Don't have an account?
+            <a href="#" @click.prevent="switchToRegister">Register here</a>
+          </p>
         </form>
       </div>
     </div>
 
-    <div v-if="showSuccessModal" class="modal-overlay">
-      <div class="modal">
-        <h2>Login Successful</h2>
-        <p>Your token: {{ token }}</p>
-        <div class="form-actions">
-          <button type="button" @click="closeSuccessModal">Close</button>
-        </div>
-      </div>
-    </div>
+    <!-- Register Component -->
+    <RegisterComponent
+      v-if="showRegisterModal"
+      @close="showRegisterModal = false"
+    />
   </div>
 </template>
 
 <script>
+import RegisterComponent from "@/components/RegisterComponent.vue";
 const login = require("@/network/netService").login;
+
 export default {
   data() {
     return {
       showModal: false,
-      showSuccessModal: false,
+      showRegisterModal: false,
       username: "",
       password: "",
+      token: "",
     };
+  },
+  components: {
+    RegisterComponent,
   },
   methods: {
     handleSubmit() {
       login(this.username, this.password)
         .then((token) => {
-          this.token = token; // Store the token
+          this.token = token;
+          localStorage.setItem("authToken", token);
+
           this.showModal = false;
-          this.showSuccessModal = true; // Show success modal
           this.username = "";
           this.password = "";
+
+          alert("Login successful!");
         })
         .catch((error) => {
           console.error("Login failed:", error);
-          alert("Login failed, please try again."); // Handle login failure
+          alert("Login failed, please try again.");
         });
     },
-    closeSuccessModal() {
-      this.showSuccessModal = false;
+    switchToRegister() {
+      this.showModal = false;
+      this.showRegisterModal = true;
     },
   },
 };
@@ -74,7 +90,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,29 +99,67 @@ export default {
 
 .modal {
   background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  width: 300px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 8px;
+  width: 350px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
 }
 
 .form-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
 .form-group input {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
   box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .form-actions {
   display: flex;
   justify-content: space-between;
+  margin-top: 15px;
+}
+
+.submit-button,
+.cancel-button,
+.close-button {
+  background-color: #64b1e8;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.submit-button:hover,
+.cancel-button:hover,
+.close-button:hover {
+  background-color: #4081ea;
+}
+
+.toggle-text {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.toggle-text a {
+  color: #64b1e8;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.toggle-text a:hover {
+  text-decoration: underline;
 }
 </style>
