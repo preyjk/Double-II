@@ -21,27 +21,47 @@
         </form>
       </div>
     </div>
+
+    <div v-if="showSuccessModal" class="modal-overlay">
+      <div class="modal">
+        <h2>Login Successful</h2>
+        <p>Your token: {{ token }}</p>
+        <div class="form-actions">
+          <button type="button" @click="closeSuccessModal">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+const login = require("@/network/netService").login;
 export default {
   data() {
     return {
       showModal: false,
+      showSuccessModal: false,
       username: "",
       password: "",
     };
   },
   methods: {
     handleSubmit() {
-      console.log("Username:", this.username);
-      console.log("Password:", this.password);
-
-      // close window after successfully login
-      this.showModal = false;
-      this.username = "";
-      this.password = "";
+      login(this.username, this.password)
+        .then((token) => {
+          this.token = token; // Store the token
+          this.showModal = false;
+          this.showSuccessModal = true; // Show success modal
+          this.username = "";
+          this.password = "";
+        })
+        .catch((error) => {
+          console.error("Login failed:", error);
+          alert("Login failed, please try again."); // Handle login failure
+        });
+    },
+    closeSuccessModal() {
+      this.showSuccessModal = false;
     },
   },
 };

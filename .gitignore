@@ -1,8 +1,5 @@
 .DS_Store
 **/node_modules/
 **/.aws-sam/
-<<<<<<< HEAD
 .history
-=======
 **/samconfig.toml
->>>>>>> origin/main
