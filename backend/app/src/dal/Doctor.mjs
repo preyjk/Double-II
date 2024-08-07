@@ -73,6 +73,21 @@ class Doctor {
     };
     return dynamo.delete(params);
   }
+
+  static async findByProperty(propertyName, value) {
+    const params = {
+      TableName: TABLE_NAME,
+      FilterExpression: `#key = :value`,
+      ExpressionAttributeNames: {
+        '#key': propertyName
+      },
+      ExpressionAttributeValues: {
+        ':value': value
+      }
+    };
+    return dynamo.scan(params);
+  }
+
 }
 
 export default Doctor;
