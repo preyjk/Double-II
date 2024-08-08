@@ -1,19 +1,19 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: 'AWS::Serverless-2016-10-31'
+Transform: AWS::Serverless-2016-10-31
 Description: >
-  GP Appointment Management API - AWS SAM Template
+  sam-app
+
+  Sample SAM Template for sam-app
+
+Parameters:
+  StageName:
+    Type: String
+    Description: "The name of the stage (e.g., dev, prod)"
+    Default: "v1"
 
 Globals:
   Function:
-    Timeout: 30
-    MemorySize: 128
-    Runtime: nodejs18.x
-    CodeUri: ./app
-    Environment:
-      Variables:
-        TABLE_NAME: !Ref AppointmentsTable
-        ENV: !Ref EnvName
-        DYNAMODB_ENDPOINT: !Ref DynamoDBEndpoint
+    Timeout: 29
 
 Resources:
   AppointmentsTable:
@@ -25,7 +25,6 @@ Resources:
       KeySchema:
         - AttributeName: id
           KeyType: HASH
-      TableName: Appointments
       BillingMode: 'PAY_PER_REQUEST'
       OnDemandThroughput:
         MaxReadRequestUnits: 1
@@ -40,7 +39,6 @@ Resources:
       KeySchema:
         - AttributeName: id
           KeyType: HASH
-      TableName: Doctors
       BillingMode: 'PAY_PER_REQUEST'
       OnDemandThroughput:
         MaxReadRequestUnits: 1
@@ -49,7 +47,6 @@ Resources:
   UsersTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: Users
       AttributeDefinitions:
         - AttributeName: username
           AttributeType: S
@@ -61,266 +58,43 @@ Resources:
         MaxReadRequestUnits: 1
         MaxWriteRequestUnits: 1
 
-  NodeDepLayer:
-    Type: AWS::Serverless::LayerVersion
-    Properties:
-      LayerName: nodejs-dependencies
-      Description: Node.js dependencies layer
-      ContentUri: ./app
-      CompatibleRuntimes:
-        - nodejs18.x
-    Metadata:
-      BuildMethod: makefile
-
-  ListAppointmentsFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/controller/aws-lambda/AppointmentController.listAppointments
-      Policies:
-        - AmazonDynamoDBReadOnlyAccess
-      Events:
-        ListAppointments:
-          Type: Api
-          Properties:
-            Path: /appointments
-            Method: get
-            RestApiId: !Ref BackendApi
-      Layers:
-        - !Ref NodeDepLayer
-    Metadata:
-      BuildMethod: makefile
-
-  CreateAppointmentFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/controller/aws-lambda/AppointmentController.createAppointment
-      Policies:
-        - AmazonDynamoDBFullAccess
-      Events:
-        CreateAppointment:
-          Type: Api
-          Properties:
-            Path: /appointments
-            Method: post
-            RestApiId: !Ref BackendApi
-      Layers:
-        - !Ref NodeDepLayer
-    Metadata:
-      BuildMethod: makefile
-
-  GetAppointmentByIdFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/controller/aws-lambda/AppointmentController.getAppointmentById
-      Policies:
-        - AmazonDynamoDBReadOnlyAccess
-      Events:
-        GetAppointmentById:
-          Type: Api
-          Properties:
-            Path: /appointments/{appointmentId}
-            Method: get
-            RestApiId: !Ref BackendApi
-      Layers:
-        - !Ref NodeDepLayer
-    Metadata:
-      BuildMethod: makefile
-
-  UpdateAppointmentFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/controller/aws-lambda/AppointmentController.updateAppointment
-      Policies:
-        - AmazonDynamoDBFullAccess
-      Events:
-        UpdateAppointment:
-          Type: Api
-          Properties:
-            Path: /appointments/{appointmentId}
-            Method: put
-            RestApiId: !Ref BackendApi
-      Layers:
-        - !Ref NodeDepLayer
-    Metadata:
-      BuildMethod: makefile
-
-  DeleteAppointmentFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/controller/aws-lambda/AppointmentController.deleteAppointment
-      Policies:
-        - AmazonDynamoDBFullAccess
-      Events:
-        DeleteAppointment:
-          Type: Api
-          Properties:
-            Path: /appointments/{appointmentId}
-            Method: delete
-            RestApiId: !Ref BackendApi
-      Layers:
-        - !Ref NodeDepLayer
-    Metadata:
-      BuildMethod: makefile
-
-  ListDoctorsFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/controller/aws-lambda/DoctorController.listDoctors
-      Policies:
-        - AmazonDynamoDBReadOnlyAccess
-      Events:
-        ListDoctors:
-          Type: Api
-          Properties:
-            Path: /doctors
-            Method: get
-            RestApiId: !Ref BackendApi
-      Layers:
-        - !Ref NodeDepLayer
-    Metadata:
-      BuildMethod: makefile
-
-  CreateDoctorFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/controller/aws-lambda/DoctorController.createDoctor
-      Policies:
-        - AmazonDynamoDBFullAccess
-      Events:
-        CreateDoctor:
-          Type: Api
-          Properties:
-            Path: /doctors
-            Method: post
-            RestApiId: !Ref BackendApi
-      Layers:
-        - !Ref NodeDepLayer
-    Metadata:
-      BuildMethod: makefile
-
-  GetDoctorByIdFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/controller/aws-lambda/DoctorController.getDoctorById
-      Policies:
-        - AmazonDynamoDBReadOnlyAccess
-      Events:
-        GetDoctorById:
-          Type: Api
-          Properties:
-            Path: /doctors/{doctorId}
-            Method: get
-            RestApiId: !Ref BackendApi
-      Layers:
-        - !Ref NodeDepLayer
-    Metadata:
-      BuildMethod: makefile
-
-  UpdateDoctorFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/controller/aws-lambda/DoctorController.updateDoctor
-      Policies:
-        - AmazonDynamoDBFullAccess
-      Events:
-        UpdateDoctor:
-          Type: Api
-          Properties:
-            Path: /doctors/{doctorId}
-            Method: put
-            RestApiId: !Ref BackendApi
-      Layers:
-        - !Ref NodeDepLayer
-    Metadata:
-      BuildMethod: makefile
-
-  DeleteDoctorFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/controller/aws-lambda/DoctorController.deleteDoctor
-      Policies:
-        - AmazonDynamoDBFullAccess
-      Events:
-        DeleteDoctor:
-          Type: Api
-          Properties:
-            Path: /doctors/{doctorId}
-            Method: delete
-            RestApiId: !Ref BackendApi
-      Layers:
-        - !Ref NodeDepLayer
-    Metadata:
-      BuildMethod: makefile
-
-  SignupFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/controller/aws-lambda/AuthController.signupHandler
-      Policies:
-        - AmazonDynamoDBFullAccess
-      Events:
-        SignupApi:
-          Type: Api
-          Properties:
-            Path: /signup
-            Method: post
-            RestApiId: !Ref BackendApi
-      Layers:
-        - !Ref NodeDepLayer
-    Metadata:
-      BuildMethod: makefile
-
-  LoginFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/controller/aws-lambda/AuthController.loginHandler
-      Policies:
-        - AmazonDynamoDBFullAccess
-      Events:
-        LoginApi:
-          Type: Api
-          Properties:
-            Path: /login
-            Method: post
-            RestApiId: !Ref BackendApi
-      Layers:
-        - !Ref NodeDepLayer
-    Metadata:
-      BuildMethod: makefile
-
-  ListClinicsFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/controller/aws-lambda/ClinicController.listClinics
-      Policies:
-        - AmazonDynamoDBReadOnlyAccess
-      Events:
-        ListDoctors:
-          Type: Api
-          Properties:
-            Path: /clinics
-            Method: get
-            RestApiId: !Ref BackendApi
-      Layers:
-        - !Ref NodeDepLayer
-    Metadata:
-      BuildMethod: makefile
-
   BackendApi:
-    Type: 'AWS::Serverless::Api'
+    Type: AWS::Serverless::HttpApi
     Properties:
-      DefinitionBody:
-        Fn::Transform:
-          Name: 'AWS::Include'
-          Parameters:
-            Location: ./config/appointment-api-schema.yml
-      StageName: v1
+      StageName: !Ref StageName
 
-Parameters:
-  EnvName:
-    Type: String
-    Default: 'local'
-  DynamoDBEndpoint:
-    Type: String
-    Default: 'http://dynamodb-local:8000'
+  ExpressFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      PackageType: Image
+      MemorySize: 1024
+      Policies:
+        - AmazonDynamoDBFullAccess
+      Environment:
+        Variables:
+          APPOINTMENT_TABLE_NAME: !Ref AppointmentsTable
+          DOCTOR_TABLE_NAME: !Ref DoctorsTable
+          USER_TABLE_NAME: !Ref UsersTable
+          API_STAGE_NAME: !Ref StageName
+      Events:
+        Root:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref BackendApi
+            Path: /
+            Method: ANY
+        Petstore:
+          Type: HttpApi
+          Properties:
+            ApiId: !Ref BackendApi
+            Path: /{proxy+}
+            Method: ANY
+    Metadata:
+      DockerTag: v1
+      DockerContext: ./app
+      Dockerfile: Dockerfile
 
+Outputs:
+  ExpressApi:
+    Description: "API Gateway endpoint URL for Prod stage for Express function"
+    Value: !Sub "https://${BackendApi}.execute-api.${AWS::Region}.${AWS::URLSuffix}/"

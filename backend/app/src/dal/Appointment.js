@@ -1,14 +1,8 @@
-import { DynamoDB } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+import { dynamo } from './DynamoDB.js'
 import { v4 as uuidv4 } from 'uuid';
 
-// Static configurations
-const dynamo = DynamoDBDocument.from(
-  process.env.ENV === 'local' ?
-    new DynamoDB({ endpoint: process.env.DYNAMODB_ENDPOINT }) :
-    new DynamoDB()
-);
-const TABLE_NAME = 'Appointments';
+console.log(`Env Var APPOINTMENT_TABLE_NAME is ${process.env.APPOINTMENT_TABLE_NAME}`);
+const TABLE_NAME = process.env.APPOINTMENT_TABLE_NAME || 'Appointments';
 
 class Appointment {
   static async list() {

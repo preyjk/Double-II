@@ -2,7 +2,7 @@ import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import request from 'supertest';
 
-const API_BASE_URL = 'http://backend:3000';
+const API_BASE_URL = 'http://backend:8080';
 
 describe('User Authentication API', function() {
   

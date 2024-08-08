@@ -1,14 +1,7 @@
-import { DynamoDB } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
-import crypto from 'crypto';
+import { dynamo } from './DynamoDB.js';
 
-const dynamo = DynamoDBDocument.from(
-  process.env.ENV === 'local' ?
-    new DynamoDB({ endpoint: process.env.DYNAMODB_ENDPOINT }) :
-    new DynamoDB()
-);
-
-const TABLE_NAME = 'Users';
+console.log(`Env Var USER_TABLE_NAME is ${process.env.USER_TABLE_NAME}`);
+const TABLE_NAME = process.env.USER_TABLE_NAME || 'Users';
 
 class User {
   static async create(item) {

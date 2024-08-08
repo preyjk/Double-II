@@ -2,7 +2,7 @@ import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import request from 'supertest';
 
-const apiUrl = 'http://backend:3000';
+const apiUrl = 'http://backend:8080';
 
 describe('GP Appointment Management API', () => {
   var appointmentId;
