@@ -6,7 +6,7 @@ module.exports = defineConfig({
     port: 8080,
     proxy: {
       "/api": {
-        target: "https://kifzcpfox4.execute-api.us-east-1.amazonaws.com/v1/",
+        target: "http://backend:8080",
         changeOrigin: true,
         pathRewrite: {
           "^/api": "/",
