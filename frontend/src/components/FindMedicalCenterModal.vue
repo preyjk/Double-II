@@ -71,7 +71,7 @@ export default {
     const fetchClinics = async () => {
       try {
         const response = await fetch(
-          "https://kifzcpfox4.execute-api.us-east-1.amazonaws.com/v1/clinics"
+          "/api/clinics"
         );
         const data = await response.json();
 
