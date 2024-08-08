@@ -8,12 +8,20 @@ const headers = {
 
 export const listDoctors = async (event) => {
   try {
-    const result = await DoctorService.listDoctors();
+    const { workplace } = event.queryStringParameters || {};
+    let result;
+
+    if (workplace) {
+      result = await DoctorService.listDoctorsByWorkplace(workplace);
+    } else {
+      result = await DoctorService.listDoctors();
+    }
+
     return {
       statusCode: result.success ? 200 : 500,
       headers,
       body: JSON.stringify(result.success ? result.data : result.message)
-    };
+    }; 
   } catch (error) {
     console.error(error);
     return {

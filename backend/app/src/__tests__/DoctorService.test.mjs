@@ -65,4 +65,14 @@ describe('DoctorService', () => {
     expect(result.success).toBe(true);
     expect(result.message).toBe('Doctor deleted successfully');
   });
+
+  test('should list doctors by workplace', async () => {
+    const workplace = 'Hospital A';
+    const mockData = { Items: [{ id: '1', name: 'Dr. Smith', WorkofPlace: workplace }] };
+    Doctor.findByProperty.mockResolvedValue(mockData);
+
+    const result = await DoctorService.listDoctorsByWorkplace(workplace);
+    expect(result.success).toBe(true);
+    expect(result.data).toEqual(mockData.Items);
+  });
 });

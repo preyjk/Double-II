@@ -288,6 +288,24 @@ Resources:
     Metadata:
       BuildMethod: makefile
 
+  ListClinicsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/controller/aws-lambda/ClinicController.listClinics
+      Policies:
+        - AmazonDynamoDBReadOnlyAccess
+      Events:
+        ListDoctors:
+          Type: Api
+          Properties:
+            Path: /clinics
+            Method: get
+            RestApiId: !Ref BackendApi
+      Layers:
+        - !Ref NodeDepLayer
+    Metadata:
+      BuildMethod: makefile
+
   BackendApi:
     Type: 'AWS::Serverless::Api'
     Properties:

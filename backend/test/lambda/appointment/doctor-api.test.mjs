@@ -6,6 +6,7 @@ const apiUrl = 'http://backend:3000';  // Adjust this URL to point to your API e
 
 describe('Doctor API End-to-End Tests', () => {
   let doctorId;
+  const workplace = 'Hospital A';
 
   it('should list all doctors', async () => {
     const res = await request(apiUrl)
@@ -21,7 +22,8 @@ describe('Doctor API End-to-End Tests', () => {
       name: 'Dr. Smith',
       specialty: 'Cardiology',
       phone: '1234567890',
-      email: 'dr.smith@example.com'
+      email: 'dr.smith@example.com',
+      WorkofPlace: workplace
     };
 
     const res = await request(apiUrl)
@@ -34,6 +36,7 @@ describe('Doctor API End-to-End Tests', () => {
     expect(res.body).to.have.property('specialty', 'Cardiology');
     expect(res.body).to.have.property('phone', '1234567890');
     expect(res.body).to.have.property('email', 'dr.smith@example.com');
+    expect(res.body).to.have.property('WorkofPlace', workplace);
     doctorId = res.body.id;  // Save the doctor ID for subsequent tests
   });
 
@@ -44,6 +47,16 @@ describe('Doctor API End-to-End Tests', () => {
       .expect(200);
 
     expect(res.body).to.have.property('id', doctorId);
+  });
+
+  it('should list doctors by workplace', async () => {
+    const res = await request(apiUrl)
+      .get(`/doctors?workplace=${workplace}`)
+      .expect('Content-Type', /json/)
+      .expect(200);
+
+    expect(res.body).to.be.an('array');
+    expect(res.body[0]).to.have.property('WorkofPlace', workplace);
   });
 
   it('should update an existing doctor', async () => {
@@ -58,6 +71,16 @@ describe('Doctor API End-to-End Tests', () => {
       .expect(200);
 
     expect(res.body).to.have.property('name', 'Dr. John Smith');
+  });
+
+  it('should list clinics', async () => {
+    const res = await request(apiUrl)
+      .get('/clinics')
+      .expect('Content-Type', /json/)
+      .expect(200);
+
+    expect(res.body).to.be.an('array');
+    expect(res.body[0]).to.have.property('workplace', workplace);
   });
 
   it('should delete a doctor', async () => {

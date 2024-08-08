@@ -29,6 +29,15 @@ class DoctorService {
     await Doctor.findByIdAndDelete(doctorId);
     return { success: true, message: 'Doctor deleted successfully' };
   }
+
+  static async listDoctorsByWorkplace(workplace) {
+    const result = await Doctor.findByProperty('WorkofPlace', workplace);
+    if (result.Items) {
+      return { success: true, data: result.Items };
+    } else {
+      return { success: false, message: 'No doctors found for the specified workplace' };
+    }
+  }
 }
 
 export default DoctorService;

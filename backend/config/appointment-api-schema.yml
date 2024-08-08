@@ -262,6 +262,13 @@ paths:
     get:
       summary: List all doctors
       operationId: listDoctors
+      parameters:
+        - name: workplace
+          in: query
+          required: false
+          description: Name of the workplace to filter doctors by
+          schema:
+            type: string
       x-amazon-apigateway-integration:
         uri:
           Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ListDoctorsFunction.Arn}/invocations
@@ -415,6 +422,62 @@ paths:
     options:
       summary: CORS support
       operationId: optionsDoctorsById
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'GET,POST,OPTIONS,PUT,DELETE'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+      responses:
+        '200':
+          description: Default response for CORS method
+          headers:
+            Access-Control-Allow-Methods:
+              description: Comma-separated list of allowed methods
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              description: Comma-separated list of allowed headers
+              schema:
+                type: string
+            Access-Control-Allow-Origin:
+              description: The allowed origin for CORS
+              schema:
+                type: string
+  #
+  # Clinic
+  #
+  /clinics:
+    get:
+      summary: List all clinics
+      operationId: listClinics
+      x-amazon-apigateway-integration:
+        uri:
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ListClinicsFunction.Arn}/invocations
+        httpMethod: POST
+        type: aws_proxy
+      responses:
+        '200':
+          description: A list of clinics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    workplace:
+                      type: string
+                      description: Name of the clinic
+    options:
+      summary: CORS support
+      operationId: optionsClinics
       x-amazon-apigateway-integration:
         responses:
           default:
