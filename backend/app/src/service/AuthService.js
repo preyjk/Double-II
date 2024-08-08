@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import User from '../dal/User.mjs';
+import User from '../dal/User.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'JWT_SECRET';
 

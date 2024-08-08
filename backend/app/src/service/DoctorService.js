@@ -1,4 +1,4 @@
-import Doctor from '../dal/Doctor.mjs';
+import Doctor from '../dal/Doctor.js';
 
 class DoctorService {
   static async listDoctors() {

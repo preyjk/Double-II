@@ -1,6 +1,7 @@
 #!/bin/sh
 
-docker compose exec backend aws dynamodb create-table \
+script_dir=$(dirname "$(readlink -f "$0")")
+docker run -v ${script_dir}/config/aws:/root/.aws --network double-ii --rm amazon/aws-cli dynamodb create-table \
     --table-name Appointments \
     --attribute-definitions AttributeName=id,AttributeType=S \
     --key-schema AttributeName=id,KeyType=HASH \
@@ -8,7 +9,7 @@ docker compose exec backend aws dynamodb create-table \
     --endpoint-url http://dynamodb-local:8000 \
     --no-paginate
 
-docker compose exec backend aws dynamodb create-table \
+docker run -v ${script_dir}/config/aws:/root/.aws --network double-ii --rm amazon/aws-cli dynamodb create-table \
     --table-name Users \
     --attribute-definitions AttributeName=username,AttributeType=S \
     --key-schema AttributeName=username,KeyType=HASH \
@@ -16,7 +17,7 @@ docker compose exec backend aws dynamodb create-table \
     --endpoint-url http://dynamodb-local:8000 \
     --no-paginate
 
-docker compose exec backend aws dynamodb create-table \
+docker run -v ${script_dir}/config/aws:/root/.aws --network double-ii --rm amazon/aws-cli dynamodb create-table \
     --table-name Doctors \
     --attribute-definitions AttributeName=id,AttributeType=S \
     --key-schema AttributeName=id,KeyType=HASH \

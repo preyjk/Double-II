@@ -2,7 +2,7 @@ import { describe, it } from 'mocha';
 import { expect } from 'chai';
 import request from 'supertest';
 
-const apiUrl = 'http://backend:3000';  // Adjust this URL to point to your API endpoint
+const apiUrl = 'http://backend:8080';  // Adjust this URL to point to your API endpoint
 
 describe('Doctor API End-to-End Tests', () => {
   let doctorId;

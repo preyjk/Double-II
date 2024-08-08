@@ -1,4 +1,4 @@
-import Appointment from '../dal/Appointment.mjs';
+import Appointment from '../dal/Appointment.js';
 
 class AppointmentService {
   static async listAppointments() {
