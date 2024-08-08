@@ -6,7 +6,7 @@ module.exports = defineConfig({
     port: 8080,
     proxy: {
       "/api": {
-        target: "https://api.gpbooking.icu/",
+        target: "http://backend:8080",
         changeOrigin: true,
         pathRewrite: {
           "^/api": "/",
