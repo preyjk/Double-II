@@ -1,13 +1,6 @@
 <template>
   <div>
     <p class="slogan">Save Time, Save Life</p>
-    <!-- <div class="search-area">
-      <div>
-        <button class="online-booking-button" @click="onlineBooking">
-          Online Booking
-        </button>
-      </div>
-    </div> -->
     <div class="chat-window">
       <div class="chat-header">
         <h3>Customer Support</h3>
@@ -37,12 +30,22 @@
         <button @click="sendMessage">Send</button>
       </div>
     </div>
+    <FindMedicalCenterModal
+      :show="showModal"
+      @close="showModal = false"
+      @selected="handleClinicSelected"
+    />
   </div>
 </template>
 
 <script>
+import FindMedicalCenterModal from "@/components/FindMedicalCenterModal.vue";
+
 export default {
   name: "ChatbotComponent",
+  components: {
+    FindMedicalCenterModal,
+  },
   data() {
     return {
       messages: [
@@ -58,11 +61,13 @@ export default {
         },
       ],
       newMessage: "",
+      showModal: false,
+      selectedClinic: null,
     };
   },
   methods: {
     onlineBooking() {
-      this.$router.push({ name: "OnlineBooking" });
+      this.showModal = true;
     },
     sendMessage() {
       if (this.newMessage.trim() !== "") {
@@ -79,6 +84,27 @@ export default {
         });
       }, 1000);
     },
+    handleClinicSelected(clinic) {
+      console.log("Clinic Received in ChatbotComponent:", clinic);
+      if (clinic) {
+        this.selectedClinic = clinic;
+        console.log(
+          "Selected clinic in ChatbotComponent:",
+          this.selectedClinic
+        );
+        console.log(
+          "Selected clinic name in ChatbotComponent:",
+          this.selectedClinic.target
+        );
+        this.showModal = false;
+        this.$router.push({
+          name: "OnlineBooking",
+          params: { clinicId: clinic.id, clinicName: clinic.name },
+        });
+      } else {
+        console.warn("No clinic selected");
+      }
+    },
   },
 };
 </script>
@@ -88,34 +114,7 @@ export default {
   font-size: 48px;
   padding: 70px;
 }
-.search-area {
-  width: 560px;
-  height: 280px;
-  margin-left: 35px;
-  background-color: white;
-  border-radius: 28px;
-}
 
-.online-booking-button {
-  display: flex;
-  justify-content: flex-end;
-  background-color: rgb(45, 45, 129);
-  color: white;
-  padding: 10px 24px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  transition: background-color 0.3s;
-}
-
-.online-booking-button:hover {
-  background-color: #45a049;
-}
 .chat-window {
   width: 480px;
   height: 520px;
