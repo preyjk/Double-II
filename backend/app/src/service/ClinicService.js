@@ -6,10 +6,10 @@ class ClinicService {
     const workplaces = new Set();
     data.Items.forEach(item => {
       if (item.WorkofPlace) {
-        workplaces.add(item.WorkofPlace);
+        workplaces.add({ workplace: item.WorkofPlace, address: item.address});
       }
     });
-    return { success: true, data: Array.from(workplaces).map(workplace => ({ workplace })) };
+    return { success: true, data: Array.from(workplaces) };
   }
 
 }
