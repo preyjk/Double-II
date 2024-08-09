@@ -7,20 +7,40 @@
       </div>
       <div class="modal-body">
         <div class="sidebar">
-          <input type="text" placeholder="Search clinics..." v-model="searchQuery" @input="filterClinics"
-            class="search-bar" />
+          <input
+            type="text"
+            placeholder="Search clinics..."
+            v-model="searchQuery"
+            @input="filterClinics"
+            class="search-bar"
+          />
           <ul class="clinic-list">
-            <li v-for="clinic in filteredClinics" :key="clinic.id" @click="selectClinic(clinic)" class="clinic-item">
+            <li
+              v-for="clinic in filteredClinics"
+              :key="clinic.id"
+              @click="selectClinic(clinic)"
+              class="clinic-item"
+            >
               {{ clinic.name }}
             </li>
           </ul>
         </div>
         <div class="map-container">
-          <GMapMap :center="mapCenter" :zoom="13" style="width: 100%; height: 75vh">
-            <GMapMarker v-for="clinic in clinics" :key="clinic.id" :position="clinic.location"
-              @click="selectClinic(clinic)">
+          <GMapMap
+            :center="mapCenter"
+            :zoom="13"
+            style="width: 100%; height: 75vh"
+          >
+            <GMapMarker
+              v-for="clinic in clinics"
+              :key="clinic.id"
+              :position="clinic.location"
+              @click="selectClinic(clinic)"
+            >
               <!-- Info window for the selected clinic -->
-              <GMapInfoWindow v-if="selectedClinic && selectedClinic.id === clinic.id">
+              <GMapInfoWindow
+                v-if="selectedClinic && selectedClinic.id === clinic.id"
+              >
                 <div class="info-window">
                   <h3>{{ clinic.name }}</h3>
                   <button @click="openBookingModal(clinic)" class="book-button">
@@ -51,6 +71,7 @@
 
 <script>
 import { ref, onMounted } from "vue";
+import geocodeAddress from "@/funs/geocodeAddress";
 
 export default {
   name: "FindMedicalCenterModal",
@@ -70,20 +91,21 @@ export default {
 
     const fetchClinics = async () => {
       try {
-        const response = await fetch(
-          "/api/clinics"
-        );
+        const response = await fetch("/api/clinics");
         const data = await response.json();
 
-        clinics.value = data.map((clinic, index) => ({
-          id: index + 1,
-          name: clinic.workplace,
-          location: {
-            lat: -36.8485 + index * 0.01,
-            lng: 174.7633 + index * 0.01,
-          }, // Example coordinates, replace with actual data if available
-        }));
+        clinics.value = await Promise.all(
+          data.map(async (clinic, index) => {
+            const coords = await geocodeAddress(clinic.address);
 
+            return {
+              id: index + 1,
+              name: clinic.workplace,
+              address: clinic.address,
+              location: coords || { lat: -36.8478, lng: 174.7622 },
+            };
+          })
+        );
         filteredClinics.value = clinics.value;
       } catch (error) {
         console.error("Error fetching clinics:", error);
