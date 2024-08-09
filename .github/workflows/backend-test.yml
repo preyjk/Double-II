@@ -17,8 +17,21 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Run unit test
-        run: docker run --rm -v ./backend/app:/app -w /app public.ecr.aws/sam/build-nodejs18.x sh -c "npm install && npm test"       
+      - name: Run start local env
+        run: docker compose up -d --build
+      
+      - name: Init database
+        run: |
+          until sh ./backend/init-db.sh; do
+            echo "Init-db script failed. Retrying in 5 seconds..."
+            sleep 5
+          done
+
+      - name: Run api tests
+        run: sh ./backend/test/api-test.sh
+
+      - name: Print the logs
+        run: docker compose logs backend
 
       
       
