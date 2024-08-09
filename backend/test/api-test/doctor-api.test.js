@@ -23,6 +23,7 @@ describe('Doctor API End-to-End Tests', () => {
       specialty: 'Cardiology',
       phone: '1234567890',
       email: 'dr.smith@example.com',
+      address: workplace,
       WorkofPlace: workplace
     };
 
@@ -37,6 +38,7 @@ describe('Doctor API End-to-End Tests', () => {
     expect(res.body).to.have.property('phone', '1234567890');
     expect(res.body).to.have.property('email', 'dr.smith@example.com');
     expect(res.body).to.have.property('WorkofPlace', workplace);
+    expect(res.body).to.have.property('address', workplace);
     doctorId = res.body.id;  // Save the doctor ID for subsequent tests
   });
 
@@ -80,8 +82,9 @@ describe('Doctor API End-to-End Tests', () => {
       .expect(200);
 
     expect(res.body).to.be.an('array');
-    const found = res.body.find(item => item.workplace === workplace);
+    const found = res.body.find(item => item.workplace === workplace && item.address === workplace);
     expect(found).to.exist;
+    
   });
 
   it('should delete a doctor', async () => {
