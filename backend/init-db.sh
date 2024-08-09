@@ -25,3 +25,4 @@ docker run -v ${script_dir}/config/aws:/root/.aws --network double-ii --rm amazo
     --endpoint-url http://dynamodb-local:8000 \
     --no-paginate
 
+docker run -v ${script_dir}/app:/app -w /app --network double-ii --rm node:20 node test/insert-example-data.js
