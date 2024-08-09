@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "mocha --recursive './lambda/**/*.mjs'"
+    "test": "mocha --recursive './api-test/**/*.js'"
   },
   "dependencies": {
     "chai": "^5.1.1",

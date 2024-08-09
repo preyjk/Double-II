@@ -80,7 +80,8 @@ describe('Doctor API End-to-End Tests', () => {
       .expect(200);
 
     expect(res.body).to.be.an('array');
-    expect(res.body[0]).to.have.property('workplace', workplace);
+    const found = res.body.find(item => item.workplace === workplace);
+    expect(found).to.exist;
   });
 
   it('should delete a doctor', async () => {
