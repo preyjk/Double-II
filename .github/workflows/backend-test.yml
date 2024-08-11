@@ -20,6 +20,13 @@ jobs:
       - name: Run start local env
         run: docker compose up -d --build
 
+      - name: Wait for backend service to be healthy
+        run: |
+          until docker compose logs backend | grep 'App server listening on port'; do
+            echo "Waiting for backend service to be healthy..."
+            sleep 5
+          done
+      
       - name: Init database
         run: docker compose exec backend npm run init-db
 
