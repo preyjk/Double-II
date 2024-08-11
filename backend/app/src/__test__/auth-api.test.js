@@ -1,15 +1,10 @@
 import request from 'supertest';
 import express from 'express';
 import router from '../routes/routes';
-import { createTables } from './db-create-tables.js';
 
 const app = express();
 app.use(express.json());
 app.use('/', router);
-
-beforeAll(async () => {
-  await createTables();
-});
 
 describe('User Authentication API', () => {
 

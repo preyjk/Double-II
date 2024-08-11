@@ -1,5 +1,4 @@
-import { DynamoDB } from "@aws-sdk/client-dynamodb";
-
+import { DynamoDB, waitUntilTableExists, waitUntilTableNotExists } from "@aws-sdk/client-dynamodb";
 export const dynamo = new DynamoDB({ endpoint: process.env.DYNAMODB_ENDPOINT });
 
 // Define table parameters
@@ -52,7 +51,8 @@ export async function createTables() {
             // Step 1: Delete the table if it exists
             try {
                 await dynamo.deleteTable({ TableName: table.TableName });
-                console.log(`Table ${table.TableName} deleted successfully.`);
+                const result = await waitUntilTableNotExists({ client: dynamo, maxWaitTime: 300 }, { TableName: table.TableName });
+                console.log(`Deleting table ${table.TableName}...`, result.state);
             } catch (error) {
                 if (error.name === 'ResourceNotFoundException') {
                     console.log(`Table ${table.TableName} does not exist, skipping delete.`);
@@ -63,7 +63,8 @@ export async function createTables() {
 
             // Step 2: Create the table
             await dynamo.createTable(table);
-            console.log(`Table ${table.TableName} created successfully.`);
+            const result = await waitUntilTableExists({ client: dynamo, maxWaitTime: 300 }, { TableName: table.TableName });
+            console.log(`Creating table ${table.TableName}...`, result.state);
         }
 
         console.log('All tables have been initialized.');

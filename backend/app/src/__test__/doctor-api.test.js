@@ -1,15 +1,10 @@
 import request from 'supertest';
 import express from 'express';
 import router from '../routes/routes';
-import { createTables } from './db-create-tables.js';
 
 const app = express();
 app.use(express.json());
 app.use('/', router);
-
-beforeAll(async () => {
-  await createTables();
-});
 
 describe('Doctor API End-to-End Tests', () => {
   let doctorId;
@@ -91,6 +86,7 @@ describe('Doctor API End-to-End Tests', () => {
     expect(Array.isArray(res.body)).toBe(true);
     const found = res.body.find(item => item.workplace === workplace && item.address === workplace);
     expect(found).toBeDefined();
+    expect(res.body.length).toBe(16);
   });
 
   test('should delete a doctor', async () => {

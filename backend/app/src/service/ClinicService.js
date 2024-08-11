@@ -4,12 +4,14 @@ class ClinicService {
   static async listClinics() {
     const data = await Doctor.list();
     const workplaces = new Set();
+    const clinics = [];
     data.Items.forEach(item => {
-      if (item.WorkofPlace) {
-        workplaces.add({ workplace: item.WorkofPlace, address: item.address});
+      if (item.WorkofPlace && !workplaces.has(item.WorkofPlace)) {
+        workplaces.add(item.WorkofPlace);
+        clinics.push({ workplace: item.WorkofPlace, address: item.address});
       }
     });
-    return { success: true, data: Array.from(workplaces) };
+    return { success: true, data: clinics };
   }
 
 }

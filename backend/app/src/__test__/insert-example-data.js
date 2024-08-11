@@ -605,7 +605,7 @@ const doctors = [
   },
   {
     "Gpname": "Dr. William Hernandez",
-    "WorkofPlace": "Albany Family FRW Centre ",
+    "WorkofPlace": "Albany Family FRW Centre",
     "Speciality": "Allergist",
     "email": "william.hernandez@example.com",
     "Phone": "+64 94158959",
@@ -628,4 +628,3 @@ export const insertExampleData = () => {
   });
   console.log("Records inserted.");
 }
-
