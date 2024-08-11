@@ -19,16 +19,12 @@ jobs:
 
       - name: Run start local env
         run: docker compose up -d --build
-      
+
       - name: Init database
-        run: |
-          until sh ./backend/init-db.sh; do
-            echo "Init-db script failed. Retrying in 5 seconds..."
-            sleep 5
-          done
+        run: docker compose exec backend npm run init-db
 
       - name: Run api tests
-        run: sh ./backend/test/api-test.sh
+        run: docker compose exec backend npm run test
 
       - name: Print the logs
         run: docker compose logs backend
