@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../views/HomePage.vue";
 import BookingPage from "../views/BookingPage.vue";
+import AdminPage from '../views/AdminPage.vue';
 
 const routes = [
   {
@@ -13,6 +14,11 @@ const routes = [
     name: "OnlineBooking",
     component: BookingPage,
     props: true,
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: AdminPage,
   },
 ];
 

@@ -35,18 +35,18 @@ export default {
   name: "FooterComponent",
   data() {
     return {
-      hoverColor: '#FFFFFF'  // Default color for the links
+      hoverColor: '#FFFFFF'  
     };
   },
   methods: {
     aboutUs() {
-      // Logic for About Us
+    
     },
     joinGroup() {
-      // Logic for Join The Group
+      
     },
     workWithUs() {
-      // Logic for Work With Us
+      
     },
     hover(isHovering) {
       this.hoverColor = isHovering ? '#02b3e4' : '#FFFFFF';
@@ -70,8 +70,8 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 45%; /* Reduce width to bring sections closer */
-  padding-left: 40px; /* Adjust as necessary */
+  width: 45%; 
+  padding-left: 40px; 
 }
 
 .logo-and-buttons {
@@ -112,7 +112,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  width: 45%; /* Reduce width to bring sections closer */
+  width: 45%; 
 }
 
 .social-icons {
