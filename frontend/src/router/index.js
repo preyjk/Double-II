@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../views/HomePage.vue";
 import BookingPage from "../views/BookingPage.vue";
-import AdminPage from '../views/AdminPage.vue';
+import AdminPage from "../views/AdminPage.vue";
+import DashboardPage from "@/views/DashboardPage.vue";
 
 const routes = [
   {
@@ -16,9 +17,14 @@ const routes = [
     props: true,
   },
   {
-    path: '/admin',
-    name: 'Admin',
+    path: "/admin",
+    name: "Admin",
     component: AdminPage,
+  },
+  {
+    path: "/dashboard",
+    name: "dashboard",
+    component: DashboardPage,
   },
 ];
 
