@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import HeaderComponent from "@/components/HeaderComponent.vue";
+import HeaderComponent from "@/components/common/HeaderComponent.vue";
 
 export default {
   name: "AdminPage",

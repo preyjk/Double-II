@@ -6,7 +6,11 @@
         <h3>Customer Support</h3>
       </div>
       <div class="chat-body">
-        <div v-for="(message, index) in messages" :key="index" class="chat-message">
+        <div
+          v-for="(message, index) in messages"
+          :key="index"
+          class="chat-message"
+        >
           <span :class="message.sender">
             <span v-if="message.isLink">
               If you want original online booking, please click here:
@@ -17,16 +21,25 @@
         </div>
       </div>
       <div class="chat-footer">
-        <input type="text" v-model="newMessage" placeholder="Type your message..." @keydown.enter="sendMessage" />
+        <input
+          type="text"
+          v-model="newMessage"
+          placeholder="Type your message..."
+          @keydown.enter="sendMessage"
+        />
         <button @click="sendMessage">Send</button>
       </div>
     </div>
-    <FindMedicalCenterModal :show="showModal" @close="showModal = false" @ClinicSelected="handleClinicSelected" />
+    <FindMedicalCenterModal
+      :show="showModal"
+      @close="showModal = false"
+      @ClinicSelected="handleClinicSelected"
+    />
   </div>
 </template>
 
 <script>
-import FindMedicalCenterModal from "@/components/FindMedicalCenterModal.vue";
+import FindMedicalCenterModal from "@/components/patients/FindMedicalCenterModal.vue";
 
 export default {
   name: "ChatbotComponent",

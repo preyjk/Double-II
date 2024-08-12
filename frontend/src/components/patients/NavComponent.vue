@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import LoginComponent from "@/components/LoginComponent.vue";
+import LoginComponent from "@/components/patients/LoginComponent.vue";
 
 export default {
   name: "NavComponent",

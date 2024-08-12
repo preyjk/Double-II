@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import RegisterComponent from "@/components/RegisterComponent.vue";
+import RegisterComponent from "@/components/patients/RegisterComponent.vue";
 const login = require("@/network/netService").login;
 
 export default {
