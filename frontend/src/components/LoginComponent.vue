@@ -68,7 +68,7 @@ export default {
           this.username = "";
           this.password = "";
 
-          alert("Login successful!");
+          alert("Login success");
         })
         .catch((error) => {
           console.error("Login failed:", error);

@@ -9,8 +9,8 @@ const routes = [
     component: HomePage,
   },
   {
-    path: '/online-booking/:clinicId/:clinicName',
-    name: 'OnlineBooking',
+    path: "/online-booking/:clinicId/:clinicName",
+    name: "OnlineBooking",
     component: BookingPage,
     props: true,
   },
