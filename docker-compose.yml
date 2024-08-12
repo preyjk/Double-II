@@ -32,6 +32,15 @@ services:
     working_dir: /app
     networks:
       - double-ii
+  
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    ports:
+      - "8000:8080"
+    volumes:
+      - ./backend/config/appointment-api-schema.yml:/tmp/swagger.yml
+    environment:
+      - SWAGGER_JSON=/tmp/swagger.yml
 
 volumes:
   dynamodb_data:
