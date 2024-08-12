@@ -42,6 +42,33 @@ const tableDefinitions = [
             WriteCapacityUnits: 5,
         },
     },
+    {
+        TableName: 'Patients',
+        KeySchema: [
+            { AttributeName: 'id', KeyType: 'HASH' }, // Primary key
+        ],
+        AttributeDefinitions: [
+            { AttributeName: 'id', AttributeType: 'S' },
+            { AttributeName: 'username', AttributeType: 'S' },
+        ],
+        ProvisionedThroughput: {
+            ReadCapacityUnits: 5,
+            WriteCapacityUnits: 5,
+        },
+        GlobalSecondaryIndexes: [
+            {
+                IndexName: 'UsernameIndex',
+                KeySchema: [
+                    { AttributeName: 'username', KeyType: 'HASH' }, // GSI key
+                ],
+                Projection: { ProjectionType: 'ALL' },
+                ProvisionedThroughput: {
+                    ReadCapacityUnits: 5,
+                    WriteCapacityUnits: 5,
+                },
+            },
+        ],
+    },
 ];
 
 // Function to delete and recreate tables
