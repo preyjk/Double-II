@@ -30,6 +30,29 @@ Resources:
         MaxReadRequestUnits: 1
         MaxWriteRequestUnits: 1
   
+  PatientsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: username
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: 'PAY_PER_REQUEST'
+      OnDemandThroughput:
+        MaxReadRequestUnits: 1
+        MaxWriteRequestUnits: 1
+      GlobalSecondaryIndexes:
+        - IndexName: UsernameIndex
+          KeySchema:
+            - AttributeName: username
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+  
   DoctorsTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -75,6 +98,7 @@ Resources:
           APPOINTMENT_TABLE_NAME: !Ref AppointmentsTable
           DOCTOR_TABLE_NAME: !Ref DoctorsTable
           USER_TABLE_NAME: !Ref UsersTable
+          PATIENTS_TABLE_NAME: !Ref PatientsTable
           API_STAGE_NAME: !Ref StageName
       Events:
         Root:

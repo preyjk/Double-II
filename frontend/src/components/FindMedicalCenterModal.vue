@@ -2,9 +2,11 @@
   <div v-if="show" class="modal-overlay">
     <div class="modal-content">
       <button @click="$emit('close')" class="close-button">&times;</button>
+      <!-- header -->
       <div class="modal-header">
         <h2>Find a Medical Center</h2>
       </div>
+      <!-- side bar -->
       <div class="modal-body">
         <div class="sidebar">
           <input
@@ -25,6 +27,7 @@
             </li>
           </ul>
         </div>
+        <!-- map -->
         <div class="map-container">
           <GMapMap
             :center="mapCenter"

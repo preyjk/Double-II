@@ -5,6 +5,9 @@ on:
     branches:
       - github-action
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
@@ -19,16 +22,19 @@ jobs:
 
       - name: Run start local env
         run: docker compose up -d --build
-      
-      - name: Init database
+
+      - name: Wait for backend service to be healthy
         run: |
-          until sh ./backend/init-db.sh; do
-            echo "Init-db script failed. Retrying in 5 seconds..."
+          until docker compose logs backend | grep 'App server listening on port'; do
+            echo "Waiting for backend service to be healthy..."
             sleep 5
           done
+      
+      - name: Init database
+        run: docker compose exec backend npm run init-db
 
       - name: Run api tests
-        run: sh ./backend/test/api-test.sh
+        run: docker compose exec backend npm run test
 
       - name: Print the logs
         run: docker compose logs backend

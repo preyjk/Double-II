@@ -7,21 +7,7 @@
     <div class="container_banner">
       <BannerComponent class="banner"></BannerComponent>
     </div>
-    <div class="main_content">
-      Join us today! Simply choose a clinic near you, we have 66 practices
-      across the country to care for you and your family Our medical teams
-      including GPs, Nurse Practitioners and Nurses are here to give you the
-      best health care and advice, when you need it most. Your wellbeing is our
-      focus and we support all Kiwis. As New Zealand's leading and largest
-      medical centre networks we're right at the heart of local communities
-      supporting over 429,000 enrolled patients around the country. If you're
-      looking for a new GP or medical centre, let us know, we're here to help.
-      When you enrol with us you'll save money on fees compared with a casual
-      consult. If it's hard to get in to see your regular GP we recommend The
-      Doctors Online. You can book online anytime in less than 2 mins and have
-      the appointment when and where it suits you. Because of what we do,
-      everyone is healthier
-    </div>
+    <div class="main_content"></div>
     <FooterComponent class="container_footer"></FooterComponent>
   </div>
 </template>

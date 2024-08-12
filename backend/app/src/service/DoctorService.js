@@ -32,11 +32,7 @@ class DoctorService {
 
   static async listDoctorsByWorkplace(workplace) {
     const result = await Doctor.findByProperty('WorkofPlace', workplace);
-    if (result.Items) {
-      return { success: true, data: result.Items };
-    } else {
-      return { success: false, message: 'No doctors found for the specified workplace' };
-    }
+    return { success: true, data: result.Items };
   }
 }
 
