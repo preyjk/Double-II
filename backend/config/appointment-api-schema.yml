@@ -9,11 +9,6 @@ paths:
     get:
       summary: List all appointments
       operationId: listAppointments
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ListAppointmentsFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
       responses:
         '200':
           description: A list of appointments
@@ -26,11 +21,6 @@ paths:
     post:
       summary: Create a new appointment
       operationId: createAppointment
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CreateAppointmentFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
       requestBody:
         description: Appointment object that needs to be added
         required: true
@@ -52,11 +42,6 @@ paths:
     get:
       summary: Get details of an appointment
       operationId: getAppointmentById
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetAppointmentByIdFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
       parameters:
         - name: appointmentId
           in: path
@@ -76,11 +61,6 @@ paths:
     put:
       summary: Update an existing appointment
       operationId: updateAppointment
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateAppointmentFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
       parameters:
         - name: appointmentId
           in: path
@@ -109,11 +89,6 @@ paths:
     delete:
       summary: Delete an appointment
       operationId: deleteAppointment
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DeleteAppointmentFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
       parameters:
         - name: appointmentId
           in: path
@@ -154,11 +129,6 @@ paths:
           description: Invalid input
         '500':
           description: Internal server error
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${SignupFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
   /login:
     post:
       summary: User Login
@@ -204,11 +174,6 @@ paths:
           description: Name of the workplace to filter doctors by
           schema:
             type: string
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ListDoctorsFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
       responses:
         '200':
           description: A list of doctors
@@ -221,11 +186,6 @@ paths:
     post:
       summary: Create a new doctor
       operationId: createDoctor
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CreateDoctorFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
       requestBody:
         description: Doctor object that needs to be added
         required: true
@@ -247,11 +207,6 @@ paths:
     get:
       summary: Get details of a doctor
       operationId: getDoctorById
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GetDoctorByIdFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
       parameters:
         - name: doctorId
           in: path
@@ -271,11 +226,6 @@ paths:
     put:
       summary: Update an existing doctor
       operationId: updateDoctor
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UpdateDoctorFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
       parameters:
         - name: doctorId
           in: path
@@ -304,11 +254,6 @@ paths:
     delete:
       summary: Delete a doctor
       operationId: deleteDoctor
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${DeleteDoctorFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
       parameters:
         - name: doctorId
           in: path
@@ -329,11 +274,6 @@ paths:
     get:
       summary: List all clinics
       operationId: listClinics
-      x-amazon-apigateway-integration:
-        uri:
-          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${ListClinicsFunction.Arn}/invocations
-        httpMethod: POST
-        type: aws_proxy
       responses:
         '200':
           description: A list of clinics
@@ -347,6 +287,132 @@ paths:
                     workplace:
                       type: string
                       description: Name of the clinic
+                    address:
+                      type: string
+                      description: Address of the clinic
+  #
+  # Patient api
+  #
+  /user/patients:
+    get:
+      summary: List all patients
+      operationId: listPatients
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: A list of patients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Patient'
+        '401':
+          description: Unauthorized
+  
+    post:
+      summary: Create a new patient
+      operationId: createPatient
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Patient object that needs to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+      responses:
+        '201':
+          description: Patient created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '400':
+          description: Invalid input
+        '401':
+          description: Unauthorized
+  
+  /user/patients/{patientId}:
+    get:
+      summary: Get details of a patient
+      operationId: getPatientById
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: patientId
+          in: path
+          required: true
+          description: ID of the patient to fetch
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Patient details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '404':
+          description: Patient not found
+        '401':
+          description: Unauthorized
+  
+    put:
+      summary: Update an existing patient
+      operationId: updatePatient
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: patientId
+          in: path
+          required: true
+          description: ID of the patient to update
+          schema:
+            type: string
+      requestBody:
+        description: Updated patient object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+      responses:
+        '200':
+          description: Patient updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '400':
+          description: Invalid input
+        '404':
+          description: Patient not found
+        '401':
+          description: Unauthorized
+  
+    delete:
+      summary: Delete a patient
+      operationId: deletePatient
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: patientId
+          in: path
+          required: true
+          description: ID of the patient to delete
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Patient deleted successfully
+        '404':
+          description: Patient not found
+        '401':
+          description: Unauthorized
+
 
 components:
   schemas:
@@ -416,3 +482,34 @@ components:
         email:
           type: string
           description: Email address of the doctor
+    Patient:
+      type: object
+      required:
+        - name
+        - gender
+        - username
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the patient
+        name:
+          type: string
+          description: Name of the patient
+        gender:
+          type: string
+          description: Gender of the patient
+        age:
+          type: integer
+          description: Age of the patient
+        phone:
+          type: string
+          description: Contact phone number of the patient
+        email:
+          type: string
+          description: Email address of the patient
+        address:
+          type: string
+          description: Address of the patient
+        username:
+          type: string
+          description: Username of the patient
