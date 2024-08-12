@@ -71,10 +71,10 @@ export default {
     submitForm() {
       bookAppointment(this.form)
         .then((data) => {
-          console.log("Booking successful:", data);
-          alert(
-            `Booking submitted for ${this.form.firstName} ${this.form.lastName} with ${this.doctor.Gpname}`
-          );
+          // console.log("Booking successful:", data);
+          // alert(
+          //   `Booking submitted for ${this.form.firstName} ${this.form.lastName} with ${this.doctor.Gpname}`
+          // );
         })
         .catch((err) => {
           console.error("Error submitting booking:", err);

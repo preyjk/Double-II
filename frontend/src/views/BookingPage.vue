@@ -2,8 +2,16 @@
   <div class="container_body">
     <HeaderComponent class="container_header"></HeaderComponent>
     <div class="main_content">
-      <GPSelectForm v-if="!selectedDoctor" :clinicName="clinicName" @doctorSelected="handleDoctorSelected" />
-      <BasicBookingInformationCollectingForm :doctor="selectedDoctor" v-if="selectedDoctor" />
+      <GPSelectForm
+        v-if="!selectedDoctor"
+        :clinicId="clinicId"
+        :clinicName="clinicName"
+        @doctorSelected="handleDoctorSelected"
+      />
+      <BasicBookingInformationCollectingForm
+        :doctor="selectedDoctor"
+        v-if="selectedDoctor"
+      />
       <!-- <InformationCollectingComponent></InformationCollectingComponent>\ -->
     </div>
     <FooterComponent class="container_header"></FooterComponent>
@@ -11,8 +19,8 @@
 </template>
 
 <script>
-import { ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref } from "vue";
+import { useRoute } from "vue-router";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import FooterComponent from "@/components/FooterComponent.vue";
 import GPSelectForm from "@/components/GPSelectForm.vue";
@@ -23,7 +31,7 @@ export default {
     HeaderComponent,
     FooterComponent,
     GPSelectForm,
-    BasicBookingInformationCollectingForm
+    BasicBookingInformationCollectingForm,
     // InformationCollectingComponent,
   },
   setup() {
@@ -34,7 +42,7 @@ export default {
 
     const handleDoctorSelected = (doctor) => {
       selectedDoctor.value = doctor;
-      console.log(doctor);
+      // console.log(doctor);
     };
     return {
       clinicName,
