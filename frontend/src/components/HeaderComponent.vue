@@ -36,7 +36,7 @@
       <li>
         <span
           :class="['for-patients', { active: activeTab === 'patients' }]"
-          @click="activateTab('patients')"
+          @click="goToPatientsPage"
           >For Patients</span
         >
       </li>
@@ -82,6 +82,10 @@ export default {
     },
     backToHomePage() {
       this.$router.push({ name: "Home" });
+    },
+    goToPatientsPage() {
+      this.activateTab("patients");
+      this.$router.push("/");
     },
     goToAdminPage() {
       this.activateTab("providers");
