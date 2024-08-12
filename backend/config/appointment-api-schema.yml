@@ -519,3 +519,8 @@ components:
         username:
           type: string
           description: Username of the patient
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
