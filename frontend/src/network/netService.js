@@ -34,3 +34,21 @@ module.exports.register = function (username, password) {
       throw err;
     });
 };
+
+module.exports.bookAppointment = function (formData) {
+  const config = {
+    url: "/api/appointments",
+    method: "post",
+    data: formData,
+  };
+
+  return request(config)
+    .then((res) => {
+      console.log("Appointment booked successfully:", res.data);
+      return res.data;
+    })
+    .catch((err) => {
+      console.error("Error booking appointment:", err);
+      throw err;
+    });
+};

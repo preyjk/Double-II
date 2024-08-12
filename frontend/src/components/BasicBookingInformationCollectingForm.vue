@@ -45,6 +45,8 @@
 </template>
 
 <script>
+import { bookAppointment } from "@/network/netService";
+
 export default {
   name: "BasicBookingInformationCollectingForm",
   props: {
@@ -67,10 +69,17 @@ export default {
   },
   methods: {
     submitForm() {
-      console.log("Booking Information:", this.form);
-      alert(
-        `Booking submitted for ${this.form.firstName} ${this.form.lastName} with ${this.doctor.Gpname}`
-      );
+      bookAppointment(this.form)
+        .then((data) => {
+          console.log("Booking successful:", data);
+          alert(
+            `Booking submitted for ${this.form.firstName} ${this.form.lastName} with ${this.doctor.Gpname}`
+          );
+        })
+        .catch((err) => {
+          console.error("Error submitting booking:", err);
+          alert("Failed to book the appointment. Please try again.");
+        });
     },
   },
 };
