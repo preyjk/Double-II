@@ -4,6 +4,12 @@ info:
   version: 1.0.0
   description: API to manage appointments with General Practitioners (GPs)
 
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+  - url: https://api.gpbooking.icu
+    description: AWS server
+
 paths:
   /appointments:
     get:
