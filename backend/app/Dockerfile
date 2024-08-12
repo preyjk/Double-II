@@ -5,5 +5,5 @@ WORKDIR "/var/task"
 ADD ./package.json /var/task/package.json
 ADD ./package-lock.json /var/task/package-lock.json
 RUN npm install --omit=dev
-ADD src/ /var/task
-CMD ["node", "app.js"]
+ADD src/ /var/task/src
+CMD ["node", "src/app.js"]

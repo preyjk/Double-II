@@ -8,5 +8,5 @@
 docker compose up -d --build
 
 # use this command to create tables in local dynamodb
-sh backend/init-db.sh
+docker compose exec backend npm run init-db
 ```

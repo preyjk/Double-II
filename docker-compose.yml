@@ -12,12 +12,14 @@ services:
     build:
       context: backend/app
       dockerfile: Dockerfile
+    command: sh -c "npm install && node src/app.js"
     environment:
       - DYNAMODB_ENDPOINT=http://dynamodb-local:8000
     ports:
       - "3000:8080"
     volumes:
       - ./backend/config/aws:/root/.aws
+      - ./backend/app:/var/task
     networks:
       - double-ii
   frontend:
