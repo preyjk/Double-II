@@ -10,9 +10,9 @@
       <li>
         <span>About Us</span>
       </li>
-      <li>
+      <!-- <li>
         <LoginComponent class="login-component"></LoginComponent>
-      </li>
+      </li> -->
     </ul>
   </nav>
 </template>
