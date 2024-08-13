@@ -1,0 +1,148 @@
+openapi: 3.0.0
+info:
+  title: GP Appointment Management API
+  version: 1.0.0
+  description: API to manage appointments with General Practitioners (GPs)
+
+servers:
+  - url: http://localhost:3000
+    description: Local development server
+  - url: https://api.gpbooking.icu
+    description: AWS server
+
+paths:
+  /appointments:
+    post:
+      summary: Create a new appointment
+      operationId: createAppointment
+      description: create a new appointment
+      requestBody:
+        description: Appointment object that needs to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Appointment'
+      responses:
+        '201':
+          description: Appointment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '400':
+          description: Invalid input
+
+  #
+  # doctor info api
+  #
+
+  /doctors:
+    get:
+      summary: List all doctors
+      operationId: listDoctors
+      description: list doctors. It can be filtered by workplace.
+      parameters:
+        - name: workplace
+          in: query
+          required: false
+          description: Name of the workplace to filter doctors by
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of doctors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Doctor'
+
+  #
+  # Clinic
+  #
+  /clinics:
+    get:
+      summary: List all clinics
+      operationId: listClinics
+      description: list clinics, including name and address
+      responses:
+        '200':
+          description: A list of clinics
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    workplace:
+                      type: string
+                      description: Name of the clinic
+                    address:
+                      type: string
+                      description: Address of the clinic
+
+components:
+  schemas:
+    Appointment:
+      type: object
+      required:
+        - patientName
+        - gpName
+        - date
+        - time
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the appointment
+        patientName:
+          type: string
+          description: Name of the patient
+        gpName:
+          type: string
+          description: Name of the General Practitioner
+        date:
+          type: string
+          format: date
+          description: Date of the appointment
+        time:
+          type: string
+          format: time
+          description: Time of the appointment
+        reason:
+          type: string
+          description: Reason for the appointment
+        status:
+          type: string
+          enum:
+            - pending
+            - scheduled
+            - cancelled
+            - completed
+          description: Status of the appointment
+
+    Doctor:
+      type: object
+      required:
+        - name
+        - specialty
+        - phone
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the doctor
+        name:
+          type: string
+          description: Name of the doctor
+        specialty:
+          type: string
+          description: Medical specialty of the doctor
+        phone:
+          type: string
+          description: Contact phone number of the doctor
+        email:
+          type: string
+          description: Email address of the doctor
+
