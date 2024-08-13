@@ -1,7 +1,8 @@
 <template>
   <div>
-    <span @click="showModal = true" class="sign-in-button">Sign In</span>
-
+<<<<<<< HEAD
+    <span v-if="showSign" @click="showModal = true" class="sign-in-button">Sign In</span>
+    <span v-if="showAvatar">avatar</span>
     <div v-if="showModal" class="modal-overlay">
       <div class="modal">
         <h2>Login</h2>
@@ -41,6 +42,8 @@ export default {
   data() {
     return {
       showModal: false,
+      showSign: true,
+      showAvatar: false,
       showRegisterModal: false,
       username: "",
       password: "",
@@ -61,8 +64,10 @@ export default {
           this.showSign = false;
           this.username = "";
           this.password = "";
+          this.showAvatar = true;
 
-          alert("Login successful!");
+          // Navigate to Patient Detail Page after successful login
+          this.$router.push({ name: 'PersonalProfile' }); // Use the route name for PatientDetailPage
         })
         .catch((error) => {
           console.error("Login failed:", error);
@@ -100,6 +105,9 @@ export default {
   position: relative;
 }
 
+.sign-in-button {
+  cursor: pointer;
+}
 .form-group {
   margin-bottom: 20px;
 }
