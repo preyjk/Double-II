@@ -42,8 +42,8 @@
       </li>
       <li class="providers-btn">
         <span
-          :class="['for-providers', { active: activeTab === 'providers' }]"
-          @click="activateTab('providers')"
+         :class="['for-providers', { active: activeTab === 'providers' }]"
+      @click="goToAdminPage"
           >For Providers</span
         >
       </li>
@@ -85,6 +85,10 @@ export default {
     backToHomePage() {
       this.$router.push({ name: "Home" });
     },
+    goToAdminPage() {
+      this.activateTab('providers'); 
+      this.$router.push('/admin'); 
+    }
   },
 };
 </script>

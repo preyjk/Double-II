@@ -4,9 +4,19 @@
     <form @submit.prevent="submitForm">
       <div class="form-group">
         <label>Who is this appointment for?</label>
-        <input v-model="form.appointmentFor" type="radio" value="Myself" required />
+        <input
+          v-model="form.appointmentFor"
+          type="radio"
+          value="Myself"
+          required
+        />
         Myself
-        <input v-model="form.appointmentFor" type="radio" value="Someone Else" required />
+        <input
+          v-model="form.appointmentFor"
+          type="radio"
+          value="Someone Else"
+          required
+        />
         Someone Else
       </div>
       <div class="form-group">
@@ -35,6 +45,8 @@
 </template>
 
 <script>
+import { bookAppointment } from "@/network/netService";
+
 export default {
   name: "BasicBookingInformationCollectingForm",
   props: {
@@ -57,8 +69,17 @@ export default {
   },
   methods: {
     submitForm() {
-      console.log("Booking Information:", this.form);
-      alert(`Booking submitted for ${this.form.firstName} ${this.form.lastName} with ${this.doctor.Gpname}`);
+      bookAppointment(this.form)
+        .then((data) => {
+          // console.log("Booking successful:", data);
+          // alert(
+          //   `Booking submitted for ${this.form.firstName} ${this.form.lastName} with ${this.doctor.Gpname}`
+          // );
+        })
+        .catch((err) => {
+          console.error("Error submitting booking:", err);
+          alert("Failed to book the appointment. Please try again.");
+        });
     },
   },
 };
@@ -95,7 +116,7 @@ input[type="date"] {
 
 button {
   padding: 10px 15px;
-  background-color: #4caf50;
+  background-color: #64b1e8;
   color: white;
   border: none;
   border-radius: 4px;
@@ -104,6 +125,6 @@ button {
 }
 
 button:hover {
-  background-color: #45a049;
+  background-color: #4081ea;
 }
 </style>

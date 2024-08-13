@@ -5,12 +5,48 @@ import User from '../dal/User.js';
 const JWT_SECRET = process.env.JWT_SECRET || 'JWT_SECRET';
 
 class AuthService {
+  
+  static verifyToken(token) {
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      return { success: true, username: decoded.username };
+    } catch (error) {
+      return { success: false, message: 'Invalid token' };
+    }
+  }
+
+  static verifyRequest(req, res, next) {
+    try {
+      const authHeader = req.headers['authorization'];
+      if (!authHeader) {
+        return res.status(401).json({ success: false, message: 'No authorization header' });
+      }
+
+      const token = authHeader.split(' ')[1];
+      if (!token) {
+        return res.status(401).json({ success: false, message: 'Token missing from authorization header' });
+      }
+
+      const verificationResult = AuthService.verifyToken(token);
+      if (!verificationResult.success) {
+        return res.status(401).json(verificationResult);
+      }
+
+      // Attach username to the request object for further use in your routes
+      req.auth = verificationResult;
+      next();
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ success: false, message: 'Error processing request' });
+    }
+  }
+
   static generateToken(username) {
     return jwt.sign({ username: username }, JWT_SECRET, { expiresIn: '1h' });
   }
 
   static verifyPassword(inputPassword, storedPassword) {
-    const hashedInputPassword = this.hashPassword(inputPassword);
+    const hashedInputPassword = AuthService.hashPassword(inputPassword);
     return hashedInputPassword === storedPassword;
   }
 
@@ -20,7 +56,7 @@ class AuthService {
 
   static async signup({ username, password }) {
     try {
-      const hashedPassword = this.hashPassword(password);
+      const hashedPassword = AuthService.hashPassword(password);
       await User.create({ username, password: hashedPassword });
       return { success: true, message: 'Signup successful' };
     } catch (error) {
@@ -35,8 +71,8 @@ class AuthService {
   static async login({ username, password }) {
     try {
       const result = await User.findByUsername(username);
-      if (result.Item && this.verifyPassword(password, result.Item.password)) {
-        const token = this.generateToken(username);
+      if (result.Item && AuthService.verifyPassword(password, result.Item.password)) {
+        const token = AuthService.generateToken(username);
         return { success: true, token };
       } else {
         return { success: false, message: 'Unauthorized' };

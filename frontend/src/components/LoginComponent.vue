@@ -66,8 +66,12 @@ export default {
           this.password = "";
           this.showAvatar = true;
 
+<<<<<<< HEAD
           // Navigate to Patient Detail Page after successful login
           this.$router.push({ name: 'PersonalProfile' }); // Use the route name for PatientDetailPage
+=======
+          alert("Login success");
+>>>>>>> origin/main
         })
         .catch((error) => {
           console.error("Login failed:", error);
