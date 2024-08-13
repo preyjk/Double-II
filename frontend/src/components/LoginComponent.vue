@@ -1,6 +1,5 @@
 <template>
   <div>
-<<<<<<< HEAD
     <span v-if="showSign" @click="showModal = true" class="sign-in-button">Sign In</span>
     <span v-if="showAvatar">avatar</span>
     <div v-if="showModal" class="modal-overlay">
@@ -65,13 +64,8 @@ export default {
           this.username = "";
           this.password = "";
           this.showAvatar = true;
-
-<<<<<<< HEAD
           // Navigate to Patient Detail Page after successful login
           this.$router.push({ name: 'PersonalProfile' }); // Use the route name for PatientDetailPage
-=======
-          alert("Login success");
->>>>>>> origin/main
         })
         .catch((error) => {
           console.error("Login failed:", error);

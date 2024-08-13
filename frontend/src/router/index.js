@@ -20,6 +20,8 @@ const routes = [
     path: "/profile",
     name: "PersonalProfile",
     component: PersonalProfilePage,
+  },
+  {
     path: '/admin',
     name: 'Admin',
     component: AdminPage,
