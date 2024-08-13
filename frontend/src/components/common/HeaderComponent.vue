@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import LoginComponent from "@/components/LoginComponent.vue";
+import LoginComponent from "@/components/patients/LoginComponent.vue";
 export default {
   name: "HeaderComponent",
   components: {
@@ -211,7 +211,7 @@ export default {
   color: black;
   border-bottom: 2px solid red;
 }
-.profile-avatar span{
+.profile-avatar span {
   cursor: pointer;
 }
 </style>
