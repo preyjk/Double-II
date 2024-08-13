@@ -59,9 +59,6 @@
         </svg>
         <span> English </span>
       </li>
-      <li class="profile-avatar">
-        <LoginComponent class="login-component"></LoginComponent>
-      </li>
     </ul>
   </header>
 </template>
