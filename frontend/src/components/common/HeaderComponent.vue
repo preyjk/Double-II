@@ -59,13 +59,20 @@
         </svg>
         <span> English </span>
       </li>
+      <li class="profile-avatar">
+        <LoginComponent class="login-component"></LoginComponent>
+      </li>
     </ul>
   </header>
 </template>
 
 <script>
+import LoginComponent from "@/components/LoginComponent.vue";
 export default {
   name: "HeaderComponent",
+  components: {
+    LoginComponent,
+  },
   data() {
     return {
       activeTab: "patients",
@@ -203,5 +210,8 @@ export default {
   font-weight: bold;
   color: black;
   border-bottom: 2px solid red;
+}
+.profile-avatar span{
+  cursor: pointer;
 }
 </style>

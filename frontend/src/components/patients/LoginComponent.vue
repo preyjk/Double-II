@@ -1,7 +1,7 @@
 <template>
   <div>
-    <span @click="showModal = true" class="sign-in-button">Sign In</span>
-
+    <span v-if="showSign" @click="showModal = true" class="sign-in-button">Sign In</span>
+    <span v-if="showAvatar">avatar</span>
     <div v-if="showModal" class="modal-overlay">
       <div class="modal">
         <h2>Login</h2>
@@ -16,11 +16,7 @@
           </div>
           <div class="form-actions">
             <button type="submit" class="submit-button">Submit</button>
-            <button
-              type="button"
-              @click="showModal = false"
-              class="cancel-button"
-            >
+            <button type="button" @click="showModal = false" class="cancel-button">
               Cancel
             </button>
           </div>
@@ -33,10 +29,7 @@
     </div>
 
     <!-- Register Component -->
-    <RegisterComponent
-      v-if="showRegisterModal"
-      @close="showRegisterModal = false"
-    />
+    <RegisterComponent v-if="showRegisterModal" @close="showRegisterModal = false" />
   </div>
 </template>
 
@@ -48,6 +41,8 @@ export default {
   data() {
     return {
       showModal: false,
+      showSign: true,
+      showAvatar: false,
       showRegisterModal: false,
       username: "",
       password: "",
@@ -65,10 +60,12 @@ export default {
           localStorage.setItem("authToken", token);
 
           this.showModal = false;
+          this.showSign = false;
           this.username = "";
           this.password = "";
-
-          alert("Login success");
+          this.showAvatar = true;
+          // Navigate to Patient Detail Page after successful login
+          this.$router.push({ name: 'PersonalProfile' }); // Use the route name for PatientDetailPage
         })
         .catch((error) => {
           console.error("Login failed:", error);
@@ -106,6 +103,9 @@ export default {
   position: relative;
 }
 
+.sign-in-button {
+  cursor: pointer;
+}
 .form-group {
   margin-bottom: 20px;
 }

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../views/patients/HomePage.vue";
 import BookingPage from "../views/patients/BookingPage.vue";
+import PersonalProfilePage from "../views/PersonalProfilePage.vue";
 import AdminPage from "../views/admin/AdminPage.vue";
 import DashboardPage from "@/views/admin/DashboardPage.vue";
 
@@ -17,8 +18,13 @@ const routes = [
     props: true,
   },
   {
-    path: "/admin",
-    name: "Admin",
+    path: "/profile",
+    name: "PersonalProfile",
+    component: PersonalProfilePage,
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
     component: AdminPage,
   },
   {
