@@ -52,3 +52,20 @@ module.exports.bookAppointment = function (formData) {
       throw err;
     });
 };
+
+module.exports.getAppointments = function () {
+  const config = {
+    url: "/api/appointments",
+    method: "get",
+  };
+
+  return request(config)
+    .then((res) => {
+      console.log("Appointments fetched successfully:", res.data);
+      return res.data;
+    })
+    .catch((err) => {
+      console.error("Error fetching appointments:", err);
+      throw err;
+    });
+};
