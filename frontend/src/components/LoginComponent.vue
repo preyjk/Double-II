@@ -1,7 +1,7 @@
 <template>
   <div>
     <span @click="showModal = true" class="sign-in-button">Sign In</span>
-
+    <span v-if="showAvatar">avatar</span>
     <div v-if="showModal" class="modal-overlay">
       <div class="modal">
         <h2>Login</h2>
@@ -48,6 +48,7 @@ export default {
   data() {
     return {
       showModal: false,
+      showAvatar:false,
       showRegisterModal: false,
       username: "",
       password: "",
@@ -67,8 +68,8 @@ export default {
           this.showModal = false;
           this.username = "";
           this.password = "";
-
-          alert("Login successful!");
+          this.showAvatar=true;
+          // alert("Login successful!");
         })
         .catch((error) => {
           console.error("Login failed:", error);
@@ -105,7 +106,9 @@ export default {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   position: relative;
 }
-
+.sign-in-button{
+  cursor: pointer;;
+}
 .form-group {
   margin-bottom: 20px;
 }
