@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import ChatbotComponent from "./ChatbotComponent.vue";
+import ChatbotComponent from "../patients/ChatbotComponent.vue";
 export default {
   name: "BannerComponent",
   components: {

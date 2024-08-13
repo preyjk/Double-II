@@ -2,7 +2,6 @@
   <div>
     <nav>
       <router-link to="/"></router-link>
-      <router-link to="/online-booking"></router-link>
       <router-link to="/admin"></router-link>
     </nav>
     <router-view></router-view>

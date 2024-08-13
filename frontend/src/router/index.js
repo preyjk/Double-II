@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomePage from "../views/HomePage.vue";
-import BookingPage from "../views/BookingPage.vue";
+import HomePage from "../views/patients/HomePage.vue";
+import BookingPage from "../views/patients/BookingPage.vue";
 import PersonalProfilePage from "../views/PersonalProfilePage.vue";
-import AdminPage from '../views/AdminPage.vue';
+import AdminPage from "../views/admin/AdminPage.vue";
+import DashboardPage from "@/views/admin/DashboardPage.vue";
 
 const routes = [
   {
@@ -25,6 +26,11 @@ const routes = [
     path: '/admin',
     name: 'Admin',
     component: AdminPage,
+  },
+  {
+    path: "/dashboard",
+    name: "dashboard",
+    component: DashboardPage,
   },
 ];
 
