@@ -13,10 +13,10 @@
 </template>
 
 <script>
-import HeaderComponent from "@/components/HeaderComponent.vue";
-import FooterComponent from "@/components/FooterComponent.vue";
-import BannerComponent from "@/components/BannerComponent.vue";
-import NavComponent from "@/components/NavComponent.vue";
+import HeaderComponent from "@/components/common/HeaderComponent.vue";
+import FooterComponent from "@/components/common/FooterComponent.vue";
+import BannerComponent from "@/components/patients/BannerComponent.vue";
+import NavComponent from "@/components/patients/NavComponent.vue";
 export default {
   components: {
     HeaderComponent,

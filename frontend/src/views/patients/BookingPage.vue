@@ -21,10 +21,10 @@
 <script>
 import { ref } from "vue";
 import { useRoute } from "vue-router";
-import HeaderComponent from "@/components/HeaderComponent.vue";
-import FooterComponent from "@/components/FooterComponent.vue";
-import GPSelectForm from "@/components/GPSelectForm.vue";
-import BasicBookingInformationCollectingForm from "@/components/BasicBookingInformationCollectingForm.vue";
+import HeaderComponent from "@/components/common/HeaderComponent.vue";
+import FooterComponent from "@/components/common/FooterComponent.vue";
+import GPSelectForm from "@/components/patients/GPSelectForm.vue";
+import BasicBookingInformationCollectingForm from "@/components/patients/BasicBookingInformationCollectingForm.vue";
 // import InformationCollectingComponent from "@/components/InformationCollectingComponent.vue";
 export default {
   components: {

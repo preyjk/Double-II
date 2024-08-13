@@ -36,14 +36,14 @@
       <li>
         <span
           :class="['for-patients', { active: activeTab === 'patients' }]"
-          @click="activateTab('patients')"
+          @click="goToPatientsPage"
           >For Patients</span
         >
       </li>
       <li class="providers-btn">
         <span
-         :class="['for-providers', { active: activeTab === 'providers' }]"
-      @click="goToAdminPage"
+          :class="['for-providers', { active: activeTab === 'providers' }]"
+          @click="goToAdminPage"
           >For Providers</span
         >
       </li>
@@ -71,6 +71,11 @@ export default {
       activeTab: "patients",
     };
   },
+  created() {
+    if (this.$route.path === "/admin") {
+      this.activateTab("providers");
+    }
+  },
   methods: {
     activateTab(tab) {
       this.activeTab = tab;
@@ -78,10 +83,14 @@ export default {
     backToHomePage() {
       this.$router.push({ name: "Home" });
     },
+    goToPatientsPage() {
+      this.activateTab("patients");
+      this.$router.push("/");
+    },
     goToAdminPage() {
-      this.activateTab('providers'); 
-      this.$router.push('/admin'); 
-    }
+      this.activateTab("providers");
+      this.$router.push("/admin");
+    },
   },
 };
 </script>
