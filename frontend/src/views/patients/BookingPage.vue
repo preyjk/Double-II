@@ -2,16 +2,9 @@
   <div class="container_body">
     <HeaderComponent class="container_header"></HeaderComponent>
     <div class="main_content">
-      <GPSelectForm
-        v-if="!selectedDoctor"
-        :clinicId="clinicId"
-        :clinicName="clinicName"
-        @doctorSelected="handleDoctorSelected"
-      />
-      <BasicBookingInformationCollectingForm
-        :doctor="selectedDoctor"
-        v-if="selectedDoctor"
-      />
+      <GPSelectForm v-if="!selectedDoctor" :clinicId="clinicId" :clinicName="clinicName"
+        @doctorSelected="handleDoctorSelected" />
+      <BasicBookingInformationCollectingForm :doctor="selectedDoctor" v-if="selectedDoctor" />
       <!-- <InformationCollectingComponent></InformationCollectingComponent>\ -->
     </div>
     <FooterComponent class="container_header"></FooterComponent>

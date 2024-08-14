@@ -6,6 +6,7 @@ import ChatbotPage from "@/views/patients/ChatbotPage.vue";
 import AdminPage from "../views/admin/AdminPage.vue";
 import DashboardPage from "@/views/admin/DashboardPage.vue";
 import AboutPage from "@/views/patients/AboutPage.vue";
+import OnlineBookingPage from "@/views/patients/OnlineBookingPage.vue";
 
 const routes = [
   {
@@ -14,11 +15,17 @@ const routes = [
     component: HomePage,
   },
   {
-    path: "/online-booking/:clinicId/:clinicName",
+    path: "/online-booking",
     name: "OnlineBooking",
-    component: BookingPage,
+    component: OnlineBookingPage,
     props: true,
   },
+  // {
+  //   path: "/online-booking/:clinicId/:clinicName",
+  //   name: "BookingPage",
+  //   component: BookingPage,
+  //   props: true,
+  // },
   {
     path: "/profile",
     name: "PersonalProfile",

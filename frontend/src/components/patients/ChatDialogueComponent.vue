@@ -4,27 +4,16 @@
       <h3>Customer Support</h3>
     </div>
     <div class="chat-body">
-      <div
-        v-for="(message, index) in messages"
-        :key="index"
-        class="chat-message"
-      >
+      <div v-for="(message, index) in messages" :key="index" class="chat-message">
         <span :class="message.sender">
           <span v-if="message.isLink">
-            If you want original online booking, please click here:
-            <a href="#" @click.prevent="onlineBooking">online booking</a>
           </span>
           <span v-else v-html="message.text"></span>
         </span>
       </div>
     </div>
     <div class="chat-footer">
-      <input
-        type="text"
-        v-model="newMessage"
-        placeholder="Type your message..."
-        @keydown.enter="sendMessage"
-      />
+      <input type="text" v-model="newMessage" placeholder="Type your message..." @keydown.enter="sendMessage" />
       <button @click="sendMessage">Send</button>
     </div>
   </div>
@@ -32,12 +21,10 @@
 
 <script>
 import axios from "axios";
-import FindMedicalCenterModal from "@/components/patients/FindMedicalCenterModal.vue";
 
 export default {
   name: "ChatDialogueComponent",
   components: {
-    FindMedicalCenterModal,
   },
   data() {
     return {
