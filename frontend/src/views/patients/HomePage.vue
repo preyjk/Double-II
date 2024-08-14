@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import HeaderComponent from "@/components/common/HeaderComponent.vue";
-import FooterComponent from "@/components/common/FooterComponent.vue";
+import HeaderComponent from "@/components/patients/HeaderComponent.vue";
+import FooterComponent from "@/components/patients/FooterComponent.vue";
 import BannerComponent from "@/components/patients/BannerComponent.vue";
 export default {
   components: {

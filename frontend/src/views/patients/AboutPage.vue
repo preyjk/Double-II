@@ -8,8 +8,8 @@
 
 <script>
 
-import HeaderComponent from "@/components/common/HeaderComponent.vue";
-import FooterComponent from "@/components/common/FooterComponent.vue";
+import HeaderComponent from "@/components/patients/HeaderComponent.vue";
+import FooterComponent from "@/components/patients/FooterComponent.vue";
 export default {
   components: {
     HeaderComponent,
