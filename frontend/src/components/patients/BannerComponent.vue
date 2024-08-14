@@ -6,7 +6,7 @@
     </h1>
     <div class="play-button-container" @click="goChatbotPage">
       <div class="play-button">
-        <span>&#9658;</span>
+        <span class="triangle"></span>
       </div>
     </div>
     <div class="arrow-down"></div>
@@ -17,10 +17,6 @@
 <script>
 export default {
   name: "BannerComponent",
-  components: {},
-  data() {
-    return {};
-  },
   methods: {
     goChatbotPage() {
       this.$router.push({ name: "Chatbot" });
@@ -75,9 +71,13 @@ export default {
 .play-button:hover {
   background-color: rgba(95, 165, 239, 0.6);
 }
-.play-button span {
-  font-size: 2rem;
-  color: white;
+
+.play-button .triangle {
+  width: 0;
+  height: 0;
+  border-left: 25px solid white;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
 }
 
 .arrow-down {
