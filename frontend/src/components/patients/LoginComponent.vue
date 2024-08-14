@@ -1,7 +1,7 @@
 <template>
   <div>
     <span v-if="showSign" @click="showModal = true" class="sign-in-button">Sign In</span>
-    <span v-if="showAvatar">avatar</span>
+    <AvatarComponent v-if="showAvatar" @logout="handleLogout" />
     <div v-if="showModal" class="modal-overlay">
       <div class="modal">
         <h2>Login</h2>
@@ -35,6 +35,7 @@
 
 <script>
 import RegisterComponent from "@/components/patients/RegisterComponent.vue";
+import AvatarComponent from "@/components/patients/AvatarComponent.vue";
 const login = require("@/network/netService").login;
 
 export default {
@@ -50,7 +51,16 @@ export default {
     };
   },
   components: {
+    AvatarComponent,
     RegisterComponent,
+  },
+  created() {
+    const savedToken = localStorage.getItem("authToken");
+    if (savedToken) {
+      this.token = savedToken;
+      this.showSign = false;
+      this.showAvatar = true;
+    }
   },
   methods: {
     handleSubmit() {
@@ -63,7 +73,7 @@ export default {
           this.username = "";
           this.password = "";
           this.showAvatar = true;
-          this.$router.push({ name: "PersonalProfile" });
+          // this.$router.push({ name: "PersonalProfile" });
         })
         .catch((error) => {
           console.error("Login failed:", error);
@@ -73,6 +83,11 @@ export default {
     switchToRegister() {
       this.showModal = false;
       this.showRegisterModal = true;
+    },
+    handleLogout() {
+      localStorage.setItem("authToken", "");
+      this.showAvatar = false;
+      this.showSign = true;
     },
   },
 };
