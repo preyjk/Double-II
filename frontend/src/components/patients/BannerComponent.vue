@@ -4,7 +4,7 @@
       <span class="line1">YOUR JOURNEY TO</span><br />
       <span class="line2">WELLNESS BEGINS HERE</span>
     </h1>
-    <div class="play-button-container">
+    <div class="play-button-container" @click="goChatbotPage">
       <div class="play-button">
         <span>&#9658;</span>
       </div>
@@ -15,13 +15,17 @@
 </template>
 
 <script>
-import ChatbotComponent from "../patients/ChatbotComponent.vue";
 export default {
   name: "BannerComponent",
-  components: {
-    ChatbotComponent,
+  components: {},
+  data() {
+    return {};
   },
-  methods: {},
+  methods: {
+    goChatbotPage() {
+      this.$router.push({ name: "Chatbot" });
+    },
+  },
 };
 </script>
 
@@ -45,6 +49,7 @@ export default {
   color: rgb(55, 55, 59);
   text-align: center;
   filter: saturate(1.2) brightness(1.1);
+  position: relative;
 }
 
 .hero-title {
@@ -67,7 +72,9 @@ export default {
   cursor: pointer;
   animation: pulse 2s infinite;
 }
-
+.play-button:hover {
+  background-color: rgba(95, 165, 239, 0.6);
+}
 .play-button span {
   font-size: 2rem;
   color: white;
@@ -87,6 +94,15 @@ export default {
   margin-top: 10px;
   font-size: 1.2rem;
   text-shadow: 1px 1px 1.5px rgba(0, 0, 0, 0.7);
+}
+
+.chatbot-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  max-width: 80%;
 }
 
 @keyframes pulse {
@@ -109,5 +125,15 @@ export default {
   50% {
     transform: translateY(-10px);
   }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

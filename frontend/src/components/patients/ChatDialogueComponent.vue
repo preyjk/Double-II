@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p class="slogan">Save Time, Save Life</p>
     <div class="chat-window">
       <div class="chat-header">
         <h3>Customer Support</h3>
@@ -101,11 +100,6 @@ export default {
 </script>
 
 <style scoped>
-.slogan {
-  font-size: 48px;
-  padding: 70px;
-}
-
 .chat-window {
   width: 480px;
   height: 520px;
@@ -115,7 +109,6 @@ export default {
   justify-content: space-between;
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  margin-left: 70px;
 }
 
 .chat-header {

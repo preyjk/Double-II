@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../views/patients/HomePage.vue";
 import BookingPage from "../views/patients/BookingPage.vue";
 import PersonalProfilePage from "../views/patients/PersonalProfilePage.vue";
+import ChatbotPage from "@/views/patients/ChatbotPage.vue";
 import AdminPage from "../views/admin/AdminPage.vue";
 import DashboardPage from "@/views/admin/DashboardPage.vue";
 
@@ -21,6 +22,11 @@ const routes = [
     path: "/profile",
     name: "PersonalProfile",
     component: PersonalProfilePage,
+  },
+  {
+    path: "/chatbot",
+    name: "Chatbot",
+    component: ChatbotPage,
   },
   {
     path: "/admin",
