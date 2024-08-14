@@ -10,6 +10,12 @@ Parameters:
     Type: String
     Description: "The name of the stage (e.g., dev, prod)"
     Default: "v1"
+  BedrockAgentId:
+    Type: String
+    Description: "id of the bedrock agent"
+  BedrockAgentAlias:
+    Type: String
+    Description: "alias id of the bedrock agent"
 
 Globals:
   Function:
@@ -100,6 +106,8 @@ Resources:
           USER_TABLE_NAME: !Ref UsersTable
           PATIENTS_TABLE_NAME: !Ref PatientsTable
           API_STAGE_NAME: !Ref StageName
+          BEDROCK_AGENT_ID: !Ref BedrockAgentId
+          BEDROCK_AGENT_ALIAS: !Ref BedrockAgentAlias
       Events:
         Root:
           Type: HttpApi

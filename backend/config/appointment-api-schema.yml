@@ -418,7 +418,52 @@ paths:
           description: Patient not found
         '401':
           description: Unauthorized
-
+  #
+  # chatbot
+  #
+  /chatbot:
+    post:
+      summary: Generate a chatbot response based on the provided prompt.
+      operationId: generateChatbotResponse
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                prompt:
+                  type: string
+                  description: The prompt to generate a response for.
+              required:
+                - prompt
+      parameters:
+        - in: header
+          name: x-chatbot-session
+          schema:
+            type: string
+          description: Custom session header for the chatbot.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sessionId:
+                    type: string
+                    description: The session ID for the chatbot interaction.
+                  response:
+                    type: string
+                    description: The chatbot's generated response.
+                required:
+                  - sessionId
+                  - response
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
 
 components:
   schemas:
