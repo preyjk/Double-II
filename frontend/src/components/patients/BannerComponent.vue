@@ -1,10 +1,4 @@
 <template>
-  <!-- <div class="banner-container"> -->
-  <!-- <ChatbotComponent class="clinic-search"></ChatbotComponent> -->
-  <!-- <div class="img-area">
-      <img src="@/assets/docotor.png" alt="docotor img" class="img-docotor" />
-    </div> -->
-  <!-- </div> -->
   <div class="hero-section">
     <h1 class="hero-title">YOUR JOURNEY TO WELLNESS BEGINS HERE</h1>
     <div class="play-button-container">
@@ -29,20 +23,6 @@ export default {
 </script>
 
 <style scoped>
-.banner-container {
-  display: flex;
-}
-.clinic-search {
-  flex: 2;
-}
-.img-area {
-  flex: 1;
-}
-.img-docotor {
-  width: 40vw;
-  margin-right: 80px;
-}
-
 .hero-section {
   background-image: url("@/assets/hospital-hall.png");
   background-size: cover;
