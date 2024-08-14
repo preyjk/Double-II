@@ -1,47 +1,41 @@
 <template>
-  <div>
-    <div class="chat-window">
-      <div class="chat-header">
-        <h3>Customer Support</h3>
-      </div>
-      <div class="chat-body">
-        <div
-          v-for="(message, index) in messages"
-          :key="index"
-          class="chat-message"
-        >
-          <span :class="message.sender">
-            <span v-if="message.isLink">
-              If you want original online booking, please click here:
-              <a href="#" @click.prevent="onlineBooking">online booking</a>
-            </span>
-            <span v-else v-html="message.text"></span>
+  <div class="chat-window">
+    <div class="chat-header">
+      <h3>Customer Support</h3>
+    </div>
+    <div class="chat-body">
+      <div
+        v-for="(message, index) in messages"
+        :key="index"
+        class="chat-message"
+      >
+        <span :class="message.sender">
+          <span v-if="message.isLink">
+            If you want original online booking, please click here:
+            <a href="#" @click.prevent="onlineBooking">online booking</a>
           </span>
-        </div>
-      </div>
-      <div class="chat-footer">
-        <input
-          type="text"
-          v-model="newMessage"
-          placeholder="Type your message..."
-          @keydown.enter="sendMessage"
-        />
-        <button @click="sendMessage">Send</button>
+          <span v-else v-html="message.text"></span>
+        </span>
       </div>
     </div>
-    <FindMedicalCenterModal
-      :show="showModal"
-      @close="showModal = false"
-      @ClinicSelected="handleClinicSelected"
-    />
+    <div class="chat-footer">
+      <input
+        type="text"
+        v-model="newMessage"
+        placeholder="Type your message..."
+        @keydown.enter="sendMessage"
+      />
+      <button @click="sendMessage">Send</button>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 import FindMedicalCenterModal from "@/components/patients/FindMedicalCenterModal.vue";
 
 export default {
-  name: "ChatbotComponent",
+  name: "ChatDialogueComponent",
   components: {
     FindMedicalCenterModal,
   },
@@ -53,11 +47,6 @@ export default {
           sender: "support",
           isLink: false,
         },
-        {
-          text: "",
-          sender: "support",
-          isLink: true,
-        },
       ],
       newMessage: "",
       showModal: false,
@@ -65,23 +54,41 @@ export default {
     };
   },
   methods: {
-    onlineBooking() {
-      this.showModal = true;
-    },
-    sendMessage() {
+    async sendMessage() {
       if (this.newMessage.trim() !== "") {
+        // Add user's message to chat
         this.messages.push({ text: this.newMessage, sender: "user" });
+        const userMessage = this.newMessage;
         this.newMessage = "";
-        this.autoReply();
+
+        try {
+          // Make API request with user's message
+          const response = await axios.post(
+            "https://api.gpbooking.icu/chatbot/",
+            {
+              prompt: userMessage,
+              sessionId: this.sessionId || null,
+            }
+          );
+
+          // Process the API response
+          const responseData = response.data;
+          this.sessionId = responseData.sessionId; // Store the session ID
+          this.messages.push({
+            text: responseData.response,
+            sender: "support",
+          });
+        } catch (error) {
+          console.error("Error during API request:", error);
+          this.messages.push({
+            text: "Sorry, there was an error processing your request. Please try again later.",
+            sender: "support",
+          });
+        }
       }
     },
-    autoReply() {
-      setTimeout(() => {
-        this.messages.push({
-          text: "Thank you for reaching out!",
-          sender: "support",
-        });
-      }, 1000);
+    onlineBooking() {
+      this.showModal = true;
     },
     handleClinicSelected(clinic) {
       if (clinic) {
@@ -101,7 +108,7 @@ export default {
 
 <style scoped>
 .chat-window {
-  width: 480px;
+  width: 80%;
   height: 520px;
   border: 1px solid #ccc;
   display: flex;
