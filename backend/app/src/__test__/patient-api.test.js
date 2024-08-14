@@ -6,14 +6,18 @@ import AuthService from '../service/AuthService';
 const app = express();
 app.use(express.json());
 app.use('/', router);
+app.use((err, req, res, next) => {
+  console.log(err);
+  return res.status(500).json();
+});
 
 describe('Patient API End-to-End Tests', () => {
   let patientId;
   const username = 'testuser';
-  const token = AuthService.generateToken(username);
+  const token = AuthService.generateToken({username});
   const invalidToken = 'invalid token';
   const mismatchedUsername = 'mismatcheduser';
-  const mismatchedToken = AuthService.generateToken(mismatchedUsername);
+  const mismatchedToken = AuthService.generateToken({username: mismatchedUsername});
   
 
   test('should list all patients', async () => {

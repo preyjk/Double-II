@@ -5,9 +5,14 @@ import router from '../routes/routes';
 const app = express();
 app.use(express.json());
 app.use('/', router);
+app.use((err, req, res, next) => {
+  console.log(err);
+  return res.status(500).json();
+});
 
 describe('GP Appointment Management API', () => {
   let appointmentId;
+  let gpId = '12345678';
 
   test('should list all appointments', async () => {
     const res = await request(app)
@@ -21,6 +26,7 @@ describe('GP Appointment Management API', () => {
   test('should create a new appointment', async () => {
     const newAppointment = {
       patientName: "Jane Doe",
+      gpId: gpId,
       gpName: "Dr. Brown",
       date: "2023-08-02",
       time: "11:00",
@@ -35,12 +41,36 @@ describe('GP Appointment Management API', () => {
       .expect(201);
 
     expect(res.body).toHaveProperty('patientName', 'Jane Doe');
+    expect(res.body).toHaveProperty('gpId', gpId);
     expect(res.body).toHaveProperty('gpName', 'Dr. Brown');
     expect(res.body).toHaveProperty('date', '2023-08-02');
     expect(res.body).toHaveProperty('time', '11:00');
     expect(res.body).toHaveProperty('reason', 'Follow-up check');
     expect(res.body).toHaveProperty('status', 'pending');
     appointmentId = res.body.id;
+  });
+
+  test('should list appointment by gpId, startDate and endDate', async () => {
+    const res = await request(app)
+      .get(`/appointments?gpId=${gpId}&startDate=2023-08-01&endDate=2023-08-02`)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(res.body[0]).toHaveProperty('patientName', 'Jane Doe');
+    expect(res.body[0]).toHaveProperty('gpId', gpId);
+    expect(res.body[0]).toHaveProperty('gpName', 'Dr. Brown');
+    expect(res.body[0]).toHaveProperty('date', '2023-08-02');
+    expect(res.body[0]).toHaveProperty('time', '11:00');
+    expect(res.body[0]).toHaveProperty('reason', 'Follow-up check');
+    expect(res.body[0]).toHaveProperty('status', 'pending');
+    expect(res.body[0]).toHaveProperty('id', appointmentId);
+  });
+
+  test('should not list appointment out of startDate and endDate', async () => {
+    const res = await request(app)
+      .get(`/appointments?gpId=${gpId}&startDate=2023-08-03&endDate=2023-08-03`)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(res.body.length).toBe(0);
   });
 
   test('should get an appointment by ID', async () => {

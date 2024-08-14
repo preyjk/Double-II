@@ -1,7 +1,7 @@
 import { dynamo } from './DynamoDB.js'
 import { v4 as uuidv4 } from 'uuid';
+import FilterExpressionBuilder from './util/FilterExpressionBuilder.js';
 
-console.log(`Env Var APPOINTMENT_TABLE_NAME is ${process.env.APPOINTMENT_TABLE_NAME}`);
 const TABLE_NAME = process.env.APPOINTMENT_TABLE_NAME || 'Appointments';
 
 class Appointment {
@@ -67,6 +67,27 @@ class Appointment {
     };
     return dynamo.delete(params);
   }
+
+  static async query(criteria) {
+    
+    const exBuilder = new FilterExpressionBuilder();
+    
+    criteria.clinicName && exBuilder.addCriteria('clinicName', '=', criteria.clinicName);
+    criteria.gpId && exBuilder.addCriteria('gpId', '=', criteria.gpId);
+    criteria.appointmentStartDate && exBuilder.addCriteria('date', '>=', criteria.appointmentStartDate);
+    criteria.appointmentEndDate && exBuilder.addCriteria('date', '<=', criteria.appointmentEndDate);
+
+    return dynamo.scan({TableName: TABLE_NAME, ...exBuilder.build()});    
+  }
+
+  static criteria(params, key, op, value) {
+    const attributeKey = `#attr_${key}`;
+    const valueKey = `:val_${key}`;  
+    params.ExpressionAttributeNames[attributeKey] = key;
+    params.ExpressionAttributeValues[valueKey] = value;
+    return `${attributeKey} ${op} ${valueKey}`;
+  }
+
 }
 
 export default Appointment;

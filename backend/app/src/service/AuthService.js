@@ -9,7 +9,7 @@ class AuthService {
   static verifyToken(token) {
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
-      return { success: true, username: decoded.username };
+      return { success: true, data: decoded };
     } catch (error) {
       return { success: false, message: 'Invalid token' };
     }
@@ -33,7 +33,7 @@ class AuthService {
       }
 
       // Attach username to the request object for further use in your routes
-      req.auth = verificationResult;
+      req.auth = verificationResult.data;
       next();
     } catch (error) {
       console.error(error);
@@ -41,8 +41,17 @@ class AuthService {
     }
   }
 
-  static generateToken(username) {
-    return jwt.sign({ username: username }, JWT_SECRET, { expiresIn: '1h' });
+  static hasRole(roles) {
+    return (req, res, next) => {
+      if (!req.auth.roles?.some(r => roles.includes(r))) {
+        return res.status(401).json();
+      }
+      next()
+    }
+  }
+
+  static generateToken(authContent) {
+    return jwt.sign(authContent, JWT_SECRET, { expiresIn: '1h' });
   }
 
   static verifyPassword(inputPassword, storedPassword) {
@@ -54,10 +63,10 @@ class AuthService {
     return crypto.createHash('sha256').update(password).digest('hex');
   }
 
-  static async signup({ username, password }) {
+  static async signup({ username, password, roles }) {
     try {
       const hashedPassword = AuthService.hashPassword(password);
-      await User.create({ username, password: hashedPassword });
+      await User.create({ username, password: hashedPassword, roles});
       return { success: true, message: 'Signup successful' };
     } catch (error) {
       if (error.name === 'ConditionalCheckFailedException') {
@@ -72,7 +81,7 @@ class AuthService {
     try {
       const result = await User.findByUsername(username);
       if (result.Item && AuthService.verifyPassword(password, result.Item.password)) {
-        const token = AuthService.generateToken(username);
+        const token = AuthService.generateToken({username, roles: result.Item.roles});
         return { success: true, token };
       } else {
         return { success: false, message: 'Unauthorized' };

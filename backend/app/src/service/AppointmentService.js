@@ -1,8 +1,8 @@
 import Appointment from '../dal/Appointment.js';
 
 class AppointmentService {
-  static async listAppointments() {
-    const data = await Appointment.list();
+  static async listAppointments({ gpId, appointmentStartDate, appointmentEndDate }) {
+    const data = await Appointment.query({ gpId, appointmentStartDate, appointmentEndDate});
     return { success: true, data: data.Items };
   }
 
@@ -29,6 +29,7 @@ class AppointmentService {
     await Appointment.findByIdAndDelete(appointmentId);
     return { success: true, message: 'Appointment deleted successfully' };
   }
+
 }
 
 export default AppointmentService;

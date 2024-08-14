@@ -1,7 +1,6 @@
 import { dynamo } from './DynamoDB.js';
 import { v4 as uuidv4 } from 'uuid';
 
-console.log(`Env Var DOCTOR_TABLE_NAME is ${process.env.DOCTOR_TABLE_NAME}`);
 const TABLE_NAME = process.env.DOCTOR_TABLE_NAME || 'Doctors';
 
 class Doctor {

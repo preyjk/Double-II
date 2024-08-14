@@ -1,6 +1,5 @@
 import { dynamo } from './DynamoDB.js';
 
-console.log(`Env Var USER_TABLE_NAME is ${process.env.USER_TABLE_NAME}`);
 const TABLE_NAME = process.env.USER_TABLE_NAME || 'Users';
 
 class User {
@@ -20,6 +19,14 @@ class User {
     };
     return dynamo.get(params);
   }
+
+  static async findByUsernameAndDelete(username) {
+    const params = {
+      TableName: TABLE_NAME,
+      Key: { username  }
+    };
+    return dynamo.delete(params);
+  } 
 }
 
 export default User;
