@@ -1,9 +1,9 @@
 <template>
   <div class="container_body">
     <HeaderComponent class="container_header"></HeaderComponent>
-    <nav class="nav">
+    <!-- <nav class="nav">
       <NavComponent></NavComponent>
-    </nav>
+    </nav> -->
     <div class="container_banner">
       <BannerComponent class="banner"></BannerComponent>
     </div>

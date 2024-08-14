@@ -47,7 +47,7 @@
           >For Providers</span
         >
       </li>
-      <li class="old-mode">
+      <!-- <li class="old-mode">
         <svg class="svg-heart-mode">
           <use xlink:href="#heart-mode" />
         </svg>
@@ -58,7 +58,7 @@
           <use xlink:href="#language-change" />
         </svg>
         <span> English </span>
-      </li>
+      </li> -->
       <li class="profile-avatar">
         <LoginComponent class="login-component"></LoginComponent>
       </li>
