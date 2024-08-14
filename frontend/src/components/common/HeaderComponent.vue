@@ -37,16 +37,23 @@
         <span
           :class="['for-patients', { active: activeTab === 'patients' }]"
           @click="goToPatientsPage"
-          >For Patients</span
+          >Home</span
         >
       </li>
       <li class="providers-btn">
+        <span
+          :class="['for-about', { active: activeTab === 'about' }]"
+          @click="goToAboutPage"
+          >About Us</span
+        >
+      </li>
+      <!-- <li class="providers-btn">
         <span
           :class="['for-providers', { active: activeTab === 'providers' }]"
           @click="goToAdminPage"
           >For Providers</span
         >
-      </li>
+      </li> -->
       <!-- <li class="old-mode">
         <svg class="svg-heart-mode">
           <use xlink:href="#heart-mode" />
@@ -79,8 +86,8 @@ export default {
     };
   },
   created() {
-    if (this.$route.path === "/admin") {
-      this.activateTab("providers");
+    if (this.$route.path === "/about") {
+      this.activateTab("about");
     }
   },
   methods: {
@@ -94,10 +101,14 @@ export default {
       this.activateTab("patients");
       this.$router.push("/");
     },
-    goToAdminPage() {
-      this.activateTab("providers");
-      this.$router.push("/admin");
-    },
+    goToAboutPage(){
+      this.activateTab("about");
+      this.$router.push("/about");
+    }
+    // goToAdminPage() {
+    //   this.activateTab("providers");
+    //   this.$router.push("/admin");
+    // },
   },
 };
 </script>

@@ -5,6 +5,7 @@ import PersonalProfilePage from "../views/patients/PersonalProfilePage.vue";
 import ChatbotPage from "@/views/patients/ChatbotPage.vue";
 import AdminPage from "../views/admin/AdminPage.vue";
 import DashboardPage from "@/views/admin/DashboardPage.vue";
+import AboutPage from "@/views/patients/AboutPage.vue";
 
 const routes = [
   {
@@ -37,6 +38,11 @@ const routes = [
     path: "/dashboard",
     name: "dashboard",
     component: DashboardPage,
+  },
+  {
+    path: "/about",
+    name: "about",
+    component: AboutPage,
   },
 ];
 
