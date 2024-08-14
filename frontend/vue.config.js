@@ -3,7 +3,11 @@ const webpack = require("webpack");
 
 module.exports = defineConfig({
   transpileDependencies: true,
+
   configureWebpack: {
+    watchOptions: {
+      poll: true
+    },
     plugins: [
       new webpack.DefinePlugin({
         __VUE_OPTIONS_API__: true,
