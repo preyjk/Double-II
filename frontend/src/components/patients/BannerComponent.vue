@@ -1,6 +1,9 @@
 <template>
   <div class="hero-section">
-    <h1 class="hero-title">YOUR JOURNEY TO WELLNESS BEGINS HERE</h1>
+    <h1 class="hero-title">
+      <span class="line1">YOUR JOURNEY TO</span><br />
+      <span class="line2">WELLNESS BEGINS HERE</span>
+    </h1>
     <div class="play-button-container">
       <div class="play-button">
         <span>&#9658;</span>
@@ -24,7 +27,13 @@ export default {
 
 <style scoped>
 .hero-section {
-  background-image: url("@/assets/hospital-hall.png");
+  background-image: linear-gradient(
+      to top,
+      white 0%,
+      rgba(255, 255, 255, 0) 20%
+    ),
+    linear-gradient(to bottom, white 0%, rgba(255, 255, 255, 0) 20%),
+    url("@/assets/hospital-hall.png");
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -33,14 +42,14 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: rgb(55, 55, 59);
   text-align: center;
+  filter: saturate(1.2) brightness(1.1);
 }
 
 .hero-title {
   font-size: 2.5rem;
-  margin-bottom: 20px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  margin-bottom: 80px;
 }
 
 .play-button-container {
@@ -77,7 +86,7 @@ export default {
 .chatbot-text {
   margin-top: 10px;
   font-size: 1.2rem;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+  text-shadow: 1px 1px 1.5px rgba(0, 0, 0, 0.7);
 }
 
 @keyframes pulse {

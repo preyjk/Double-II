@@ -1,9 +1,6 @@
 <template>
   <div class="container_body">
     <HeaderComponent class="container_header"></HeaderComponent>
-    <!-- <nav class="nav">
-      <NavComponent></NavComponent>
-    </nav> -->
     <div class="container_banner">
       <BannerComponent class="banner"></BannerComponent>
     </div>
@@ -16,13 +13,11 @@
 import HeaderComponent from "@/components/common/HeaderComponent.vue";
 import FooterComponent from "@/components/common/FooterComponent.vue";
 import BannerComponent from "@/components/patients/BannerComponent.vue";
-import NavComponent from "@/components/patients/NavComponent.vue";
 export default {
   components: {
     HeaderComponent,
     FooterComponent,
     BannerComponent,
-    NavComponent,
   },
 };
 </script>
