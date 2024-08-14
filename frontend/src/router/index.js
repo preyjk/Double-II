@@ -1,9 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../views/patients/HomePage.vue";
 import BookingPage from "../views/patients/BookingPage.vue";
-import PersonalProfilePage from "../views/PersonalProfilePage.vue";
+import PersonalProfilePage from "../views/patients/PersonalProfilePage.vue";
+import ChatbotPage from "@/views/patients/ChatbotPage.vue";
 import AdminPage from "../views/admin/AdminPage.vue";
 import DashboardPage from "@/views/admin/DashboardPage.vue";
+import AboutPage from "@/views/patients/AboutPage.vue";
+import OnlineBookingPage from "@/views/patients/OnlineBookingPage.vue";
 
 const routes = [
   {
@@ -12,25 +15,41 @@ const routes = [
     component: HomePage,
   },
   {
-    path: "/online-booking/:clinicId/:clinicName",
+    path: "/online-booking",
     name: "OnlineBooking",
-    component: BookingPage,
+    component: OnlineBookingPage,
     props: true,
   },
+  // {
+  //   path: "/online-booking/:clinicId/:clinicName",
+  //   name: "BookingPage",
+  //   component: BookingPage,
+  //   props: true,
+  // },
   {
     path: "/profile",
     name: "PersonalProfile",
     component: PersonalProfilePage,
   },
   {
-    path: '/admin',
-    name: 'Admin',
+    path: "/chatbot",
+    name: "Chatbot",
+    component: ChatbotPage,
+  },
+  {
+    path: "/admin",
+    name: "Admin",
     component: AdminPage,
   },
   {
     path: "/dashboard",
     name: "dashboard",
     component: DashboardPage,
+  },
+  {
+    path: "/about",
+    name: "about",
+    component: AboutPage,
   },
 ];
 

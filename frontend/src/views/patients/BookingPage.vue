@@ -2,16 +2,9 @@
   <div class="container_body">
     <HeaderComponent class="container_header"></HeaderComponent>
     <div class="main_content">
-      <GPSelectForm
-        v-if="!selectedDoctor"
-        :clinicId="clinicId"
-        :clinicName="clinicName"
-        @doctorSelected="handleDoctorSelected"
-      />
-      <BasicBookingInformationCollectingForm
-        :doctor="selectedDoctor"
-        v-if="selectedDoctor"
-      />
+      <GPSelectForm v-if="!selectedDoctor" :clinicId="clinicId" :clinicName="clinicName"
+        @doctorSelected="handleDoctorSelected" />
+      <BasicBookingInformationCollectingForm :doctor="selectedDoctor" v-if="selectedDoctor" />
       <!-- <InformationCollectingComponent></InformationCollectingComponent>\ -->
     </div>
     <FooterComponent class="container_header"></FooterComponent>
@@ -21,8 +14,8 @@
 <script>
 import { ref } from "vue";
 import { useRoute } from "vue-router";
-import HeaderComponent from "@/components/common/HeaderComponent.vue";
-import FooterComponent from "@/components/common/FooterComponent.vue";
+import HeaderComponent from "@/components/patients/HeaderComponent.vue";
+import FooterComponent from "@/components/patients/FooterComponent.vue";
 import GPSelectForm from "@/components/patients/GPSelectForm.vue";
 import BasicBookingInformationCollectingForm from "@/components/patients/BasicBookingInformationCollectingForm.vue";
 // import InformationCollectingComponent from "@/components/InformationCollectingComponent.vue";

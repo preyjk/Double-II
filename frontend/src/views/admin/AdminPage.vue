@@ -1,6 +1,5 @@
 <template>
   <div class="admin-container">
-    <HeaderComponent class="container_header"></HeaderComponent>
     <div class="login-form">
       <div class="logo-container">
         <img src="@/assets/logo.png" alt="FRW Logo" />
@@ -13,12 +12,10 @@
 </template>
 
 <script>
-import HeaderComponent from "@/components/common/HeaderComponent.vue";
 
 export default {
   name: "AdminPage",
   components: {
-    HeaderComponent,
   },
   data() {
     return {
