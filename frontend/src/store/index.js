@@ -8,6 +8,9 @@ export default createStore({
     ADD_BOOKING(state, booking) {
       state.bookings.push(booking); // Add booking to the state
     },
+    REMOVE_BOOKING(state, index) {
+      state.bookings.splice(index, 1); // Remove booking by index
+    },
     CLEAR_BOOKINGS(state) {
       state.bookings = []; // Clear all bookings
     },
@@ -18,6 +21,9 @@ export default createStore({
       // Then commit the mutation to add booking
       commit("ADD_BOOKING", booking);
       localStorage.setItem("lastBooking", JSON.stringify(booking)); // Save to localStorage
+    },
+    removeBooking({ commit }, index) {
+      commit("REMOVE_BOOKING", index); // Call the mutation to remove the booking
     },
     clearBookings({ commit }) {
       // Clear bookings, this can also be used when user logs out

@@ -3,7 +3,7 @@
     <img :src="avatarSrc" alt="User Avatar" class="avatar" />
     <div v-if="dropdownVisible" class="dropdown-menu">
       <ul>
-        <li @click="goToProfile">Profile</li>
+        <!-- <li @click="goToProfile">Profile</li> -->
         <li @click="viewBookings">My Bookings</li>
         <li @click="logout">Logout</li>
       </ul>
@@ -29,7 +29,7 @@ export default {
       this.dropdownVisible = false;
     },
     viewBookings() {
-      this.$router.push({ name: "BookingInfo" });
+      this.$router.push({ name: "MyBooking" });
       this.dropdownVisible = false;
     },
     logout() {
