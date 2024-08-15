@@ -1,44 +1,15 @@
-import { dynamo } from './DynamoDB.js';
-import { v4 as uuidv4 } from 'uuid';
-
+import DynamoTable from "./DynamoTable.js";
 const TABLE_NAME = process.env.PATIENTS_TABLE_NAME || 'Patients';
 
-class Patient {
-  static async list() {
-    const params = {
-      TableName: TABLE_NAME
-    };
-    return dynamo.scan(params);
-  }
+class PatientTable extends DynamoTable {
 
-  static async create(data) {
-    const item = {
-      id: uuidv4(),
-      ...data,
-    };
-    const params = {
-      TableName: TABLE_NAME,
-      Item: item
-    };
-    await dynamo.put(params);
-    return item;
-  }
-
-  static async findById(patientId) {
-    const params = {
-      TableName: TABLE_NAME,
-      Key: { id: patientId }
-    };
-    return dynamo.get(params);
-  }
-
-  static async findByIdAndUpdate(data) {
-    const patientId = data.id;
+  async findByIdAndUpdate(data) {
+    const id = data.id;
     delete data.id;
 
     const params = {
-      TableName: TABLE_NAME,
-      Key: { id: patientId },
+      TableName: this.tableName,
+      Key: { id },
       UpdateExpression: '',
       ExpressionAttributeNames: {},
       ExpressionAttributeValues: {},
@@ -60,20 +31,12 @@ class Patient {
     params.ExpressionAttributeNames['#username'] = 'username';
     params.ExpressionAttributeValues[':username'] = data.username;
 
-    return dynamo.update(params);
+    return this.dynamo.update(params);
   }
 
-  static async findByIdAndDelete(patientId) {
+  async findByUsername(username) {
     const params = {
-      TableName: TABLE_NAME,
-      Key: { id: patientId }
-    };
-    return dynamo.delete(params);
-  }
-
-  static async findByUsername(username) {
-    const params = {
-      TableName: TABLE_NAME,
+      TableName: this.tableName,
       IndexName: 'UsernameIndex', // Assumes there's a GSI on username
       KeyConditionExpression: '#username = :username',
       ExpressionAttributeNames: {
@@ -83,8 +46,10 @@ class Patient {
         ':username': username,
       }
     };
-    return dynamo.query(params);
+    return this.dynamo.query(params);
   }
 }
+
+const Patient = new PatientTable(TABLE_NAME);
 
 export default Patient;

@@ -1,8 +1,8 @@
 import Appointment from '../dal/Appointment.js';
 
 class AppointmentService {
-  static async listAppointments({ gpId, appointmentStartDate, appointmentEndDate }) {
-    const data = await Appointment.query({ gpId, appointmentStartDate, appointmentEndDate});
+  static async listAppointments({ gpId, userId, appointmentStartDate, appointmentEndDate }) {
+    const data = await Appointment.query({ gpId, userId, appointmentStartDate, appointmentEndDate});
     return { success: true, data: data.Items };
   }
 

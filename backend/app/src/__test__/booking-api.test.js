@@ -1,6 +1,7 @@
 import request from 'supertest';
 import express from 'express';
 import router from '../routes/routes';
+import AuthService from '../service/AuthService.js';
 
 const app = express();
 app.use(express.json());
@@ -13,6 +14,9 @@ app.use((err, req, res, next) => {
 describe('GP Appointment Management API', () => {
   let appointmentId;
   let gpId = '12345678';
+
+  const username = 'testuser';
+  const token = AuthService.generateToken({username});
 
   test('should list all appointments', async () => {
     const res = await request(app)
@@ -27,6 +31,7 @@ describe('GP Appointment Management API', () => {
     const newAppointment = {
       patientName: "Jane Doe",
       gpId: gpId,
+      username: username,
       gpName: "Dr. Brown",
       date: "2023-08-02",
       time: "11:00",
@@ -53,6 +58,22 @@ describe('GP Appointment Management API', () => {
   test('should list appointment by gpId, startDate and endDate', async () => {
     const res = await request(app)
       .get(`/appointments?gpId=${gpId}&startDate=2023-08-01&endDate=2023-08-02`)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(res.body[0]).toHaveProperty('patientName', 'Jane Doe');
+    expect(res.body[0]).toHaveProperty('gpId', gpId);
+    expect(res.body[0]).toHaveProperty('gpName', 'Dr. Brown');
+    expect(res.body[0]).toHaveProperty('date', '2023-08-02');
+    expect(res.body[0]).toHaveProperty('time', '11:00');
+    expect(res.body[0]).toHaveProperty('reason', 'Follow-up check');
+    expect(res.body[0]).toHaveProperty('status', 'pending');
+    expect(res.body[0]).toHaveProperty('id', appointmentId);
+  });
+
+  test('should list appointment under specific user by gpId, startDate and endDate', async () => {
+    const res = await request(app)
+      .get(`/user/appointments?gpId=${gpId}&startDate=2023-08-01&endDate=2023-08-02`)
+      .set('Authorization', `Bearer ${token}`) 
       .expect('Content-Type', /json/)
       .expect(200);
     expect(res.body[0]).toHaveProperty('patientName', 'Jane Doe');

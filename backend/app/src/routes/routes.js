@@ -6,6 +6,7 @@ import doctorRoutes from '../controller/DoctorController.js';
 import patientRoutes from '../controller/PatientController.js';
 import chatbotRoutes from '../controller/ChatbotController.js';
 import userRoutes from '../controller/UserController.js';
+import workingScheduleRoutes from '../controller/WorkingScheduleController.js';
 import AuthService from '../service/AuthService.js';
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.use('/', doctorRoutes);
 router.use('/', chatbotRoutes);
 router.use('/user', AuthService.verifyRequest, patientRoutes);
 router.use('/admin', AuthService.verifyRequest, userRoutes);
+router.use('/', workingScheduleRoutes);
 
 export default router;

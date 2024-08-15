@@ -15,6 +15,27 @@ paths:
     get:
       summary: List all appointments
       operationId: listAppointments
+      parameters:
+        - in: query
+          name: gpId
+          schema:
+            type: string
+          required: true
+          description: ID of the GP to filter schedules.
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          required: true
+          description: Start date to filter schedules.
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          required: true
+          description: End date to filter schedules.
       responses:
         '200':
           description: A list of appointments
@@ -107,6 +128,42 @@ paths:
           description: Appointment deleted successfully
         '404':
           description: Appointment not found
+  /user/appointments:
+    get:
+      summary: List all appointments under current user
+      operationId: listAppointments
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: gpId
+          schema:
+            type: string
+          required: true
+          description: ID of the GP to filter schedules.
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          required: true
+          description: Start date to filter schedules.
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          required: true
+          description: End date to filter schedules.
+      responses:
+        '200':
+          description: A list of appointments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Appointment'
 
   #
   # signup and login api
@@ -540,7 +597,113 @@ paths:
           description: User not found
         '500':
           description: Internal Server Error
+  #
+  # Working Schedule
+  #
+  /schedules:
+    get:
+      summary: Get a list of working schedules
+      description: Retrieve a list of working schedules filtered by GP ID and date range.
+      parameters:
+        - in: query
+          name: gpId
+          schema:
+            type: string
+          required: true
+          description: ID of the GP to filter schedules.
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+          required: true
+          description: Start date to filter schedules.
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+          required: true
+          description: End date to filter schedules.
+      responses:
+        '200':
+          description: A list of working schedules.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Schedule'
+        '500':
+          description: Server error.
 
+    post:
+      summary: Create a new working schedule
+      description: Create a new working schedule entry. Requires admin role.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+      responses:
+        '201':
+          description: Working schedule created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        '500':
+          description: Server error.
+
+  /schedules/{scheduleId}:
+    put:
+      summary: Update an existing working schedule
+      description: Update the details of an existing working schedule by its ID. Requires admin role.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: scheduleId
+          schema:
+            type: string
+          required: true
+          description: ID of the working schedule to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleInput'
+      responses:
+        '200':
+          description: Working schedule updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule'
+        '500':
+          description: Server error.
+
+    delete:
+      summary: Delete an existing working schedule
+      description: Delete a working schedule by its ID. Requires admin role.
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: scheduleId
+          schema:
+            type: string
+          required: true
+          description: ID of the working schedule to delete.
+      responses:
+        '204':
+          description: Working schedule deleted successfully.
+        '500':
+          description: Server error.
 
 components:
   schemas:
@@ -558,6 +721,9 @@ components:
         patientName:
           type: string
           description: Name of the patient
+        gpId:
+          type: string
+          description: Unique identifier for the gp
         gpName:
           type: string
           description: Name of the General Practitioner
@@ -587,13 +753,15 @@ components:
           type: string
         password:
           type: string
+        rolses:
+          type: array
+          items:
+            type: string
 
     Doctor:
       type: object
       required:
         - name
-        - specialty
-        - phone
       properties:
         id:
           type: string
@@ -610,6 +778,9 @@ components:
         email:
           type: string
           description: Email address of the doctor
+        WorkofPlace:
+          type: string
+          description: Workplace
     Patient:
       type: object
       required:
@@ -640,7 +811,30 @@ components:
           description: Address of the patient
         username:
           type: string
-          description: Username of the patient
+          description: Username of registered user
+    Schedule:
+      type: object
+      properties:
+        id:
+          type: string
+        gpId:
+          type: string
+        appointmentId:
+          type: string
+        date:
+          type: string
+          format: date
+        startTime:
+          type: string
+          format: time
+        endTime:
+          type: string
+          format: time
+        status:
+          type: string
+          enum:
+            - available
+            - reserved
   securitySchemes:
     bearerAuth:
       type: http
