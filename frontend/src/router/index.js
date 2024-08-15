@@ -7,6 +7,8 @@ import AdminPage from "../views/admin/AdminPage.vue";
 import DashboardPage from "@/views/admin/DashboardPage.vue";
 import AboutPage from "@/views/patients/AboutPage.vue";
 import OnlineBookingPage from "@/views/patients/OnlineBookingPage.vue";
+import ConfirmationPage from "@/views/patients/ConfirmationPage.vue";
+import MyBooking from "@/views/patients/MyBooking.vue";
 
 const routes = [
   {
@@ -37,6 +39,11 @@ const routes = [
     component: ChatbotPage,
   },
   {
+    path: "/my-booking",
+    name: "MyBooking",
+    component: MyBooking,
+  },
+  {
     path: "/admin",
     name: "Admin",
     component: AdminPage,
@@ -50,6 +57,11 @@ const routes = [
     path: "/about",
     name: "about",
     component: AboutPage,
+  },
+  {
+    path: "/confirmation",
+    name: "ConfirmationPage",
+    component: ConfirmationPage,
   },
 ];
 

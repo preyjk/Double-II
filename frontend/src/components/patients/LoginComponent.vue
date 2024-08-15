@@ -1,6 +1,8 @@
 <template>
   <div>
-    <span v-if="showSign" @click="showModal = true" class="sign-in-button">Sign In</span>
+    <span v-if="showSign" @click="showModal = true" class="sign-in-button"
+      >Sign In</span
+    >
     <AvatarComponent v-if="showAvatar" @logout="handleLogout" />
     <div v-if="showModal" class="modal-overlay">
       <div class="modal">
@@ -16,7 +18,12 @@
           </div>
           <div class="form-actions">
             <button type="submit" class="submit-button">Submit</button>
-            <button type="button" @click="showModal = false" class="cancel-button">
+            <span v-if="isLoading" class="loading-spinner"></span>
+            <button
+              type="button"
+              @click="showModal = false"
+              class="cancel-button"
+            >
               Cancel
             </button>
           </div>
@@ -29,7 +36,10 @@
     </div>
 
     <!-- Register Component -->
-    <RegisterComponent v-if="showRegisterModal" @close="showRegisterModal = false" />
+    <RegisterComponent
+      v-if="showRegisterModal"
+      @close="showRegisterModal = false"
+    />
   </div>
 </template>
 
@@ -48,6 +58,7 @@ export default {
       username: "",
       password: "",
       token: "",
+      isLoading: false,
     };
   },
   components: {
@@ -64,21 +75,27 @@ export default {
   },
   methods: {
     handleSubmit() {
-      login(this.username, this.password)
-        .then((token) => {
-          this.token = token;
-          localStorage.setItem("authToken", token);
-          this.showModal = false;
-          this.showSign = false;
-          this.username = "";
-          this.password = "";
-          this.showAvatar = true;
-          // this.$router.push({ name: "PersonalProfile" });
-        })
-        .catch((error) => {
-          console.error("Login failed:", error);
-          alert("Login failed, please try again.");
-        });
+      this.isLoading = true;
+
+      setTimeout(() => {
+        login(this.username, this.password)
+          .then((token) => {
+            this.token = token;
+            localStorage.setItem("authToken", token);
+            this.showModal = false;
+            this.showSign = false;
+            this.username = "";
+            this.password = "";
+            this.showAvatar = true;
+          })
+          .catch((error) => {
+            console.error("Login failed:", error);
+            alert("Login failed, please try again.");
+          })
+          .finally(() => {
+            this.isLoading = false;
+          });
+      }, 1000);
     },
     switchToRegister() {
       this.showModal = false;
@@ -180,5 +197,23 @@ export default {
 
 .toggle-text a:hover {
   text-decoration: underline;
+}
+
+.loading-spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 3px solid #3498db;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
