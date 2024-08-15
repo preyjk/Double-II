@@ -12,9 +12,8 @@
         <div class="container_body" v-if="isShowBookingForm">
             <div class="main_content">
                 <GPSelectForm v-if="!isSelectedDoctor" :clinicId="clinicId" :clinicName="clinicName"
-                    @click="handleDoctorSelected" />
+                    @doctorSelected="handleDoctorSelected" />
                 <BasicBookingInformationCollectingForm :doctor="selectedDoctor" v-if="isSelectedDoctor" />
-                <!-- <InformationCollectingComponent></InformationCollectingComponent>\ -->
             </div>
         </div>
 
@@ -64,7 +63,7 @@ export default {
             this.clinicName = selectedClinic.name;
         },
         handleDoctorSelected(doctor) {
-            this.selectedDoctor.value = doctor;
+            this.selectedDoctor = doctor;
             this.isSelectedDoctor = true;
         },
     }
