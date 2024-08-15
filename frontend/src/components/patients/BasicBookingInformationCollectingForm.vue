@@ -45,10 +45,9 @@
 </template>
 
 <script>
-import { bookAppointment } from "@/network/netService";
+import { mapActions } from "vuex";
 
 export default {
-  name: "BasicBookingInformationCollectingForm",
   props: {
     doctor: {
       type: Object,
@@ -68,13 +67,29 @@ export default {
     };
   },
   methods: {
+    // Mapping Vuex actions
+    ...mapActions(["addBooking"]),
+
+    // Submit form method
     submitForm() {
-      bookAppointment(this.form)
-        .then((data) => {
-          // console.log("Booking successful:", data);
-          // alert(
-          //   `Booking submitted for ${this.form.firstName} ${this.form.lastName} with ${this.doctor.Gpname}`
-          // );
+      // Create booking object based on form data
+      const booking = {
+        doctorName: this.doctor.Gpname,
+        date: this.form.date,
+        time: this.form.time,
+        patientName: `${this.form.firstName} ${this.form.lastName}`,
+        email: this.form.email,
+        phone: this.form.phone,
+        dob: this.form.dob,
+      };
+
+      // Use Vuex action to add booking to the store
+      this.addBooking(booking)
+        .then(() => {
+          // Redirect to ConfirmationPage after booking is added
+          this.$router.push({
+            name: "ConfirmationPage",
+          });
         })
         .catch((err) => {
           console.error("Error submitting booking:", err);

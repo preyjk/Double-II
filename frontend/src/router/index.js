@@ -7,6 +7,7 @@ import AdminPage from "../views/admin/AdminPage.vue";
 import DashboardPage from "@/views/admin/DashboardPage.vue";
 import AboutPage from "@/views/patients/AboutPage.vue";
 import OnlineBookingPage from "@/views/patients/OnlineBookingPage.vue";
+import ConfirmationPage from "@/views/patients/ConfirmationPage.vue";
 
 const routes = [
   {
@@ -50,6 +51,11 @@ const routes = [
     path: "/about",
     name: "about",
     component: AboutPage,
+  },
+  {
+    path: "/confirmation",
+    name: "ConfirmationPage",
+    component: ConfirmationPage,
   },
 ];
 
