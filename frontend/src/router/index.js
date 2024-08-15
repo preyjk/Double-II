@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../views/patients/HomePage.vue";
-import BookingPage from "../views/patients/BookingPage.vue";
 import PersonalProfilePage from "../views/patients/PersonalProfilePage.vue";
 import ChatbotPage from "@/views/patients/ChatbotPage.vue";
 import AdminPage from "../views/admin/AdminPage.vue";
@@ -22,12 +21,7 @@ const routes = [
     component: OnlineBookingPage,
     props: true,
   },
-  // {
-  //   path: "/online-booking/:clinicId/:clinicName",
-  //   name: "BookingPage",
-  //   component: BookingPage,
-  //   props: true,
-  // },
+
   {
     path: "/profile",
     name: "PersonalProfile",

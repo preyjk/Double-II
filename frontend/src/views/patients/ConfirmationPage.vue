@@ -31,7 +31,7 @@ export default {
     ...mapGetters(["getBookingDetails"]),
     bookingDetails() {
       const details = this.getBookingDetails || {};
-      //   console.log("Booking Details:", details);
+      // console.log("Booking Details:", details);
       return details;
     },
   },

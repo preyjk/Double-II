@@ -4,19 +4,9 @@
     <form @submit.prevent="submitForm">
       <div class="form-group">
         <label>Who is this appointment for?</label>
-        <input
-          v-model="form.appointmentFor"
-          type="radio"
-          value="Myself"
-          required
-        />
+        <input v-model="form.appointmentFor" type="radio" value="Myself" required />
         Myself
-        <input
-          v-model="form.appointmentFor"
-          type="radio"
-          value="Someone Else"
-          required
-        />
+        <input v-model="form.appointmentFor" type="radio" value="Someone Else" required />
         Someone Else
       </div>
       <div class="form-group">
@@ -70,13 +60,40 @@ export default {
     // Mapping Vuex actions
     ...mapActions(["addBooking"]),
 
+    // Generate a random time between 8:00 AM and 4:00 PM with 15-minute intervals
+    getRandomTime() {
+      const startTime = 8 * 60; // 8:00 AM in minutes
+      const endTime = 16 * 60; // 4:00 PM in minutes
+      const interval = 15; // 15-minute interval
+
+      // Generate a random number of minutes within the range
+      const randomMinutes = Math.floor(Math.random() * ((endTime - startTime) / interval)) * interval + startTime;
+
+      // Convert minutes to HH:mm format
+      const hours = Math.floor(randomMinutes / 60);
+      const minutes = randomMinutes % 60;
+      return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    },
+
+    // Generate today's date in YYYY-MM-DD format
+    getTodayDate() {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = (today.getMonth() + 1).toString().padStart(2, '0');
+      const day = today.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    },
+
     // Submit form method
     submitForm() {
+      // Generate random date and time
+      const date = this.getTodayDate();
+      const time = this.getRandomTime();
       // Create booking object based on form data
       const booking = {
         doctorName: this.doctor.Gpname,
-        date: this.form.date,
-        time: this.form.time,
+        date: date,
+        time: time,
         patientName: `${this.form.firstName} ${this.form.lastName}`,
         email: this.form.email,
         phone: this.form.phone,
