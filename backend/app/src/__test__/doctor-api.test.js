@@ -5,6 +5,10 @@ import router from '../routes/routes';
 const app = express();
 app.use(express.json());
 app.use('/', router);
+app.use((err, req, res, next) => {
+  console.log(err);
+  return res.status(500).json();
+});
 
 describe('Doctor API End-to-End Tests', () => {
   let doctorId;
