@@ -6,7 +6,7 @@ module.exports = defineConfig({
 
   configureWebpack: {
     watchOptions: {
-      poll: true
+      poll: true,
     },
     plugins: [
       new webpack.DefinePlugin({
