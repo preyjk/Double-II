@@ -18,14 +18,5 @@ module.exports = defineConfig({
   },
   devServer: {
     port: 8080,
-    proxy: {
-      "/api": {
-        target: "http://backend:8080",
-        changeOrigin: true,
-        pathRewrite: {
-          "^/api": "/",
-        },
-      },
-    },
   },
 });
