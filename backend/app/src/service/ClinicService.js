@@ -6,9 +6,9 @@ class ClinicService {
     const workplaces = new Set();
     const clinics = [];
     data.Items.forEach(item => {
-      if (item.WorkofPlace && !workplaces.has(item.WorkofPlace)) {
-        workplaces.add(item.WorkofPlace);
-        clinics.push({ workplace: item.WorkofPlace, address: item.address});
+      if (item.Workplace && !workplaces.has(item.Workplace)) {
+        workplaces.add(item.Workplace);
+        clinics.push({ workplace: item.Workplace, address: item.Address});
       }
     });
     return { success: true, data: clinics };
