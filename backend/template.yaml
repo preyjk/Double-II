@@ -122,6 +122,11 @@ Resources:
       MemorySize: 1024
       Policies:
         - AmazonDynamoDBFullAccess
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action: 'bedrock:InvokeAgent'
+              Resource: '*'
       Environment:
         Variables:
           APPOINTMENT_TABLE_NAME: !Ref AppointmentsTable
