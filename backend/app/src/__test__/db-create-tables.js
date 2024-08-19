@@ -69,6 +69,33 @@ const tableDefinitions = [
             },
         ],
     },
+    {
+        TableName: 'WorkingSchedule',
+        KeySchema: [
+            { AttributeName: 'id', KeyType: 'HASH' }, // Primary key
+        ],
+        AttributeDefinitions: [
+            { AttributeName: 'id', AttributeType: 'S' },
+            { AttributeName: 'gpId', AttributeType: 'S' },
+        ],
+        ProvisionedThroughput: {
+            ReadCapacityUnits: 5,
+            WriteCapacityUnits: 5,
+        },
+        GlobalSecondaryIndexes: [
+            {
+                IndexName: 'GpIdIndex',
+                KeySchema: [
+                    { AttributeName: 'gpId', KeyType: 'HASH' }, // GSI key
+                ],
+                Projection: { ProjectionType: 'ALL' },
+                ProvisionedThroughput: {
+                    ReadCapacityUnits: 5,
+                    WriteCapacityUnits: 5,
+                },
+            },
+        ]
+    }
 ];
 
 // Function to delete and recreate tables

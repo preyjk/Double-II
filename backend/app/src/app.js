@@ -15,7 +15,11 @@ app.use(express.json());
 
 // Import and use our application routes.
 import routes from "./routes/routes.js";
-console.log(`Env Var API_STAGE_NAME is ${process.env.API_STAGE_NAME}`);
 app.use(`/${process.env.API_STAGE_NAME || ''}`, routes);
+
+app.use((err, req, res, next) => {
+    console.log(err);
+    return res.status(500).json();
+});
 
 app.listen(PORT, () => console.log(`App server listening on port ${PORT}!`));
