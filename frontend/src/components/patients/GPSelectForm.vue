@@ -36,7 +36,7 @@ export default {
     const fetchDoctors = async () => {
       try {
         const response = await fetch(
-          "/api/doctors"
+          `${process.env.VUE_APP_API_ENDPOINT}/doctors`
         );
         const data = await response.json();
         doctors.value = data;
