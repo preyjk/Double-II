@@ -1,7 +1,7 @@
 const request = require("./netUtils");
 module.exports.login = function (username, password) {
   const config = {
-    url: "/api/login",
+    url: "/login",
     method: "post",
     data: { username, password },
   };
@@ -19,7 +19,7 @@ module.exports.login = function (username, password) {
 
 module.exports.register = function (username, password) {
   const config = {
-    url: "/api/signup",
+    url: "/signup",
     method: "post",
     data: { username, password },
   };
@@ -37,7 +37,7 @@ module.exports.register = function (username, password) {
 
 module.exports.bookAppointment = function (formData) {
   const config = {
-    url: "/api/appointments",
+    url: "/appointments",
     method: "post",
     data: formData,
   };
@@ -55,7 +55,7 @@ module.exports.bookAppointment = function (formData) {
 
 module.exports.getAppointments = function () {
   const config = {
-    url: "/api/appointments",
+    url: "/appointments",
     method: "get",
   };
 
