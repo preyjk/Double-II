@@ -12,6 +12,7 @@
 
 <script>
 import { ref, onMounted } from "vue";
+import { useGet } from '@/utils/useApi';
 
 export default {
   name: "GPSelectForm",
@@ -29,35 +30,14 @@ export default {
   },
   emits: ['doctorSelected'],
   setup(props, { emit }) {
-    const doctors = ref([]);
-    const filteredDoctors = ref([]);
+
     const selectedDoctor = ref(null);
-
-    const fetchDoctors = async () => {
-      try {
-        const response = await fetch(
-          `${process.env.VUE_APP_API_ENDPOINT}/doctors`
-        );
-        const data = await response.json();
-        doctors.value = data;
-        filterDoctors();
-      } catch (error) {
-        console.error("Error fetching doctors:", error);
-      }
-    };
-
-    const filterDoctors = () => {
-      filteredDoctors.value = doctors.value.filter(
-        (doctor) => doctor.WorkofPlace === props.clinicName
-      );
-    };
+    const {data: filteredDoctors} = useGet(`${import.meta.env.VITE_API_ENDPOINT}/doctors?workplace=${props.clinicName}`)
 
     const selectDoctor = (doctor) => {
       selectedDoctor.value = doctor;
       emit('doctorSelected', doctor);
     };
-
-    onMounted(fetchDoctors);
 
     return {
       filteredDoctors,

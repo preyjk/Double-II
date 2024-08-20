@@ -12,12 +12,13 @@
 </template>
 
 <script>
+import avatarSrc from "@/assets/default-avatar.png";
 export default {
   name: "AvatarComponent",
   data() {
     return {
       dropdownVisible: false,
-      avatarSrc: require("@/assets/default-avatar.png"),
+      avatarSrc: avatarSrc,
     };
   },
   methods: {
