@@ -1,8 +1,8 @@
 import Doctor from '../dal/Doctor.js';
 
 class DoctorService {
-  static async listDoctors() {
-    const data = await Doctor.list();
+  static async listDoctors(params) {
+    const data = await Doctor.query(params);
     return { success: true, data: data.Items };
   }
 
@@ -30,10 +30,6 @@ class DoctorService {
     return { success: true, message: 'Doctor deleted successfully' };
   }
 
-  static async listDoctorsByWorkplace(workplace) {
-    const result = await Doctor.findByProperty('WorkofPlace', workplace);
-    return { success: true, data: result.Items };
-  }
 }
 
 export default DoctorService;

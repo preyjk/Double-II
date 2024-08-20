@@ -17,10 +17,17 @@ def lambda_handler(event, context):
     params_dict = {param['name']: param['value'] for param in parameters}
 
     # Extract request body properties into a dictionary
-    requestBody_dict = {prop['name']: prop['value'] for prop in requestBodyContent}
+    requestBody_dict = {prop['name'][2:] if prop['name'].startswith('s_') else prop['name']: prop['value'] for prop in requestBodyContent}
 
     url = f"{BASE_URL}{apiPath}"
     
+    headers = {'Content-Type': 'application/json'}
+    
+    # Check for x-access-token in parameters or request body
+    access_token = params_dict.get('x_access_token') or requestBody_dict.get('x_access_token')
+    if access_token:
+        headers['Authorization'] = f"Bearer {access_token}"
+
     # Convert parameters to a query string for GET and DELETE requests
     if httpMethod in ["GET", "DELETE"] and params_dict:
         query_string = urllib.parse.urlencode(params_dict)
@@ -28,13 +35,13 @@ def lambda_handler(event, context):
     
     try:
         if httpMethod == "GET":
-            req = urllib.request.Request(url, method='GET')
+            req = urllib.request.Request(url, headers=headers, method='GET')
         elif httpMethod == "POST":
-            req = urllib.request.Request(url, data=json.dumps(requestBody_dict).encode(), headers={'Content-Type': 'application/json'}, method='POST')
+            req = urllib.request.Request(url, data=json.dumps(requestBody_dict).encode(), headers=headers, method='POST')
         elif httpMethod == "PUT":
-            req = urllib.request.Request(url, data=json.dumps(requestBody_dict).encode(), headers={'Content-Type': 'application/json'}, method='PUT')
+            req = urllib.request.Request(url, data=json.dumps(requestBody_dict).encode(), headers=headers, method='PUT')
         elif httpMethod == "DELETE":
-            req = urllib.request.Request(url, method='DELETE')
+            req = urllib.request.Request(url, headers=headers, method='DELETE')
         else:
             return {
                 'statusCode': 400,

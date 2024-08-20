@@ -231,6 +231,18 @@ paths:
       summary: List all doctors
       operationId: listDoctors
       parameters:
+        - name: firstname
+          in: query
+          required: false
+          description: First name of the doctor
+          schema:
+            type: string
+        - name: lastname
+          in: query
+          required: false
+          description: Last name of the doctor
+          schema:
+            type: string 
         - name: workplace
           in: query
           required: false
@@ -711,6 +723,7 @@ components:
       type: object
       required:
         - patientName
+        - gpId
         - gpName
         - date
         - time
@@ -761,14 +774,23 @@ components:
     Doctor:
       type: object
       required:
-        - name
+        - firstname
+        - lastname
+        - specialty
+        - phone
+        - email
+        - workplace
+        - address
       properties:
         id:
           type: string
-          description: Unique identifier for the doctor
-        name:
+          description: Unique identifier for the doctor. It is the gpId, s_gpId
+        firstname:
           type: string
-          description: Name of the doctor
+          description: First name of the doctor
+        lastname:
+          type: string
+          description: Last name of the doctor
         specialty:
           type: string
           description: Medical specialty of the doctor
@@ -778,9 +800,12 @@ components:
         email:
           type: string
           description: Email address of the doctor
-        WorkofPlace:
+        workplace:
           type: string
           description: Workplace
+        address:
+          type: string
+          description: Address of the workplace
     Patient:
       type: object
       required:
