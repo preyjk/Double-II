@@ -94,7 +94,7 @@ export default {
 
     const fetchClinics = async () => {
       try {
-        const response = await fetch(`${process.env.VUE_APP_API_ENDPOINT}/clinics`);
+        const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/clinics`);
         const data = await response.json();
 
         clinics.value = await Promise.all(
