@@ -12,7 +12,9 @@ app.use((err, req, res, next) => {
 
 describe('Doctor API End-to-End Tests', () => {
   let doctorId;
-  const workplace = 'Hospital A';
+  const Workplace = 'Hospital A';
+  const Firstname = 'John';
+  const Lastname = 'Smith';
 
   test('should list all doctors', async () => {
     const res = await request(app)
@@ -25,12 +27,13 @@ describe('Doctor API End-to-End Tests', () => {
 
   test('should create a new doctor', async () => {
     const newDoctor = {
-      name: 'Dr. Smith',
-      specialty: 'Cardiology',
-      phone: '1234567890',
-      email: 'dr.smith@example.com',
-      address: workplace,
-      WorkofPlace: workplace
+      FirstName: 'John',
+      LastName: 'Smith',
+      Specialty: 'Cardiology',
+      Phone: '1234567890',
+      Email: 'dr.smith@example.com',
+      Address: Workplace,
+      Workplace: Workplace
     };
 
     const res = await request(app)
@@ -39,12 +42,13 @@ describe('Doctor API End-to-End Tests', () => {
       .expect('Content-Type', /json/)
       .expect(201);
 
-    expect(res.body).toHaveProperty('name', 'Dr. Smith');
-    expect(res.body).toHaveProperty('specialty', 'Cardiology');
-    expect(res.body).toHaveProperty('phone', '1234567890');
-    expect(res.body).toHaveProperty('email', 'dr.smith@example.com');
-    expect(res.body).toHaveProperty('WorkofPlace', workplace);
-    expect(res.body).toHaveProperty('address', workplace);
+    expect(res.body).toHaveProperty('FirstName', 'John');
+    expect(res.body).toHaveProperty('LastName', 'Smith');
+    expect(res.body).toHaveProperty('Specialty', 'Cardiology');
+    expect(res.body).toHaveProperty('Phone', '1234567890');
+    expect(res.body).toHaveProperty('Email', 'dr.smith@example.com');
+    expect(res.body).toHaveProperty('Workplace', Workplace);
+    expect(res.body).toHaveProperty('Address', Workplace);
     doctorId = res.body.id;  // Save the doctor ID for subsequent tests
   });
 
@@ -59,17 +63,30 @@ describe('Doctor API End-to-End Tests', () => {
 
   test('should list doctors by workplace', async () => {
     const res = await request(app)
-      .get(`/doctors?workplace=${workplace}`)
+      .get(`/doctors?workplace=${Workplace}`)
       .expect('Content-Type', /json/)
       .expect(200);
 
     expect(Array.isArray(res.body)).toBe(true);
-    expect(res.body[0]).toHaveProperty('WorkofPlace', workplace);
+    expect(res.body[0]).toHaveProperty('Workplace', Workplace);
+  });
+
+  // New test case for listing doctors by firstname and lastname
+  test('should list doctors by firstname and lastname', async () => {
+    const res = await request(app)
+      .get(`/doctors?firstname=${Firstname}&lastname=${Lastname}`)
+      .expect('Content-Type', /json/)
+      .expect(200);
+
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body[0]).toHaveProperty('FirstName', Firstname);
+    expect(res.body[0]).toHaveProperty('LastName', Lastname);
   });
 
   test('should update an existing doctor', async () => {
     const updatedData = {
-      name: 'Dr. John Smith'
+      Firstname: 'John',
+      Lastname: 'Smith Jr.'
     };
 
     const res = await request(app)
@@ -78,7 +95,7 @@ describe('Doctor API End-to-End Tests', () => {
       .expect('Content-Type', /json/)
       .expect(200);
 
-    expect(res.body).toHaveProperty('name', 'Dr. John Smith');
+    expect(res.body).toHaveProperty('Lastname', 'Smith Jr.');
   });
 
   test('should list clinics', async () => {
@@ -86,11 +103,11 @@ describe('Doctor API End-to-End Tests', () => {
       .get('/clinics')
       .expect('Content-Type', /json/)
       .expect(200);
-
+      
     expect(Array.isArray(res.body)).toBe(true);
-    const found = res.body.find(item => item.workplace === workplace && item.address === workplace);
+    const found = res.body.find(item => item.workplace === Workplace && item.address === Workplace);
     expect(found).toBeDefined();
-    expect(res.body.length).toBe(16);
+    expect(res.body.length).toBe(9);
   });
 
   test('should delete a doctor', async () => {

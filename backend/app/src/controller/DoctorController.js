@@ -5,14 +5,8 @@ import DoctorService from '../service/DoctorService.js';
 const router = express.Router();
 
 router.get('/doctors', asyncHandler(async (req, res) => {
-  const { workplace } = req.query;
-  let result;
-
-  if (workplace) {
-    result = await DoctorService.listDoctorsByWorkplace(workplace);
-  } else {
-    result = await DoctorService.listDoctors();
-  }
+  const { firstname, lastname, workplace } = req.query;
+  const result = await DoctorService.listDoctors({firstname, lastname, workplace});
   return res.status(200).json(result.data);
 }));
 
