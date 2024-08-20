@@ -1,5 +1,6 @@
-const request = require("./netUtils");
-module.exports.login = function (username, password) {
+import request from './netUtils';
+
+export const login = function (username, password) {
   const config = {
     url: "/login",
     method: "post",
@@ -17,7 +18,7 @@ module.exports.login = function (username, password) {
     });
 };
 
-module.exports.register = function (username, password) {
+export const register = function (username, password) {
   const config = {
     url: "/signup",
     method: "post",
@@ -35,7 +36,7 @@ module.exports.register = function (username, password) {
     });
 };
 
-module.exports.bookAppointment = function (formData) {
+export const bookAppointment = function (formData) {
   const config = {
     url: "/appointments",
     method: "post",
@@ -53,7 +54,7 @@ module.exports.bookAppointment = function (formData) {
     });
 };
 
-module.exports.getAppointments = function () {
+export const getAppointments = function () {
   const config = {
     url: "/appointments",
     method: "get",

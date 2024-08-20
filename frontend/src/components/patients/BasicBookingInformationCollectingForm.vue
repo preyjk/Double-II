@@ -1,6 +1,6 @@
 <template>
   <div class="booking-form">
-    <h2>Booking Information for {{ doctor.Gpname }}</h2>
+    <h2>Booking Information for {{ `${this.doctor.FirstName} ${this.doctor.LastName}` }}</h2>
     <form @submit.prevent="submitForm">
       <div class="form-group">
         <label>Who is this appointment for?</label>
@@ -91,7 +91,7 @@ export default {
       const time = this.getRandomTime();
       // Create booking object based on form data
       const booking = {
-        doctorName: this.doctor.Gpname,
+        doctorName: `${this.doctor.FirstName} ${this.doctor.LastName}`,
         date: date,
         time: time,
         patientName: `${this.form.firstName} ${this.form.lastName}`,
