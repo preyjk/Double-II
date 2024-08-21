@@ -70,3 +70,26 @@ export const getAppointments = function () {
       throw err;
     });
 };
+
+
+export const fetchSchedules = function (doctorId, startDate, endDate) {
+  const config = {
+    url: "/schedules",
+    method: "get",
+    params: {
+      doctorId,
+      startDate,
+      endDate,
+    },
+  };
+
+  return request(config)
+    .then((res) => {
+      console.log("Schedules fetched successfully:", res.data);
+      return res.data;
+    })
+    .catch((err) => {
+      console.error("Error fetching schedules:", err);
+      throw err;
+    });
+};
