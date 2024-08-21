@@ -9,6 +9,7 @@ servers:
     description: Local development server
   - url: https://api.gpbooking.icu
     description: AWS server
+  - url: https://c8ar5h58d8.execute-api.us-east-1.amazonaws.com/v1
 
 paths:
   /appointments:
