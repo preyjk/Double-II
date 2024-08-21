@@ -21,21 +21,18 @@ paths:
           name: doctorId
           schema:
             type: string
-          required: true
           description: ID of the doctor to filter schedules.
         - in: query
           name: startDate
           schema:
             type: string
             format: date
-          required: true
           description: Start date to filter schedules.
         - in: query
           name: endDate
           schema:
             type: string
             format: date
-          required: true
           description: End date to filter schedules.
       responses:
         '200':
@@ -140,21 +137,18 @@ paths:
           name: doctorId
           schema:
             type: string
-          required: true
           description: ID of the doctor to filter schedules.
         - in: query
           name: startDate
           schema:
             type: string
             format: date
-          required: true
           description: Start date to filter schedules.
         - in: query
           name: endDate
           schema:
             type: string
             format: date
-          required: true
           description: End date to filter schedules.
       responses:
         '200':
@@ -234,19 +228,16 @@ paths:
       parameters:
         - name: firstname
           in: query
-          required: false
           description: First name of the doctor
           schema:
             type: string
         - name: lastname
           in: query
-          required: false
           description: Last name of the doctor
           schema:
             type: string 
         - name: workplace
           in: query
-          required: false
           description: Name of the workplace to filter doctors by
           schema:
             type: string
@@ -512,7 +503,12 @@ paths:
           name: x-chatbot-session
           schema:
             type: string
-          description: Custom session header for the chatbot.
+          description: session id with the chatbot.
+        - in: header
+          name: x-access-token
+          schema:
+            type: string
+          description: auth token after login.
       responses:
         '200':
           description: Successful response
@@ -622,21 +618,18 @@ paths:
           name: doctorId
           schema:
             type: string
-          required: true
           description: ID of the doctor to filter schedules.
         - in: query
           name: startDate
           schema:
             type: string
             format: date
-          required: true
           description: Start date to filter schedules.
         - in: query
           name: endDate
           schema:
             type: string
             format: date
-          required: true
           description: End date to filter schedules.
       responses:
         '200':

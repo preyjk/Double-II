@@ -6,8 +6,12 @@ import ChatBotService from "../service/ChatbotService.js";
 const router = express.Router();
 
 router.post('/chatbot', asyncHandler(async (req, res) => {
+    if (!req.body.prompt ) {
+        res.status(400).json();
+    }
     const sessionId = req.headers['x-chatbot-session'] || uuidv4();
-    const { prompt } = req.body;
+    const accessToken = req.headers['x-access-token'];
+    const prompt = accessToken? `the x_access_token is '${accessToken}'. ${req.body.prompt}` : req.body.prompt;
     const result = await ChatBotService.send({ sessionId, prompt });
     res.status(200).json(result);
 }));
