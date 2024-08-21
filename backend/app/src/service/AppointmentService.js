@@ -8,13 +8,13 @@ class AppointmentService {
   }
 
   static async createAppointment(appointmentData) {
-    const { scheduleId } = appointmentData;
-    const workingSchedule = await WorkingScheduleService.getScheduleById(scheduleId);
+    const { ScheduleId } = appointmentData;
+    const workingSchedule = await WorkingScheduleService.getScheduleById(ScheduleId);
     if (workingSchedule.data?.Status == 'available') {
-      await WorkingScheduleService.updateSchedule({Id: scheduleId, Status: 'occupied'})
-      const {Id: ScheduleId, ...scheduleData} = workingSchedule.data;
+      await WorkingScheduleService.updateSchedule({Id: ScheduleId, Status: 'occupied'})
+      const {Id: WorkingScheduleId, ...scheduleData} = workingSchedule.data;
       const newAppointment = await Appointment.create({
-        ScheduleId,
+        ScheduleId: WorkingScheduleId,
         ...scheduleData,
         ...appointmentData
       });

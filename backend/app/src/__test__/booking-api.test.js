@@ -53,11 +53,11 @@ describe('GP Appointment Management API', () => {
 
   test('should create a new appointment', async () => {
     const newAppointment = {
-      scheduleId,
-      patientName: "Jane Doe",
+      ScheduleId: scheduleId,
+      PatientName: "Jane Doe",
       UserId: username,
-      reason: "Follow-up check",
-      status: "pending",
+      Reason: "Follow-up check",
+      Status: "pending",
     };
 
     const res = await request(app)
@@ -66,24 +66,24 @@ describe('GP Appointment Management API', () => {
       .expect('Content-Type', /json/)
       .expect(201);
 
-    expect(res.body).toHaveProperty('patientName', 'Jane Doe');
+    expect(res.body).toHaveProperty('PatientName', 'Jane Doe');
     expect(res.body).toHaveProperty('ScheduleId', scheduleId);
     expect(res.body).toHaveProperty('DoctorId', doctorId);
     expect(res.body).toHaveProperty('DoctorName', 'John Smith');
     expect(res.body).toHaveProperty('Date', '2024-11-11');
     expect(res.body).toHaveProperty('Time', '09:00');
-    expect(res.body).toHaveProperty('reason', 'Follow-up check');
-    expect(res.body).toHaveProperty('status', 'pending');
+    expect(res.body).toHaveProperty('Reason', 'Follow-up check');
+    expect(res.body).toHaveProperty('Status', 'pending');
     appointmentId = res.body.Id;
   });
 
   test('should not create a new appointment with same schedule', async () => {
     const newAppointment = {
-      scheduleId,
-      patientName: "Jane Doe Jr",
+      ScheduleId: scheduleId,
+      PatientName: "Jane Doe Jr",
       UserId: username,
-      reason: "Follow-up check",
-      status: "pending",
+      Reason: "Follow-up check",
+      Status: "pending",
     };
 
     await request(app)
@@ -95,11 +95,11 @@ describe('GP Appointment Management API', () => {
 
   test('should not create a new appointment with invalid schedule', async () => {
     const newAppointment = {
-      scheduleId: 'null',
-      patientName: "Jane Doe Jr",
+      ScheduleId: 'null',
+      PatientName: "Jane Doe Jr",
       UserId: username,
-      reason: "Follow-up check",
-      status: "pending",
+      Reason: "Follow-up check",
+      Status: "pending",
     };
 
     await request(app)
@@ -114,13 +114,13 @@ describe('GP Appointment Management API', () => {
       .get(`/appointments?doctorId=${doctorId}&startDate=2024-11-11&endDate=2024-11-11`)
       .expect('Content-Type', /json/)
       .expect(200);
-    expect(res.body[0]).toHaveProperty('patientName', 'Jane Doe');
+    expect(res.body[0]).toHaveProperty('PatientName', 'Jane Doe');
     expect(res.body[0]).toHaveProperty('DoctorId', doctorId);
     expect(res.body[0]).toHaveProperty('DoctorName', 'John Smith');
     expect(res.body[0]).toHaveProperty('Date', '2024-11-11');
     expect(res.body[0]).toHaveProperty('Time', '09:00'); 
-    expect(res.body[0]).toHaveProperty('reason', 'Follow-up check');
-    expect(res.body[0]).toHaveProperty('status', 'pending');
+    expect(res.body[0]).toHaveProperty('Reason', 'Follow-up check');
+    expect(res.body[0]).toHaveProperty('Status', 'pending');
     expect(res.body[0]).toHaveProperty('Id', appointmentId);
   });
 
@@ -130,13 +130,13 @@ describe('GP Appointment Management API', () => {
       .set('Authorization', `Bearer ${token}`) 
       .expect('Content-Type', /json/)
       .expect(200);
-      expect(res.body[0]).toHaveProperty('patientName', 'Jane Doe');
+      expect(res.body[0]).toHaveProperty('PatientName', 'Jane Doe');
       expect(res.body[0]).toHaveProperty('DoctorId', doctorId);
       expect(res.body[0]).toHaveProperty('DoctorName', 'John Smith');
       expect(res.body[0]).toHaveProperty('Date', '2024-11-11');
       expect(res.body[0]).toHaveProperty('Time', '09:00'); 
-      expect(res.body[0]).toHaveProperty('reason', 'Follow-up check');
-      expect(res.body[0]).toHaveProperty('status', 'pending');
+      expect(res.body[0]).toHaveProperty('Reason', 'Follow-up check');
+      expect(res.body[0]).toHaveProperty('Status', 'pending');
       expect(res.body[0]).toHaveProperty('Id', appointmentId);
   });
 
@@ -159,7 +159,7 @@ describe('GP Appointment Management API', () => {
 
   test('should update an appointment', async () => {
     const updatedData = {
-      patientName: "Jane Doe Updated",
+      PatientName: "Jane Doe Updated",
     };
 
     const res = await request(app)
@@ -168,7 +168,7 @@ describe('GP Appointment Management API', () => {
       .expect('Content-Type', /json/)
       .expect(200);
 
-    expect(res.body).toHaveProperty('patientName', 'Jane Doe Updated');
+    expect(res.body).toHaveProperty('PatientName', 'Jane Doe Updated');
   });
 
   test('should delete an appointment', async () => {
