@@ -20,4 +20,13 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
   },
+  server: {
+    watch: {
+      usePolling: true,
+    },
+    hmr: {
+      overlay: false,
+    },
+    host: '0.0.0.0',
+  },
 })
