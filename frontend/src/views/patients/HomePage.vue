@@ -175,7 +175,7 @@ export default {
 .chat-icon {
   width: 60px;
   height: 60px;
-  background-color: #007bff;
+  background-color: #004d66;
   border-radius: 50%;
   display: flex;
   align-items: center;

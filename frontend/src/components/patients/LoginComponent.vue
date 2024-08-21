@@ -139,7 +139,7 @@ export default {
 }
 
 .sign-in-button:hover {
-  color: black;
+  color: #365a82;
 }
 
 .form-group {
