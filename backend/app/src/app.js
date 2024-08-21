@@ -19,7 +19,7 @@ app.use(`/${process.env.API_STAGE_NAME || ''}`, routes);
 
 app.use((err, req, res, next) => {
     console.log(err);
-    return res.status(500).json();
+    return res.status(err.status || 500).json();
 });
 
 app.listen(PORT, () => console.log(`App server listening on port ${PORT}!`));

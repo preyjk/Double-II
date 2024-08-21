@@ -1,14 +1,26 @@
 import Appointment from '../dal/Appointment.js';
+import WorkingScheduleService from './WorkingScheduleService.js';
 
 class AppointmentService {
-  static async listAppointments({ gpId, userId, appointmentStartDate, appointmentEndDate }) {
-    const data = await Appointment.query({ gpId, userId, appointmentStartDate, appointmentEndDate});
+  static async listAppointments({ doctorId, userId, appointmentStartDate, appointmentEndDate }) {
+    const data = await Appointment.query({ doctorId, userId, appointmentStartDate, appointmentEndDate});
     return { success: true, data: data.Items };
   }
 
   static async createAppointment(appointmentData) {
-    const newAppointment = await Appointment.create(appointmentData);
-    return { success: true, data: newAppointment };
+    const { scheduleId } = appointmentData;
+    const workingSchedule = await WorkingScheduleService.getScheduleById(scheduleId);
+    if (workingSchedule.data?.Status == 'available') {
+      await WorkingScheduleService.updateSchedule({Id: scheduleId, Status: 'occupied'})
+      const {Id: ScheduleId, ...scheduleData} = workingSchedule.data;
+      const newAppointment = await Appointment.create({
+        ScheduleId,
+        ...scheduleData,
+        ...appointmentData
+      });
+      return { success: true, data: newAppointment };
+    }
+    return { success: false, message: 'Not available' };
   }
 
   static async getAppointmentById(appointmentId) {

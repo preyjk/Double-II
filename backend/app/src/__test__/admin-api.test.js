@@ -36,7 +36,7 @@ describe('Admin API End-to-End Tests', () => {
     expect(typeof token).toBe('string');
     const auth = AuthService.verifyToken(token);
     expect(auth.success).toBe(true);
-    expect(auth.data.username).toBe(username);
+    expect(auth.data.id).toBe(username);
     expect(auth.data.roles[0]).toBe(role)
   });
 

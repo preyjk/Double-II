@@ -1,11 +1,24 @@
 <template>
   <footer class="footer">
     <div class="footer-content">
-      <img src="@/assets/logo.png" alt="FRW Healthcare Logo" class="logo" />
-      <div class="footer-links">
-        <a href="/privacy">Privacy Policy</a> |
-        <a href="/child-protection">Child Protection</a>
+      <div class="footer-box">
+        <div class="text-and-logo">
+          <p class="booking-text"><strong>Book now</strong></p>
+          <img src="@/assets/logo.png" alt="FRW Healthcare Logo" class="logo" />
+        </div>
+        <div class="booking-section">
+          <span class="small-text">Book online using our easy online booking system.</span>
+          <button class="appointment-button">
+            <img src="@/assets/time.png" alt="Time Icon" class="time-icon" />APPOINTMENT
+          </button>
+        </div>
       </div>
+      <div class="footer-box">
+        <p class="welcome-text"><strong>Welcome to FRW Healthcare</strong></p>
+        <span class="description-text">Providing top-tier medical services since 1992 in Auckland, Wellington, and Christchurch.</span>
+      </div>
+    </div>
+    <div class="footer-base">
       <p class="copyright">© 2024 FRW Healthcare. All Rights Reserved.</p>
     </div>
   </footer>
@@ -19,40 +32,93 @@ export default {
 
 <style scoped>
 .footer {
-  background-color: #005a8d;
-  color: white;
-  padding: 20px 10px;
-  text-align: center;
-  border-top: 3px solid #02b3e4;
+  background-color: #accfd8;
+  color: #002366;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
 }
 
 .footer-content {
-  max-width: 800px;
-  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.footer-box {
+  flex: 1;
+  text-align: left;
+  padding-left: 50px;
+}
+
+.text-and-logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.booking-text {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.booking-section {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
+}
+
+.small-text {
+  font-size: 16px;
+  margin-bottom: 20px; 
+}
+
+.appointment-button {
+  background-color: #365a82;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+  margin-top: 20px; 
+  margin-left: 20px; 
+}
+
+.appointment-button:hover {
+  background-color: #2a4665;
+}
+
+.time-icon {
+  height: 24px;
+  margin-right: 10px;
 }
 
 .logo {
   height: 80px;
-  margin-bottom: 15px;
 }
 
-.footer-links {
-  font-size: 14px;
-  margin: 10px 0;
+.welcome-text {
+  margin-bottom: 10px;
 }
 
-.footer-links a {
-  color: #ffffff;
-  margin: 0 8px;
-  text-decoration: none;
+.description-text {
+  margin-bottom: 20px;
 }
 
-.footer-links a:hover {
-  color: #0294b5;
+.footer-base {
+  width: 100%;
+  text-align: right;
+  padding-top: 10px;
 }
 
 .copyright {
-  font-size: 12px;
-  margin-top: 10px;
+  font-size: 16px;
 }
 </style>

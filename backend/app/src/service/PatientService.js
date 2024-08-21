@@ -30,8 +30,8 @@ class PatientService {
     return { success: true, message: 'Patient deleted successfully' };
   }
 
-  static async getPatientByUsername(username) {
-    const result = await Patient.findByUsername(username);
+  static async getPatientByUserId(userId) {
+    const result = await Patient.findByUserId(userId);
     return { success: true, data: result.Items };
   }
 }

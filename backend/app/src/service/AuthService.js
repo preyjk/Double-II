@@ -66,7 +66,7 @@ class AuthService {
   static async signup({ username, password, roles }) {
     try {
       const hashedPassword = AuthService.hashPassword(password);
-      await User.create({ username, password: hashedPassword, roles});
+      await User.create({ Id: username, Password: hashedPassword, Roles: roles});
       return { success: true, message: 'Signup successful' };
     } catch (error) {
       if (error.name === 'ConditionalCheckFailedException') {
@@ -79,13 +79,12 @@ class AuthService {
 
   static async login({ username, password }) {
     try {
-      const result = await User.findByUsername(username);
-      if (result.Item && AuthService.verifyPassword(password, result.Item.password)) {
-        const token = AuthService.generateToken({username, roles: result.Item.roles});
+      const result = await User.findById(username);
+      if (result.Item && AuthService.verifyPassword(password, result.Item.Password)) {
+        const token = AuthService.generateToken({id: username, roles: result.Item.Roles});
         return { success: true, token };
-      } else {
-        return { success: false, message: 'Unauthorized' };
-      }
+      } 
+      return { success: false, message: 'Unauthorized' };
     } catch (error) {
       throw error;
     }

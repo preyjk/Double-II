@@ -49,7 +49,7 @@ describe('Doctor API End-to-End Tests', () => {
     expect(res.body).toHaveProperty('Email', 'dr.smith@example.com');
     expect(res.body).toHaveProperty('Workplace', Workplace);
     expect(res.body).toHaveProperty('Address', Workplace);
-    doctorId = res.body.id;  // Save the doctor ID for subsequent tests
+    doctorId = res.body.Id;  // Save the doctor ID for subsequent tests
   });
 
   test('should get a doctor by ID', async () => {
@@ -58,7 +58,7 @@ describe('Doctor API End-to-End Tests', () => {
       .expect('Content-Type', /json/)
       .expect(200);
 
-    expect(res.body).toHaveProperty('id', doctorId);
+    expect(res.body).toHaveProperty('Id', doctorId);
   });
 
   test('should list doctors by workplace', async () => {

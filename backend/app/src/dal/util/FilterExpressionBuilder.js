@@ -3,11 +3,13 @@ class FilterExpressionBuilder {
         this.filterExpressions = []
         this.ExpressionAttributeNames = {};
         this.ExpressionAttributeValues = {};
+        this.counter = 0
     }
 
     addCriteria(key, op, value) {
-        const attributeKey = `#attr_${key}`;
-        const valueKey = `:val_${key}`;
+        const attributeKey = `#attr_${this.counter}_${key}`;
+        const valueKey = `:val_${this.counter}_${key}`;
+        this.counter++;
         this.ExpressionAttributeNames[attributeKey] = key;
         this.ExpressionAttributeValues[valueKey] = value;
         this.filterExpressions.push(`${attributeKey} ${op} ${valueKey}`);
