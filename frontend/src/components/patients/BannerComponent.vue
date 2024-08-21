@@ -17,18 +17,21 @@
           <span class="triangle"></span>
         </div>
       </div>
-      <img :src="require('@/assets/robot.png')" alt="Robot Image" class="robot-image" />
+      <img :src="robotImageSrc" alt="Robot Image" class="robot-image" />
     </div>
   </div>
 </template>
 
 <script>
+import robotImage from '@/assets/robot.png';  
+import videoSrc from '@/assets/1.mp4';  
 export default {
   name: "BannerComponent",
   data() {
     return {
-      videoSrc: require('@/assets/1.mp4'),
-      videoReadyToPlay: true  
+      videoSrc,
+      robotImageSrc: robotImage, 
+      videoReadyToPlay: true,
     };
   },
   methods: {
