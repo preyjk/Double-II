@@ -26,10 +26,10 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
-        - AttributeName: id
+        - AttributeName: Id
           AttributeType: S
       KeySchema:
-        - AttributeName: id
+        - AttributeName: Id
           KeyType: HASH
       BillingMode: 'PAY_PER_REQUEST'
       OnDemandThroughput:
@@ -40,21 +40,21 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
-        - AttributeName: id
+        - AttributeName: Id
           AttributeType: S
-        - AttributeName: gpId
+        - AttributeName: DoctorId
           AttributeType: S
       KeySchema:
-        - AttributeName: id
+        - AttributeName: Id
           KeyType: HASH
       BillingMode: 'PAY_PER_REQUEST'
       OnDemandThroughput:
         MaxReadRequestUnits: 1
         MaxWriteRequestUnits: 1
       GlobalSecondaryIndexes:
-        - IndexName: GpIdIndex
+        - IndexName: DoctorIdIndex
           KeySchema:
-            - AttributeName: gpId
+            - AttributeName: DoctorId
               KeyType: HASH
           Projection:
             ProjectionType: ALL
@@ -63,21 +63,21 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
-        - AttributeName: id
+        - AttributeName: Id
           AttributeType: S
-        - AttributeName: username
+        - AttributeName: UserId
           AttributeType: S
       KeySchema:
-        - AttributeName: id
+        - AttributeName: Id
           KeyType: HASH
       BillingMode: 'PAY_PER_REQUEST'
       OnDemandThroughput:
         MaxReadRequestUnits: 1
         MaxWriteRequestUnits: 1
       GlobalSecondaryIndexes:
-        - IndexName: UsernameIndex
+        - IndexName: UserIdIndex
           KeySchema:
-            - AttributeName: username
+            - AttributeName: UserId
               KeyType: HASH
           Projection:
             ProjectionType: ALL
@@ -86,10 +86,10 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
-        - AttributeName: id
+        - AttributeName: Id
           AttributeType: S
       KeySchema:
-        - AttributeName: id
+        - AttributeName: Id
           KeyType: HASH
       BillingMode: 'PAY_PER_REQUEST'
       OnDemandThroughput:
@@ -100,10 +100,10 @@ Resources:
     Type: AWS::DynamoDB::Table
     Properties:
       AttributeDefinitions:
-        - AttributeName: username
+        - AttributeName: Id
           AttributeType: S
       KeySchema:
-        - AttributeName: username
+        - AttributeName: Id
           KeyType: HASH
       BillingMode: 'PAY_PER_REQUEST'
       OnDemandThroughput:

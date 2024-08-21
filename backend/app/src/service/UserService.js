@@ -1,8 +1,8 @@
 import User from "../dal/User.js";
 
 class UserService {
-    static async deleteUser(username) {
-        await User.findByUsernameAndDelete(username);
+    static async deleteUser(id) {
+        await User.findByIdAndDelete(id);
         return { success: true, message: 'User deleted successfully' };
     }
 }

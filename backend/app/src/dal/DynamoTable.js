@@ -16,7 +16,7 @@ class DynamoTable {
 
     async create(data) {
         const item = {
-            id: this.generateId(data),
+            Id: this.generateId(data),
             ...data,
         };
         const params = {
@@ -27,21 +27,20 @@ class DynamoTable {
         return item;
     }
 
-    async findById(id) {
+    async findById(Id) {
         const params = {
             TableName: this.tableName,
-            Key: { id }
+            Key: { Id }
         };
         return dynamo.get(params);
     }
 
-    async findByIdAndUpdate(data) {
-        const id = data.id;
-        delete data.id;
+    async findByIdAndUpdate(newData) {
+        const {Id, ...data} = newData;
 
         const params = {
             TableName: this.tableName,
-            Key: { id },
+            Key: { Id },
             UpdateExpression: '',
             ExpressionAttributeNames: {},
             ExpressionAttributeValues: {},
@@ -62,10 +61,10 @@ class DynamoTable {
         return dynamo.update(params);
     }
 
-    async findByIdAndDelete(id) {
+    async findByIdAndDelete(Id) {
         const params = {
             TableName: this.tableName,
-            Key: { id: id }
+            Key: { Id }
         };
         return dynamo.delete(params);
     }

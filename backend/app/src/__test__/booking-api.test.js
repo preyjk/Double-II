@@ -13,10 +13,19 @@ app.use((err, req, res, next) => {
 
 describe('GP Appointment Management API', () => {
   let appointmentId;
-  let gpId = '12345678';
+  let doctorId = '12345678';
+  let scheduleId;
 
   const username = 'testuser';
   const token = AuthService.generateToken({username});
+  const adminToken = AuthService.generateToken({username: 'admin', roles: ['admin']});
+
+  const schedule = {
+    DoctorId: doctorId,
+    DoctorName: 'John Smith',
+    Date: '2024-11-11',
+    Time: '09:00'
+  }
 
   test('should list all appointments', async () => {
     const res = await request(app)
@@ -27,14 +36,26 @@ describe('GP Appointment Management API', () => {
     expect(Array.isArray(res.body)).toBe(true);
   });
 
+  test('should create working schedule for a doctor', async () => {
+    const res = await request(app)
+      .post('/schedules')
+      .set('Authorization', `Bearer ${adminToken}`) 
+      .send(schedule)
+      .expect('Content-Type', /json/)
+      .expect(201);
+    expect(res.body).toHaveProperty('DoctorId', doctorId);
+    expect(res.body).toHaveProperty('DoctorName', 'John Smith');
+    expect(res.body).toHaveProperty('Date', '2024-11-11');
+    expect(res.body).toHaveProperty('Time', '09:00'); 
+    expect(res.body).toHaveProperty('Status', 'available');
+    scheduleId = res.body.Id;
+  });
+
   test('should create a new appointment', async () => {
     const newAppointment = {
+      scheduleId,
       patientName: "Jane Doe",
-      gpId: gpId,
-      username: username,
-      gpName: "Dr. Brown",
-      date: "2023-08-02",
-      time: "11:00",
+      UserId: username,
       reason: "Follow-up check",
       status: "pending",
     };
@@ -46,49 +67,82 @@ describe('GP Appointment Management API', () => {
       .expect(201);
 
     expect(res.body).toHaveProperty('patientName', 'Jane Doe');
-    expect(res.body).toHaveProperty('gpId', gpId);
-    expect(res.body).toHaveProperty('gpName', 'Dr. Brown');
-    expect(res.body).toHaveProperty('date', '2023-08-02');
-    expect(res.body).toHaveProperty('time', '11:00');
+    expect(res.body).toHaveProperty('ScheduleId', scheduleId);
+    expect(res.body).toHaveProperty('DoctorId', doctorId);
+    expect(res.body).toHaveProperty('DoctorName', 'John Smith');
+    expect(res.body).toHaveProperty('Date', '2024-11-11');
+    expect(res.body).toHaveProperty('Time', '09:00');
     expect(res.body).toHaveProperty('reason', 'Follow-up check');
     expect(res.body).toHaveProperty('status', 'pending');
-    appointmentId = res.body.id;
+    appointmentId = res.body.Id;
   });
 
-  test('should list appointment by gpId, startDate and endDate', async () => {
+  test('should not create a new appointment with same schedule', async () => {
+    const newAppointment = {
+      scheduleId,
+      patientName: "Jane Doe Jr",
+      UserId: username,
+      reason: "Follow-up check",
+      status: "pending",
+    };
+
+    await request(app)
+      .post('/appointments')
+      .send(newAppointment)
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+
+  test('should not create a new appointment with invalid schedule', async () => {
+    const newAppointment = {
+      scheduleId: 'null',
+      patientName: "Jane Doe Jr",
+      UserId: username,
+      reason: "Follow-up check",
+      status: "pending",
+    };
+
+    await request(app)
+      .post('/appointments')
+      .send(newAppointment)
+      .expect('Content-Type', /json/)
+      .expect(400);
+  });
+
+  test('should list appointment by doctorId, startDate and endDate', async () => {
     const res = await request(app)
-      .get(`/appointments?gpId=${gpId}&startDate=2023-08-01&endDate=2023-08-02`)
+      .get(`/appointments?doctorId=${doctorId}&startDate=2024-11-11&endDate=2024-11-11`)
       .expect('Content-Type', /json/)
       .expect(200);
     expect(res.body[0]).toHaveProperty('patientName', 'Jane Doe');
-    expect(res.body[0]).toHaveProperty('gpId', gpId);
-    expect(res.body[0]).toHaveProperty('gpName', 'Dr. Brown');
-    expect(res.body[0]).toHaveProperty('date', '2023-08-02');
-    expect(res.body[0]).toHaveProperty('time', '11:00');
+    expect(res.body[0]).toHaveProperty('DoctorId', doctorId);
+    expect(res.body[0]).toHaveProperty('DoctorName', 'John Smith');
+    expect(res.body[0]).toHaveProperty('Date', '2024-11-11');
+    expect(res.body[0]).toHaveProperty('Time', '09:00'); 
     expect(res.body[0]).toHaveProperty('reason', 'Follow-up check');
     expect(res.body[0]).toHaveProperty('status', 'pending');
-    expect(res.body[0]).toHaveProperty('id', appointmentId);
+    expect(res.body[0]).toHaveProperty('Id', appointmentId);
   });
 
-  test('should list appointment under specific user by gpId, startDate and endDate', async () => {
+  test('should list appointment under specific user by doctorId, startDate and endDate', async () => {
     const res = await request(app)
-      .get(`/user/appointments?gpId=${gpId}&startDate=2023-08-01&endDate=2023-08-02`)
+      .get(`/user/appointments?doctorId=${doctorId}&startDate=2024-11-01&endDate=2024-11-12`)
       .set('Authorization', `Bearer ${token}`) 
       .expect('Content-Type', /json/)
       .expect(200);
-    expect(res.body[0]).toHaveProperty('patientName', 'Jane Doe');
-    expect(res.body[0]).toHaveProperty('gpId', gpId);
-    expect(res.body[0]).toHaveProperty('gpName', 'Dr. Brown');
-    expect(res.body[0]).toHaveProperty('date', '2023-08-02');
-    expect(res.body[0]).toHaveProperty('time', '11:00');
-    expect(res.body[0]).toHaveProperty('reason', 'Follow-up check');
-    expect(res.body[0]).toHaveProperty('status', 'pending');
-    expect(res.body[0]).toHaveProperty('id', appointmentId);
+      expect(res.body[0]).toHaveProperty('patientName', 'Jane Doe');
+      expect(res.body[0]).toHaveProperty('DoctorId', doctorId);
+      expect(res.body[0]).toHaveProperty('DoctorName', 'John Smith');
+      expect(res.body[0]).toHaveProperty('Date', '2024-11-11');
+      expect(res.body[0]).toHaveProperty('Time', '09:00'); 
+      expect(res.body[0]).toHaveProperty('reason', 'Follow-up check');
+      expect(res.body[0]).toHaveProperty('status', 'pending');
+      expect(res.body[0]).toHaveProperty('Id', appointmentId);
   });
 
   test('should not list appointment out of startDate and endDate', async () => {
     const res = await request(app)
-      .get(`/appointments?gpId=${gpId}&startDate=2023-08-03&endDate=2023-08-03`)
+      .get(`/appointments?doctorId=${doctorId}&startDate=2023-08-03&endDate=2023-08-03`)
       .expect('Content-Type', /json/)
       .expect(200);
     expect(res.body.length).toBe(0);
@@ -100,17 +154,12 @@ describe('GP Appointment Management API', () => {
       .expect('Content-Type', /json/)
       .expect(200);
 
-    expect(res.body).toHaveProperty('id', appointmentId);
+    expect(res.body).toHaveProperty('Id', appointmentId);
   });
 
   test('should update an appointment', async () => {
     const updatedData = {
       patientName: "Jane Doe Updated",
-      gpName: "Dr. Brown",
-      date: "2023-08-03",
-      time: "12:00",
-      reason: "Updated reason",
-      status: "scheduled"
     };
 
     const res = await request(app)

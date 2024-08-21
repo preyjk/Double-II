@@ -14,14 +14,15 @@ app.use((err, req, res, next) => {
 describe('Working Schedule API', () => {
   const token = AuthService.generateToken({username: 'admin', roles: ['admin']});
   let scheduleId;
-  const gpId = '12345678';
+  const doctorId = '12345678';
 
   test('should create a new working schedule', async () => {
     const newSchedule = {
-      gpId: gpId,
-      date: "2023-08-10",
-      startTime: "09:00",
-      endTime: "17:00",
+      DoctorId: doctorId,
+      DoctorName: 'john smith',
+      Date: "2023-08-10",
+      StartTime: "09:00",
+      EndTime: "17:00",
     };
 
     const res = await request(app)
@@ -31,27 +32,28 @@ describe('Working Schedule API', () => {
       .expect('Content-Type', /json/)
       .expect(201);
 
-    expect(res.body).toHaveProperty('gpId', gpId);
-    expect(res.body).toHaveProperty('date', '2023-08-10');
-    expect(res.body).toHaveProperty('startTime', '09:00');
-    expect(res.body).toHaveProperty('endTime', '17:00');
-    scheduleId = res.body.id; // Assuming 'id' is part of the response
+    expect(res.body).toHaveProperty('DoctorId', doctorId);
+    expect(res.body).toHaveProperty('Date', '2023-08-10');
+    expect(res.body).toHaveProperty('StartTime', '09:00');
+    expect(res.body).toHaveProperty('EndTime', '17:00');
+    expect(res.body).toHaveProperty('DoctorName', 'john smith');
+    scheduleId = res.body.Id; // Assuming 'id' is part of the response
   });
 
-  test('should list all schedules for a given gpId and date range', async () => {
+  test('should list all schedules for a given doctorId and date range', async () => {
     const res = await request(app)
-      .get(`/schedules?gpId=${gpId}&startDate=2023-08-10&endDate=2023-08-10`)
+      .get(`/schedules?doctorId=${doctorId}&startDate=2023-08-10&endDate=2023-08-10`)
       .expect('Content-Type', /json/)
       .expect(200);
-    expect(res.body[0].id).toBe(scheduleId);
+    expect(res.body[0].Id).toBe(scheduleId);
     // Add further expectations based on the actual data structure
   });
 
   test('should update an existing schedule', async () => {
     const updatedData = {
-      scheduleDate: "2023-08-12",
-      startTime: "10:00",
-      endTime: "16:00",
+      Date: "2023-08-12",
+      StartTime: "10:00",
+      EndTime: "16:00",
     };
 
     const res = await request(app)
@@ -61,9 +63,9 @@ describe('Working Schedule API', () => {
       .expect('Content-Type', /json/)
       .expect(200);
 
-    expect(res.body).toHaveProperty('scheduleDate', '2023-08-12');
-    expect(res.body).toHaveProperty('startTime', '10:00');
-    expect(res.body).toHaveProperty('endTime', '16:00');
+    expect(res.body).toHaveProperty('Date', '2023-08-12');
+    expect(res.body).toHaveProperty('StartTime', '10:00');
+    expect(res.body).toHaveProperty('EndTime', '16:00');
   });
 
   test('should delete an existing schedule', async () => {

@@ -6,8 +6,8 @@ import AuthService from '../service/AuthService.js';
 const router = express.Router();
 
 router.get('/appointments', asyncHandler(async (req, res) => {
-  const { gpId, startDate, endDate } = req.query;
-  const result = await AppointmentService.listAppointments({ gpId, appointmentStartDate: startDate, appointmentEndDate: endDate });
+  const { doctorId, startDate, endDate } = req.query;
+  const result = await AppointmentService.listAppointments({ doctorId, appointmentStartDate: startDate, appointmentEndDate: endDate });
   if (result.success) {
     res.status(200).json(result.data);
   } else {
@@ -16,8 +16,8 @@ router.get('/appointments', asyncHandler(async (req, res) => {
 }));
 
 router.get('/user/appointments', AuthService.verifyRequest, asyncHandler(async (req, res) => {
-  const { gpId, startDate, endDate } = req.query;
-  const result = await AppointmentService.listAppointments({ gpId, username: req.auth.username, appointmentStartDate: startDate, appointmentEndDate: endDate });
+  const { doctorId, startDate, endDate } = req.query;
+  const result = await AppointmentService.listAppointments({ doctorId, userId: req.auth.id, appointmentStartDate: startDate, appointmentEndDate: endDate });
   if (result.success) {
     res.status(200).json(result.data);
   } else {
@@ -30,7 +30,7 @@ router.post('/appointments', asyncHandler(async (req, res) => {
   if (result.success) {
     res.status(201).json(result.data);
   } else {
-    res.status(500).json(result.message);
+    res.status(400).json(result.message);
   }
 }));
 
@@ -44,7 +44,7 @@ router.get('/appointments/:appointmentId', asyncHandler(async (req, res) => {
 }));
 
 router.put('/appointments/:appointmentId', asyncHandler(async (req, res) => {
-  const result = await AppointmentService.updateAppointment({ id: req.params.appointmentId, ...req.body });
+  const result = await AppointmentService.updateAppointment({ Id: req.params.appointmentId, ...req.body });
   if (result.success) {
     res.status(200).json(result.data);
   } else {

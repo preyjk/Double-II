@@ -6,10 +6,10 @@ const tableDefinitions = [
     {
         TableName: 'Appointments',
         KeySchema: [
-            { AttributeName: 'id', KeyType: 'HASH' }, // Primary key
+            { AttributeName: 'Id', KeyType: 'HASH' }, // Primary key
         ],
         AttributeDefinitions: [
-            { AttributeName: 'id', AttributeType: 'S' },
+            { AttributeName: 'Id', AttributeType: 'S' },
         ],
         ProvisionedThroughput: {
             ReadCapacityUnits: 5,
@@ -19,10 +19,10 @@ const tableDefinitions = [
     {
         TableName: 'Users',
         KeySchema: [
-            { AttributeName: 'username', KeyType: 'HASH' }, // Primary key
+            { AttributeName: 'Id', KeyType: 'HASH' }, // Primary key
         ],
         AttributeDefinitions: [
-            { AttributeName: 'username', AttributeType: 'S' },
+            { AttributeName: 'Id', AttributeType: 'S' },
         ],
         ProvisionedThroughput: {
             ReadCapacityUnits: 5,
@@ -32,10 +32,10 @@ const tableDefinitions = [
     {
         TableName: 'Doctors',
         KeySchema: [
-            { AttributeName: 'id', KeyType: 'HASH' }, // Primary key
+            { AttributeName: 'Id', KeyType: 'HASH' }, // Primary key
         ],
         AttributeDefinitions: [
-            { AttributeName: 'id', AttributeType: 'S' },
+            { AttributeName: 'Id', AttributeType: 'S' },
         ],
         ProvisionedThroughput: {
             ReadCapacityUnits: 5,
@@ -45,11 +45,11 @@ const tableDefinitions = [
     {
         TableName: 'Patients',
         KeySchema: [
-            { AttributeName: 'id', KeyType: 'HASH' }, // Primary key
+            { AttributeName: 'Id', KeyType: 'HASH' }, // Primary key
         ],
         AttributeDefinitions: [
-            { AttributeName: 'id', AttributeType: 'S' },
-            { AttributeName: 'username', AttributeType: 'S' },
+            { AttributeName: 'Id', AttributeType: 'S' },
+            { AttributeName: 'UserId', AttributeType: 'S' },
         ],
         ProvisionedThroughput: {
             ReadCapacityUnits: 5,
@@ -57,9 +57,9 @@ const tableDefinitions = [
         },
         GlobalSecondaryIndexes: [
             {
-                IndexName: 'UsernameIndex',
+                IndexName: 'UserIdIndex',
                 KeySchema: [
-                    { AttributeName: 'username', KeyType: 'HASH' }, // GSI key
+                    { AttributeName: 'UserId', KeyType: 'HASH' }, // GSI key
                 ],
                 Projection: { ProjectionType: 'ALL' },
                 ProvisionedThroughput: {
@@ -72,11 +72,11 @@ const tableDefinitions = [
     {
         TableName: 'WorkingSchedule',
         KeySchema: [
-            { AttributeName: 'id', KeyType: 'HASH' }, // Primary key
+            { AttributeName: 'Id', KeyType: 'HASH' }, // Primary key
         ],
         AttributeDefinitions: [
-            { AttributeName: 'id', AttributeType: 'S' },
-            { AttributeName: 'gpId', AttributeType: 'S' },
+            { AttributeName: 'Id', AttributeType: 'S' },
+            { AttributeName: 'DoctorId', AttributeType: 'S' },
         ],
         ProvisionedThroughput: {
             ReadCapacityUnits: 5,
@@ -84,9 +84,9 @@ const tableDefinitions = [
         },
         GlobalSecondaryIndexes: [
             {
-                IndexName: 'GpIdIndex',
+                IndexName: 'DoctorIdIndex',
                 KeySchema: [
-                    { AttributeName: 'gpId', KeyType: 'HASH' }, // GSI key
+                    { AttributeName: 'DoctorId', KeyType: 'HASH' }, // GSI key
                 ],
                 Projection: { ProjectionType: 'ALL' },
                 ProvisionedThroughput: {
