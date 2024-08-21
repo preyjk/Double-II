@@ -17,11 +17,11 @@ paths:
       operationId: listAppointments
       parameters:
         - in: query
-          name: gpId
+          name: doctorId
           schema:
             type: string
           required: true
-          description: ID of the GP to filter schedules.
+          description: ID of the doctor to filter schedules.
         - in: query
           name: startDate
           schema:
@@ -136,11 +136,11 @@ paths:
         - bearerAuth: []
       parameters:
         - in: query
-          name: gpId
+          name: doctorId
           schema:
             type: string
           required: true
-          description: ID of the GP to filter schedules.
+          description: ID of the doctor to filter schedules.
         - in: query
           name: startDate
           schema:
@@ -615,14 +615,14 @@ paths:
   /schedules:
     get:
       summary: Get a list of working schedules
-      description: Retrieve a list of working schedules filtered by GP ID and date range.
+      description: Retrieve a list of working schedules filtered by doctor ID and date range.
       parameters:
         - in: query
-          name: gpId
+          name: doctorId
           schema:
             type: string
           required: true
-          description: ID of the GP to filter schedules.
+          description: ID of the doctor to filter schedules.
         - in: query
           name: startDate
           schema:
@@ -722,36 +722,40 @@ components:
     Appointment:
       type: object
       required:
-        - patientName
-        - gpId
-        - gpName
-        - date
-        - time
+        - ScheduleId
+        - PatientName
       properties:
-        id:
+        Id:
           type: string
           description: Unique identifier for the appointment
-        patientName:
+        ScheduleId:
+          type: string
+          description: Unique identifier for the booking timeslot
+        PatientName:
           type: string
           description: Name of the patient
-        gpId:
+        DoctorId:
           type: string
-          description: Unique identifier for the gp
-        gpName:
+          description: Unique identifier for the doctor
+        DoctorName:
           type: string
           description: Name of the General Practitioner
-        date:
+        Date:
           type: string
           format: date
           description: Date of the appointment
-        time:
+        StartTime:
           type: string
           format: time
-          description: Time of the appointment
-        reason:
+          description: Start time of the appointment
+        EndTime:
+          type: string
+          format: time
+          description: End time of the appointment
+        Reason:
           type: string
           description: Reason for the appointment
-        status:
+        Status:
           type: string
           enum:
             - pending
@@ -762,11 +766,11 @@ components:
     User:
       type: object
       properties:
-        username:
+        Id:
           type: string
-        password:
+        Password:
           type: string
-        rolses:
+        Roles:
           type: array
           items:
             type: string
@@ -774,92 +778,91 @@ components:
     Doctor:
       type: object
       required:
-        - firstname
-        - lastname
-        - specialty
-        - phone
-        - email
-        - workplace
-        - address
+        - FirstName
+        - LastName
+        - Specialty
+        - Phone
+        - Email
+        - Workplace
+        - Address
       properties:
-        id:
+        Id:
           type: string
-          description: Unique identifier for the doctor. It is the gpId, s_gpId
-        firstname:
+          description: Unique identifier for the doctor.
+        FirstName:
           type: string
           description: First name of the doctor
-        lastname:
+        LastName:
           type: string
           description: Last name of the doctor
-        specialty:
+        Specialty:
           type: string
           description: Medical specialty of the doctor
-        phone:
+        Phone:
           type: string
           description: Contact phone number of the doctor
-        email:
+        Email:
           type: string
           description: Email address of the doctor
-        workplace:
+        Workplace:
           type: string
           description: Workplace
-        address:
+        Address:
           type: string
           description: Address of the workplace
     Patient:
       type: object
       required:
-        - name
-        - gender
-        - username
+        - Name
+        - Gender
       properties:
-        id:
+        Id:
           type: string
           description: Unique identifier for the patient
-        name:
+        Name:
           type: string
           description: Name of the patient
-        gender:
+        Gender:
           type: string
           description: Gender of the patient
-        age:
+        Age:
           type: integer
           description: Age of the patient
-        phone:
+        Phone:
           type: string
           description: Contact phone number of the patient
-        email:
+        Email:
           type: string
           description: Email address of the patient
-        address:
+        Address:
           type: string
           description: Address of the patient
-        username:
+        UserId:
           type: string
-          description: Username of registered user
+          description: Unique identifier of a registered user
     Schedule:
       type: object
       properties:
-        id:
+        Id:
           type: string
-        gpId:
+        DoctorId:
           type: string
-        appointmentId:
+        DoctorName:
           type: string
-        date:
+        Date:
           type: string
           format: date
-        startTime:
+        StartTime:
           type: string
           format: time
-        endTime:
+        EndTime:
           type: string
           format: time
-        status:
+        Status:
           type: string
           enum:
             - available
-            - reserved
+            - occupied
   securitySchemes:
     bearerAuth:
       type: http

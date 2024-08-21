@@ -9,14 +9,15 @@ class AppointmentTable extends DynamoTable {
     
     const exBuilder = new FilterExpressionBuilder();
     
-    criteria.clinicName && exBuilder.addCriteria('clinicName', '=', criteria.clinicName);
-    criteria.gpId && exBuilder.addCriteria('gpId', '=', criteria.gpId);
-    criteria.userId && exBuilder.addCriteria('userId', '=', criteria.userId);
-    criteria.appointmentStartDate && exBuilder.addCriteria('date', '>=', criteria.appointmentStartDate);
-    criteria.appointmentEndDate && exBuilder.addCriteria('date', '<=', criteria.appointmentEndDate);
+    criteria.clinicName && exBuilder.addCriteria('ClinicName', '=', criteria.clinicName);
+    criteria.doctorId && exBuilder.addCriteria('DoctorId', '=', criteria.doctorId);
+    criteria.userId && exBuilder.addCriteria('UserId', '=', criteria.userId);
+    criteria.appointmentStartDate && exBuilder.addCriteria('Date', '>=', criteria.appointmentStartDate);
+    criteria.appointmentEndDate && exBuilder.addCriteria('Date', '<=', criteria.appointmentEndDate);
 
     return this.dynamo.scan({TableName: this.tableName, ...exBuilder.build()});    
   }
+
 }
 
 const Appointment = new AppointmentTable(TABLE_NAME);

@@ -5,27 +5,23 @@ import PatientService from '../service/PatientService.js';
 const router = express.Router();
 
 router.get('/patients', asyncHandler(async (req, res) => {
-  const { username } = req.auth;
-  const result = await PatientService.getPatientByUsername(username);
+  const result = await PatientService.getPatientByUserId(req.auth.id);
   return res.status(200).json(result.data);
 }));
 
 router.post('/patients', asyncHandler(async (req, res) => {
-  const username = req.auth.username;
-  const patientData = { ...req.body, username };
+  const patientData = { ...req.body, UserId: req.auth.id };
   const result = await PatientService.createPatient(patientData);
   return res.status(201).json(result.data);
 }));
 
 router.get('/patients/:patientId', asyncHandler(async (req, res) => {
   const { patientId } = req.params;
-  const username = req.auth.username;
 
   // Fetch the patient record first
   const result = await PatientService.getPatientById(patientId);
 
-  // Check if the username matches
-  if (result.success && result.data.username === username) {
+  if (result.success && result.data.UserId === req.auth.id) {
     return res.status(200).json(result.data);
   } else {
     return res.status(404).json('Patient not found');
@@ -35,14 +31,8 @@ router.get('/patients/:patientId', asyncHandler(async (req, res) => {
 router.put('/patients/:patientId', asyncHandler(async (req, res) => {
   try {
   const { patientId } = req.params;
-  const username = req.auth.username;
 
-  // Ensure the username in the request body matches the authenticated user
-  if (req.body.username !== username) {
-    return res.status(404).json('Patient not found');
-  }
-
-  const patientData = { id: patientId, ...req.body };
+  const patientData = { Id: patientId, UserId: req.auth.id, ...req.body };
   const result = await PatientService.updatePatient(patientData);
 
   return res.status(200).json(result.data);
@@ -56,12 +46,10 @@ router.put('/patients/:patientId', asyncHandler(async (req, res) => {
 
 router.delete('/patients/:patientId', asyncHandler(async (req, res) => {
   const { patientId } = req.params;
-  const username = req.auth.username;
 
   const patientToBeDeleted = await PatientService.getPatientById(patientId);
 
-  // Ensure the username in the request body matches the authenticated user
-  if (patientToBeDeleted.data?.username !== username) {
+  if (patientToBeDeleted.data?.UserId !== req.auth.id) {
     return res.status(404).json('Patient not found');
   }
 

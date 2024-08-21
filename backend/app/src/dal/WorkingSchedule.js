@@ -8,9 +8,9 @@ class WorkingScheduleTable extends DynamoTable {
   async query(criteria) {
     const exBuilder = new FilterExpressionBuilder();
 
-    criteria.gpId && exBuilder.addCriteria('gpId', '=', criteria.gpId);
-    criteria.scheduleStartDate && exBuilder.addCriteria('date', '>=', criteria.scheduleStartDate);
-    criteria.scheduleEndDate && exBuilder.addCriteria('date', '<=', criteria.scheduleEndDate);
+    criteria.doctorId && exBuilder.addCriteria('DoctorId', '=', criteria.doctorId);
+    criteria.scheduleStartDate && exBuilder.addCriteria('Date', '>=', criteria.scheduleStartDate);
+    criteria.scheduleEndDate && exBuilder.addCriteria('Date', '<=', criteria.scheduleEndDate);
 
     return this.dynamo.scan({TableName: TABLE_NAME, ...exBuilder.build()});
   }

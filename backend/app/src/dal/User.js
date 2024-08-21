@@ -1,32 +1,19 @@
-import { dynamo } from './DynamoDB.js';
+import DynamoTable from './DynamoTable.js';
 
 const TABLE_NAME = process.env.USER_TABLE_NAME || 'Users';
 
-class User {
-  static async create(item) {
+class UserTable extends DynamoTable {
+  async create(item) {
     const params = {
-      TableName: TABLE_NAME,
+      TableName: this.tableName,
       Item: item,
-      ConditionExpression: 'attribute_not_exists(username)'
+      ConditionExpression: 'attribute_not_exists(Id)'
     };
-    return dynamo.put(params);
+    return this.dynamo.put(params);
   }
 
-  static async findByUsername(username) {
-    const params = {
-      TableName: TABLE_NAME,
-      Key: { username }
-    };
-    return dynamo.get(params);
-  }
-
-  static async findByUsernameAndDelete(username) {
-    const params = {
-      TableName: TABLE_NAME,
-      Key: { username  }
-    };
-    return dynamo.delete(params);
-  } 
 }
+
+const User = new UserTable(TABLE_NAME);
 
 export default User;

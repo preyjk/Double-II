@@ -25,7 +25,7 @@ router.get('/doctors/:doctorId', asyncHandler(async (req, res) => {
 }));
 
 router.put('/doctors/:doctorId', asyncHandler(async (req, res) => {
-  const result = await DoctorService.updateDoctor({ id: req.params.doctorId, ...req.body });
+  const result = await DoctorService.updateDoctor({ Id: req.params.doctorId, ...req.body });
   return res.status(200).json(result.data);
 }));
 

@@ -7,7 +7,7 @@ class WorkingScheduleService {
   }
 
   static async createSchedule(scheduleData) {
-    const newSchedule = await WorkingSchedule.create(scheduleData);
+    const newSchedule = await WorkingSchedule.create({...scheduleData, Status: 'available'});
     return { success: true, data: newSchedule };
   }
 

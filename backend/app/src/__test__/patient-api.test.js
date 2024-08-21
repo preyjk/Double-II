@@ -14,10 +14,10 @@ app.use((err, req, res, next) => {
 describe('Patient API End-to-End Tests', () => {
   let patientId;
   const username = 'testuser';
-  const token = AuthService.generateToken({username});
+  const token = AuthService.generateToken({id: username});
   const invalidToken = 'invalid token';
   const mismatchedUsername = 'mismatcheduser';
-  const mismatchedToken = AuthService.generateToken({username: mismatchedUsername});
+  const mismatchedToken = AuthService.generateToken({id: mismatchedUsername});
   
 
   test('should list all patients', async () => {
@@ -32,13 +32,12 @@ describe('Patient API End-to-End Tests', () => {
 
   test('should create a new patient', async () => {
     const newPatient = {
-      name: 'John Doe',
-      age: 30,
-      gender: 'Male',
-      phone: '1234567890',
-      email: 'john.doe@example.com',
-      address: '123 Main St',
-      username: username  // Ensure the username matches the authenticated user
+      Name: 'John Doe',
+      Age: 30,
+      Gender: 'Male',
+      Phone: '1234567890',
+      Email: 'john.doe@example.com',
+      Address: '123 Main St',
     };
 
     const res = await request(app)
@@ -48,14 +47,14 @@ describe('Patient API End-to-End Tests', () => {
       .expect('Content-Type', /json/)
       .expect(201);
 
-    expect(res.body).toHaveProperty('name', 'John Doe');
-    expect(res.body).toHaveProperty('age', 30);
-    expect(res.body).toHaveProperty('gender', 'Male');
-    expect(res.body).toHaveProperty('phone', '1234567890');
-    expect(res.body).toHaveProperty('email', 'john.doe@example.com');
-    expect(res.body).toHaveProperty('address', '123 Main St');
-    expect(res.body).toHaveProperty('username', username);
-    patientId = res.body.id;  // Save the patient ID for subsequent tests
+    expect(res.body).toHaveProperty('Name', 'John Doe');
+    expect(res.body).toHaveProperty('Age', 30);
+    expect(res.body).toHaveProperty('Gender', 'Male');
+    expect(res.body).toHaveProperty('Phone', '1234567890');
+    expect(res.body).toHaveProperty('Email', 'john.doe@example.com');
+    expect(res.body).toHaveProperty('Address', '123 Main St');
+    expect(res.body).toHaveProperty('UserId', username);
+    patientId = res.body.Id;  // Save the patient ID for subsequent tests
   });
 
   test('should fail to get a patient by ID with a mismatched username token', async () => {
@@ -68,7 +67,6 @@ describe('Patient API End-to-End Tests', () => {
   test('should fail to update a patient with a mismatched username token', async () => {
     const updatedData = {
       name: 'Jane Doe Updated',
-      username: mismatchedUsername  // Ensure the username doesn't match the token
     };
 
     await request(app)
@@ -92,13 +90,12 @@ describe('Patient API End-to-End Tests', () => {
       .expect('Content-Type', /json/)
       .expect(200);
 
-    expect(res.body).toHaveProperty('id', patientId);
+    expect(res.body).toHaveProperty('Id', patientId);
   });
 
   test('should update an existing patient', async () => {
     const updatedData = {
       name: 'Johnathan Doe',
-      username: username  // Ensure the username matches the authenticated user
     };
 
     const res = await request(app)
@@ -135,7 +132,6 @@ describe('Patient API End-to-End Tests', () => {
         phone: '0987654321',
         email: 'jane.doe@example.com',
         address: '456 Oak St',
-        username: username  // Ensure the username matches the authenticated user
       };
 
       await request(app)
@@ -155,7 +151,6 @@ describe('Patient API End-to-End Tests', () => {
     test('should fail to update a patient with an invalid token', async () => {
       const updatedData = {
         name: 'Jane Doe Updated',
-        username: username  // Ensure the username matches the authenticated user
       };
 
       await request(app)

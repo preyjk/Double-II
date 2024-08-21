@@ -3,18 +3,17 @@ const TABLE_NAME = process.env.PATIENTS_TABLE_NAME || 'Patients';
 
 class PatientTable extends DynamoTable {
 
-  async findByIdAndUpdate(data) {
-    const id = data.id;
-    delete data.id;
+  async findByIdAndUpdate(record) {
+    const {Id, UserId, ...data} = record;
 
     const params = {
       TableName: this.tableName,
-      Key: { id },
+      Key: { Id },
       UpdateExpression: '',
       ExpressionAttributeNames: {},
       ExpressionAttributeValues: {},
       ReturnValues: 'ALL_NEW',
-      ConditionExpression: '#username = :username',
+      ConditionExpression: '#UserId = :UserId',
     };
 
     const updateExpressions = [];
@@ -28,22 +27,22 @@ class PatientTable extends DynamoTable {
 
     params.UpdateExpression = 'set ' + updateExpressions.join(', ');
 
-    params.ExpressionAttributeNames['#username'] = 'username';
-    params.ExpressionAttributeValues[':username'] = data.username;
-
+    params.ExpressionAttributeNames['#UserId'] = 'UserId';
+    params.ExpressionAttributeValues[':UserId'] = UserId;
+    
     return this.dynamo.update(params);
   }
 
-  async findByUsername(username) {
+  async findByUserId(userId) {
     const params = {
       TableName: this.tableName,
-      IndexName: 'UsernameIndex', // Assumes there's a GSI on username
-      KeyConditionExpression: '#username = :username',
+      IndexName: 'UserIdIndex', // Assumes there's a GSI on username
+      KeyConditionExpression: '#UserId = :UserId',
       ExpressionAttributeNames: {
-        '#username': 'username',
+        '#UserId': 'UserId',
       },
       ExpressionAttributeValues: {
-        ':username': username,
+        ':UserId': userId,
       }
     };
     return this.dynamo.query(params);

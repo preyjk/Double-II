@@ -6,8 +6,8 @@ import AuthService from '../service/AuthService.js';
 const router = express.Router();
 
 router.get('/schedules', asyncHandler(async (req, res) => {
-  const { gpId, startDate, endDate } = req.query;
-  const result = await WorkingScheduleService.listSchedules({ gpId, scheduleStartDate: startDate, scheduleEndDate: endDate });
+  const { doctorId, startDate, endDate } = req.query;
+  const result = await WorkingScheduleService.listSchedules({ doctorId, scheduleStartDate: startDate, scheduleEndDate: endDate });
   if (result.success) {
     res.status(200).json(result.data);
   } else {
@@ -25,7 +25,7 @@ router.post('/schedules', AuthService.verifyRequest, AuthService.hasRole(['admin
 }));
 
 router.put('/schedules/:scheduleId', AuthService.verifyRequest, AuthService.hasRole(['admin']), asyncHandler(async (req, res) => {
-  const result = await WorkingScheduleService.updateSchedule({ id: req.params.scheduleId, ...req.body });
+  const result = await WorkingScheduleService.updateSchedule({ Id: req.params.scheduleId, ...req.body });
   if (result.success) {
     res.status(200).json(result.data);
   } else {
