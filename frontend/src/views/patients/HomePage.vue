@@ -23,15 +23,21 @@
           </div>
           <div class="chat-body">
             <!-- Deep Chat Component with Intro Panel -->
-            <deep-chat style="border: none; width: 330px; height: 420px;" id="chat-element" :connect="chatConnect">
-              <div style="display: none;">
+            <deep-chat
+              style="border: none; width: 330px; height: 420px"
+              id="chat-element"
+              :connect="chatConnect"
+            >
+              <div style="display: none">
                 <div class="custom-button">
-                  <div class="custom-button-text">"I want to book a doctor"</div>
+                  <div class="custom-button-text">
+                    "I want to book a doctor"
+                  </div>
                 </div>
-                <div class="custom-button" style="margin-top: 15px;">
+                <div class="custom-button" style="margin-top: 15px">
                   <div class="custom-button-text">"Give me clinic list"</div>
                 </div>
-                <div class="custom-button" style="margin-top: 15px;">
+                <div class="custom-button" style="margin-top: 15px">
                   <div class="custom-button-text">"I'm sick"</div>
                 </div>
               </div>
@@ -49,7 +55,7 @@
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
 import BannerComponent from "@/components/patients/BannerComponent.vue";
-import 'deep-chat';
+import "deep-chat";
 
 export default {
   components: {
@@ -64,15 +70,16 @@ export default {
       chatConnect: {
         handler: async (body, signals) => {
           try {
-            const prompt = body.messages[0]?.text || '';
+            const prompt = body.messages[0]?.text || "";
             const sessionId = this.sessionId || null;
 
-            const response = await fetch('https://api.gpbooking.icu/chatbot/', {
-              method: 'POST',
+            const response = await fetch("https://api.gpbooking.icu/chatbot/", {
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
+                "x-chatbot-session": sessionId,
               },
-              body: JSON.stringify({ prompt, sessionId }),
+              body: JSON.stringify({ prompt }),
             });
 
             const data = await response.json();
@@ -81,47 +88,51 @@ export default {
               this.sessionId = data.sessionId;
               signals.onResponse({ text: data.response });
             } else {
-              throw new Error(data.error || 'Unknown error');
+              throw new Error(data.error || "Unknown error");
             }
           } catch (error) {
-            console.error('Error during API request:', error);
-            signals.onResponse({ error: 'Error communicating with the server' });
+            console.error("Error during API request:", error);
+            signals.onResponse({
+              error: "Error communicating with the server",
+            });
           }
         },
       },
     };
   },
   mounted() {
-    const chatElementRef = document.getElementById('chat-element');
+    const chatElementRef = document.getElementById("chat-element");
 
     chatElementRef.htmlClassUtilities = {
-      'custom-button': {
+      "custom-button": {
         events: {
           click: (event) => {
             const text = event.target.children[0].innerText;
-            chatElementRef.submitUserMessage(text.substring(1, text.length - 1));
+            chatElementRef.submitUserMessage(
+              text.substring(1, text.length - 1)
+            );
           },
         },
         styles: {
           default: {
-            backgroundColor: '#f2f2f2',
-            borderRadius: '10px',
-            padding: '10px',
-            cursor: 'pointer',
-            textAlign: 'center',
+            backgroundColor: "#f2f2f2",
+            borderRadius: "10px",
+            padding: "10px",
+            cursor: "pointer",
+            textAlign: "center",
           },
           hover: {
-            backgroundColor: '#ebebeb',
+            backgroundColor: "#ebebeb",
           },
           click: {
-            backgroundColor: '#e4e4e4',
+            backgroundColor: "#e4e4e4",
           },
         },
       },
-      'custom-button-text': {
+      "custom-button-text": {
         styles: {
           default: {
-            pointerEvents: 'none',
+            pointerEvents: "none",
           },
         },
       },
@@ -206,7 +217,6 @@ export default {
 }
 
 @keyframes bounce {
-
   0%,
   100% {
     transform: translateY(0);

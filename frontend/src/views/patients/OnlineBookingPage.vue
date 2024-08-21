@@ -11,9 +11,11 @@
 
         <div class="container_body" v-if="isShowBookingForm">
             <div class="main_content">
-                <GPSelectForm v-if="!isSelectedDoctor" :clinicId="clinicId" :clinicName="clinicName"
+                <GPSelectForm v-if="!isSelectedDoctor & !isScheduleChosen" :clinicId="clinicId" :clinicName="clinicName"
                     @doctorSelected="handleDoctorSelected" />
-                <BasicBookingInformationCollectingForm :doctor="selectedDoctor" v-if="isSelectedDoctor" />
+                <DoctorSchedule :doctorId="selectedDoctor.Id" :doctorName="selectedDoctor.Gpname"
+                    v-if="isSelectedDoctor & !isScheduleChosen" @scheduleSelected="handleScheduleSelected" />
+                <BasicBookingInformationCollectingForm :doctor="selectedDoctor" v-if="isScheduleChosen" />
             </div>
         </div>
 
@@ -28,6 +30,7 @@ import FooterComponent from "@/components/patients/FooterComponent.vue";
 import FindMedicalCenterModal from "@/components/patients/FindMedicalCenterModal.vue";
 import GPSelectForm from "@/components/patients/GPSelectForm.vue";
 import BasicBookingInformationCollectingForm from "@/components/patients/BasicBookingInformationCollectingForm.vue";
+import DoctorSchedule from "@/components/patients/DoctorSchedule.vue";
 export default {
     components: {
         HeaderComponent,
@@ -35,6 +38,7 @@ export default {
         FindMedicalCenterModal,
         GPSelectForm,
         BasicBookingInformationCollectingForm,
+        DoctorSchedule,
     },
     data() {
         return {
@@ -45,6 +49,7 @@ export default {
             clinicName: "",
             isSelectedDoctor: false,
             selectedDoctor: {},
+            isScheduleChosen: false,
         };
     },
     methods: {
@@ -65,6 +70,9 @@ export default {
         handleDoctorSelected(doctor) {
             this.selectedDoctor = doctor;
             this.isSelectedDoctor = true;
+        },
+        handleScheduleSelected(schedule) {
+            this.isScheduleChosen = true;
         },
     }
 };
