@@ -55,7 +55,8 @@
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
 import BannerComponent from "@/components/patients/BannerComponent.vue";
-import "deep-chat";
+import {usePost} from '@/utils/useApi';
+import 'deep-chat';
 
 export default {
   components: {
@@ -70,26 +71,16 @@ export default {
       chatConnect: {
         handler: async (body, signals) => {
           try {
-            const prompt = body.messages[0]?.text || "";
-            const sessionId = this.sessionId || null;
-
-            const response = await fetch("https://api.gpbooking.icu/chatbot/", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "x-chatbot-session": sessionId,
-              },
-              body: JSON.stringify({ prompt }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-              this.sessionId = data.sessionId;
-              signals.onResponse({ text: data.response });
-            } else {
-              throw new Error(data.error || "Unknown error");
-            }
+            let headers = {}
+            const token = localStorage.getItem("authToken");
+            if (this.sessionId) headers = {'x-chatbot-session': this.sessionId, ...headers};
+            if (token) headers = {'x-access-token': token, ...headers};
+            const prompt = body.messages[0]?.text || '';
+            const {data, postData} = usePost("https://api.gpbooking.icu/chatbot/");
+            await postData({prompt}, headers);
+            console.log(data);
+            this.sessionId = data.value.sessionId;
+            signals.onResponse({ text: data.value.response });
           } catch (error) {
             console.error("Error during API request:", error);
             signals.onResponse({

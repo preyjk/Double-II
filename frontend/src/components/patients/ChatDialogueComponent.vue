@@ -20,7 +20,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import { usePost } from '@/utils/useApi';
+
 
 export default {
   name: "ChatDialogueComponent",
@@ -50,19 +51,16 @@ export default {
 
         try {
           // Make API request with user's message
-          const response = await axios.post(
-            "https://api.gpbooking.icu/chatbot/",
-            {
-              prompt: userMessage,
-              sessionId: this.sessionId || null,
-            }
-          );
+          let headers = {}
+          const token = localStorage.getItem("authToken");
+          if (this.sessionId) headers = {'x-chatbot-session': this.sessionId, ...headers};
+          if (token) headers = {'x-access-token': token, ...headers};
+          const {data: responseData, postData} = usePost("https://api.gpbooking.icu/chatbot/");
+          await postData({prompt: userMessage}, headers);
 
-          // Process the API response
-          const responseData = response.data;
-          this.sessionId = responseData.sessionId; // Store the session ID
+          this.sessionId = responseData.value.sessionId; // Store the session ID
           this.messages.push({
-            text: responseData.response,
+            text: responseData.value.response,
             sender: "support",
           });
         } catch (error) {
