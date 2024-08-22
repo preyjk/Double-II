@@ -1,26 +1,40 @@
 <template>
   <div class="schedule-container">
-    <h2>Available Time Slots for Dr. {{ doctorName }}</h2>
+    <el-calendar @input="handleDatePick">
+      <template #date-cell="{ data }">
+        <p :class="data.isSelected ? 'is-selected' : ''">
+          {{ data.day.split("-").slice(1).join("-") }}
+          {{ data.isSelected ? "✔️" : "" }}
+        </p>
+      </template>
+    </el-calendar>
+
+    <h2>Available Time Slots for Dr. {{ doctorName }} on {{ selectedDate }}</h2>
+
     <div v-if="loading" class="loading">Loading schedules...</div>
     <div v-if="error" class="error">
       Failed to load schedules. Please try again later.
     </div>
-    <ul v-if="!loading && !error">
+
+    <ul v-if="!loading && !error && filteredSchedules.length">
       <li
-        v-for="schedule in schedules"
+        v-for="schedule in filteredSchedules"
         :key="schedule.Id"
         class="schedule-item"
       >
-        Date: {{ schedule.Date }} | Time: {{ schedule.StartTime }} -
-        {{ schedule.EndTime }}
+        Time: {{ schedule.StartTime }} - {{ schedule.EndTime }}
         <button @click="selectTimeSlot(schedule)">Book This Slot</button>
       </li>
     </ul>
+
+    <div v-if="!loading && !error && !filteredSchedules.length">
+      No available time slots for the selected date.
+    </div>
   </div>
 </template>
 
 <script>
-import { fetchSchedules } from "@/network/netService";
+import { getSchedules } from "@/network/netService";
 
 export default {
   props: {
@@ -38,7 +52,15 @@ export default {
       schedules: [],
       loading: false,
       error: false,
+      selectedDate: this.getTodayDate(),
     };
+  },
+  computed: {
+    filteredSchedules() {
+      return this.schedules.filter(
+        (schedule) => schedule.Date === this.selectedDate
+      );
+    },
   },
   methods: {
     fetchSchedules() {
@@ -48,11 +70,15 @@ export default {
       this.loading = true;
       this.error = false;
 
-      fetchSchedules(this.doctorId, startDate, endDate)
+      getSchedules(this.doctorId, startDate, endDate)
         .then((data) => {
-          // data = [{ "Id": "1", "DoctorId": "doc123", "DoctorName": "Dr. Emily Johnson", "Date": "2024-08-21", "StartTime": "09:00 AM", "EndTime": "09:15 AM", "Status": "available" }, { "Id": "2", "DoctorId": "doc123", "DoctorName": "Dr. Emily Johnson", "Date": "2024-08-21", "StartTime": "09:15 AM", "EndTime": "09:30 AM", "Status": "available" }, { "Id": "3", "DoctorId": "doc123", "DoctorName": "Dr. Emily Johnson", "Date": "2024-08-22", "StartTime": "10:00 AM", "EndTime": "10:15 AM", "Status": "available" }, { "Id": "4", "DoctorId": "doc456", "DoctorName": "Dr. John Smith", "Date": "2024-08-23", "StartTime": "11:00 AM", "EndTime": "11:15 AM", "Status": "available" }, { "Id": "5", "DoctorId": "doc456", "DoctorName": "Dr. John Smith", "Date": "2024-08-23", "StartTime": "11:15 AM", "EndTime": "11:30 AM", "Status": "available" }]
-          this.schedules = data;
+          this.schedules = data.sort((a, b) => {
+            const timeA = new Date(`${a.Date}T${a.StartTime}`);
+            const timeB = new Date(`${b.Date}T${b.StartTime}`);
+            return timeA - timeB;
+          });
           this.loading = false;
+          // console.log(data);
         })
         .catch((error) => {
           console.error("Failed to fetch schedules:", error);
@@ -62,18 +88,22 @@ export default {
     },
     getTodayDate() {
       const today = new Date();
-      return today.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+      return today.toISOString().split("T")[0];
     },
     getEndDate() {
       const today = new Date();
-      today.setDate(today.getDate() + 7); // Get the date one week from today
-      return today.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+      today.setDate(today.getDate() + 28);
+      return today.toISOString().split("T")[0];
+    },
+    handleDatePick(date) {
+      this.selectedDate = date.toISOString().split("T")[0];
+      console.log(this.selectedDate);
     },
     selectTimeSlot(schedule) {
       alert(
         `You have selected: ${schedule.Date} from ${schedule.StartTime} to ${schedule.EndTime}`
       );
-      this.$emit("scheduleSelected", this.schedules);
+      this.$emit("scheduleSelected", schedule);
     },
   },
   mounted() {
@@ -119,5 +149,9 @@ export default {
 
 .schedule-item button:hover {
   background-color: #2980b9;
+}
+
+.is-selected {
+  color: #1989fa;
 }
 </style>

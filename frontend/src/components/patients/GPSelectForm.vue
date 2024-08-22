@@ -3,21 +3,25 @@
     <h1>Doctors at {{ clinicName }}</h1>
     <p>Please select a doctor to proceed with the booking:</p>
     <ul class="doctor-list">
-      <li v-for="doctor in filteredDoctors" :key="doctor.id" @click="selectDoctor(doctor)" class="doctor-item">
-        {{ doctor.Gpname }} - {{ doctor.Speciality }}
+      <li
+        v-for="doctor in filteredDoctors"
+        :key="doctor.id"
+        @click="selectDoctor(doctor)"
+        class="doctor-item"
+      >
+        {{ doctor.LastName }} - {{ doctor.Speciality }}
       </li>
     </ul>
   </div>
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
-import { useGet } from '@/utils/useApi';
+import { ref } from "vue";
+import { useGet } from "@/utils/useApi";
 
 export default {
   name: "GPSelectForm",
-  components: {
-  },
+  components: {},
   props: {
     clinicName: {
       type: String,
@@ -28,15 +32,19 @@ export default {
       required: true,
     },
   },
-  emits: ['doctorSelected'],
+  emits: ["doctorSelected"],
   setup(props, { emit }) {
-
     const selectedDoctor = ref(null);
-    const {data: filteredDoctors} = useGet(`${import.meta.env.VITE_API_ENDPOINT}/doctors?workplace=${props.clinicName}`)
+    const { data: filteredDoctors } = useGet(
+      `${import.meta.env.VITE_API_ENDPOINT}/doctors?workplace=${
+        props.clinicName
+      }`
+    );
 
     const selectDoctor = (doctor) => {
       selectedDoctor.value = doctor;
-      emit('doctorSelected', doctor);
+      // console.log("xx:", doctor.Id);
+      emit("doctorSelected", doctor);
     };
 
     return {
