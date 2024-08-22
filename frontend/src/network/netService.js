@@ -1,4 +1,4 @@
-import request from './netUtils';
+import request from "./netUtils";
 
 export const login = function (username, password) {
   const config = {
@@ -71,8 +71,7 @@ export const getAppointments = function () {
     });
 };
 
-
-export const fetchSchedules = function (doctorId, startDate, endDate) {
+export const getSchedules = function (doctorId, startDate, endDate) {
   const config = {
     url: "/schedules",
     method: "get",
@@ -85,7 +84,7 @@ export const fetchSchedules = function (doctorId, startDate, endDate) {
 
   return request(config)
     .then((res) => {
-      console.log("Schedules fetched successfully:", res.data);
+      // console.log("Schedules fetched successfully:", res.data);
       return res.data;
     })
     .catch((err) => {
