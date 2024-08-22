@@ -69,6 +69,7 @@ export default {
 
 .left-section {
   width: 60%;
+  height: 80vh;
   position: relative;
 }
 
