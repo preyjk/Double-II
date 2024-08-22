@@ -1,8 +1,8 @@
 import WorkingSchedule from '../dal/WorkingSchedule.js';
 
 class WorkingScheduleService {
-  static async listSchedules({ gpId, scheduleStartDate, scheduleEndDate }) {
-    const data = await WorkingSchedule.query({ gpId, scheduleStartDate, scheduleEndDate });
+  static async listSchedules({ doctorId, scheduleStartDate, scheduleEndDate }) {
+    const data = await WorkingSchedule.query({ doctorId, scheduleStartDate, scheduleEndDate });
     return { success: true, data: data.Items };
   }
 
