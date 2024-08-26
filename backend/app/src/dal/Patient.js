@@ -1,9 +1,10 @@
 import DynamoTable from "./DynamoTable.js";
+import { QueryCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 const TABLE_NAME = process.env.PATIENTS_TABLE_NAME || 'Patients';
 
 class PatientTable extends DynamoTable {
 
-  async findByIdAndUpdate(record) {
+  findByIdAndUpdate(record) {
     const {Id, UserId, ...data} = record;
 
     const params = {
@@ -30,10 +31,10 @@ class PatientTable extends DynamoTable {
     params.ExpressionAttributeNames['#UserId'] = 'UserId';
     params.ExpressionAttributeValues[':UserId'] = UserId;
     
-    return this.dynamo.update(params);
+    return new UpdateCommand(params);
   }
 
-  async findByUserId(userId) {
+  findByUserId(userId) {
     const params = {
       TableName: this.tableName,
       IndexName: 'UserIdIndex', // Assumes there's a GSI on username
@@ -45,7 +46,7 @@ class PatientTable extends DynamoTable {
         ':UserId': userId,
       }
     };
-    return this.dynamo.query(params);
+    return new QueryCommand(params);
   }
 }
 

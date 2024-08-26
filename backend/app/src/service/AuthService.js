@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import User from '../dal/User.js';
+import { dynamo } from '../dal/DynamoDB.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'JWT_SECRET';
 
@@ -66,7 +67,7 @@ class AuthService {
   static async signup({ username, password, roles }) {
     try {
       const hashedPassword = AuthService.hashPassword(password);
-      await User.create({ Id: username, Password: hashedPassword, Roles: roles});
+      await dynamo.send(User.create({ Id: username, Password: hashedPassword, Roles: roles}));
       return { success: true, message: 'Signup successful' };
     } catch (error) {
       if (error.name === 'ConditionalCheckFailedException') {
@@ -79,7 +80,7 @@ class AuthService {
 
   static async login({ username, password }) {
     try {
-      const result = await User.findById(username);
+      const result = await dynamo.send(User.findById(username));
       if (result.Item && AuthService.verifyPassword(password, result.Item.Password)) {
         const token = AuthService.generateToken({id: username, roles: result.Item.Roles});
         return { success: true, token };

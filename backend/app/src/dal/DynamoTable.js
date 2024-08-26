@@ -1,42 +1,60 @@
-import { dynamo } from './DynamoDB.js';
+import { ScanCommand, PutCommand, GetCommand, UpdateCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
 import { v4 as uuidv4 } from 'uuid';
 
 class DynamoTable {
     constructor(tableName) {
         this.tableName = tableName;
-        this.dynamo = dynamo;
     }
 
-    async list() {
+    /**
+     * List all items in the DynamoDB table.
+     * @returns {ScanCommand} The command to list all items in the table.
+     */
+    list() {
         const params = {
-            TableName: this.tableName
+            TableName: this.tableName,
         };
-        return dynamo.scan(params);
+        return new ScanCommand(params);
     }
 
-    async create(data) {
+    /**
+     * Create a new item in the DynamoDB table.
+     * @param {Object} data - The data to insert into the table.
+     * @returns {PutCommand} The command to create a new item.
+     */
+    create(data) {
         const item = {
             Id: this.generateId(data),
             ...data,
         };
         const params = {
             TableName: this.tableName,
-            Item: item
+            Item: item,
+            ReturnValues: 'ALL_OLD'
         };
-        await dynamo.put(params);
-        return item;
+        return new PutCommand(params);
     }
 
-    async findById(Id) {
+    /**
+     * Find an item by its ID in the DynamoDB table.
+     * @param {string} Id - The ID of the item to find.
+     * @returns {GetCommand} The command to get an item by its ID.
+     */
+    findById(Id) {
         const params = {
             TableName: this.tableName,
-            Key: { Id }
+            Key: { Id },
         };
-        return dynamo.get(params);
+        return new GetCommand(params);
     }
 
-    async findByIdAndUpdate(newData) {
-        const {Id, ...data} = newData;
+    /**
+     * Update an item by its ID in the DynamoDB table.
+     * @param {Object} newData - The new data for the item, including its ID.
+     * @returns {UpdateCommand} The command to update an item by its ID.
+     */
+    findByIdAndUpdate(newData) {
+        const { Id, ...data } = newData;
 
         const params = {
             TableName: this.tableName,
@@ -44,13 +62,13 @@ class DynamoTable {
             UpdateExpression: '',
             ExpressionAttributeNames: {},
             ExpressionAttributeValues: {},
-            ReturnValues: 'ALL_NEW'
+            ReturnValues: 'ALL_NEW',
         };
 
         const updateExpressions = [];
-        Object.keys(data).forEach((key, index) => {
-            const attributeKey = `#attr${index}`;
-            const valueKey = `:val${index}`;
+        Object.keys(data).forEach(key => {
+            const attributeKey = `#${key}`;
+            const valueKey = `:${key}`;
             updateExpressions.push(`${attributeKey} = ${valueKey}`);
             params.ExpressionAttributeNames[attributeKey] = key;
             params.ExpressionAttributeValues[valueKey] = data[key];
@@ -58,31 +76,47 @@ class DynamoTable {
 
         params.UpdateExpression = 'set ' + updateExpressions.join(', ');
 
-        return dynamo.update(params);
+        return new UpdateCommand(params);
     }
 
-    async findByIdAndDelete(Id) {
+    /**
+     * Delete an item by its ID from the DynamoDB table.
+     * @param {string} Id - The ID of the item to delete.
+     * @returns {DeleteCommand} The command to delete an item by its ID.
+     */
+    findByIdAndDelete(Id) {
         const params = {
             TableName: this.tableName,
-            Key: { Id }
+            Key: { Id },
         };
-        return dynamo.delete(params);
+        return new DeleteCommand(params);
     }
 
-    async findByProperty(propertyName, value) {
+    /**
+     * Find items by a specific property and value in the DynamoDB table.
+     * @param {string} propertyName - The name of the property to filter by.
+     * @param {any} value - The value to filter by.
+     * @returns {ScanCommand} The command to find items by property.
+     */
+    findByProperty(propertyName, value) {
         const params = {
             TableName: this.tableName,
             FilterExpression: `#key = :value`,
             ExpressionAttributeNames: {
-                '#key': propertyName
+                '#key': propertyName,
             },
             ExpressionAttributeValues: {
-                ':value': value
-            }
+                ':value': value,
+            },
         };
-        return dynamo.scan(params);
+        return new ScanCommand(params);
     }
 
+    /**
+     * Generate a unique ID for a new item.
+     * @param {Object} data - The data for which to generate an ID.
+     * @returns {string} A unique ID.
+     */
     generateId(data) {
         return uuidv4();
     }

@@ -717,17 +717,29 @@ components:
       type: object
       required:
         - ScheduleId
-        - PatientName
+        - FirstName
+        - LastName
+        - DateOfBirth
       properties:
         Id:
           type: string
           description: Unique identifier for the appointment
+        FirstName:
+          type: string
+          description: First name of the patient
+        LastName:
+          type: string
+          description: Last name of the patient
+        DateOfBirth:
+          type: string
+          format: date
+          description: date of birth of the patient
+        BookingReference:
+          type: string
+          description: booking reference
         ScheduleId:
           type: string
           description: Unique identifier for the booking timeslot
-        PatientName:
-          type: string
-          description: Name of the patient
         DoctorId:
           type: string
           description: Unique identifier for the doctor
