@@ -80,14 +80,15 @@ class DynamoTable {
     }
 
     /**
-     * Delete an item by its ID from the DynamoDB table.
+     * Delete an item by its ID from the DynamoDB table and return the deleted item.
      * @param {string} Id - The ID of the item to delete.
-     * @returns {DeleteCommand} The command to delete an item by its ID.
+     * @returns {DeleteCommand} The command to delete an item by its ID and return the deleted item.
      */
     findByIdAndDelete(Id) {
         const params = {
             TableName: this.tableName,
             Key: { Id },
+            ReturnValues: "ALL_OLD"
         };
         return new DeleteCommand(params);
     }

@@ -1,4 +1,4 @@
-import Appointment from '../dal/Appointment.js';
+import Appointment, { BookingReferenceIndex } from '../dal/Appointment.js';
 import WorkingSchedule from '../dal/WorkingSchedule.js';
 import WorkingScheduleService from './WorkingScheduleService.js';
 import retry from './util/retry.js';
@@ -28,12 +28,16 @@ class AppointmentService {
           ScheduleId: WorkingScheduleId,
           BookingReference: nano(),
           ...scheduleData,
-          ...appointmentData
+          ...appointmentData,
+          Status: 'pending'
         });
+
+        const { BookingReference, LastName, DateOfBirth, Id: AppointmentId } = putAppointmentCommand.input.Item;
 
         await txBuilder
           .add(updateScheduleCommand)
           .add(putAppointmentCommand)
+          .add(BookingReferenceIndex.create({ BookingReference, LastName, DateOfBirth, AppointmentId }))
           .execute();
         return { success: true, data: putAppointmentCommand.input.Item };
       });
@@ -56,8 +60,33 @@ class AppointmentService {
   }
 
   static async deleteAppointment(appointmentId) {
-    await dynamo.send(Appointment.findByIdAndDelete(appointmentId));
+    const result = await dynamo.send(Appointment.findById(appointmentId));
+    if (!result.Item) {
+      return { success: false, message: 'Appointment not found' };
+    }
+    const txBuilder = new TransactionBuilder();
+    const { ScheduleId, BookingReference, LastName, DateOfBirth } = result.Item;
+    const updateScheduleCommand = WorkingSchedule.findByIdAndUpdate({ Id: ScheduleId, Status: 'available' });
+    const deleteAppointmentCommand = Appointment.findByIdAndDelete(appointmentId);
+    const bookingReferenceId = BookingReferenceIndex.generateId({ BookingReference, LastName, DateOfBirth });
+    const deleteBookingReferenceIndexCommand = BookingReferenceIndex.findByIdAndDelete(bookingReferenceId);
+    await txBuilder
+      .add(updateScheduleCommand)
+      .add(deleteAppointmentCommand)
+      .add(deleteBookingReferenceIndexCommand)
+      .execute();
     return { success: true, message: 'Appointment deleted successfully' };
+  }
+
+  static async getAppointmentByBookingReference({ BookingReference, LastName, DateOfBirth }) {
+    const bookingReferenceId = BookingReferenceIndex.generateId({ BookingReference, LastName, DateOfBirth });
+    const bookingReferenceIndex = await dynamo.send(BookingReferenceIndex.findById(bookingReferenceId));
+    const result = await dynamo.send(Appointment.findById(bookingReferenceIndex.Item.AppointmentId));
+    if (result.Item) {
+      return { success: true, data: result.Item };
+    } else {
+      return { success: false, message: 'Appointment not found' };
+    }
   }
 
 }

@@ -15,6 +15,16 @@ router.get('/appointments', asyncHandler(async (req, res) => {
   }
 }));
 
+router.get('/appointment', asyncHandler(async (req, res) => {
+  const { reference, lastname, dob } = req.query;
+  const result = await AppointmentService.getAppointmentByBookingReference({ BookingReference: reference, LastName: lastname, DateOfBirth: dob });
+  if (result.success) {
+    res.status(200).json(result.data);
+  } else {
+    res.status(500).json(result.message);
+  }
+}));
+
 router.get('/user/appointments', AuthService.verifyRequest, asyncHandler(async (req, res) => {
   const { doctorId, startDate, endDate } = req.query;
   const result = await AppointmentService.listAppointments({ doctorId, userId: req.auth.id, appointmentStartDate: startDate, appointmentEndDate: endDate });

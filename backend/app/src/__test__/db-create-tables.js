@@ -17,6 +17,19 @@ const tableDefinitions = [
         },
     },
     {
+        TableName: 'BookingReferenceIndex',
+        KeySchema: [
+            { AttributeName: 'Id', KeyType: 'HASH' }, // Primary key
+        ],
+        AttributeDefinitions: [
+            { AttributeName: 'Id', AttributeType: 'S' },
+        ],
+        ProvisionedThroughput: {
+            ReadCapacityUnits: 5,
+            WriteCapacityUnits: 5,
+        },
+    },
+    {
         TableName: 'Users',
         KeySchema: [
             { AttributeName: 'Id', KeyType: 'HASH' }, // Primary key
