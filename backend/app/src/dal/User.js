@@ -1,15 +1,16 @@
 import DynamoTable from './DynamoTable.js';
+import { PutCommand } from '@aws-sdk/lib-dynamodb';
 
 const TABLE_NAME = process.env.USER_TABLE_NAME || 'Users';
 
 class UserTable extends DynamoTable {
-  async create(item) {
+  create(item) {
     const params = {
       TableName: this.tableName,
       Item: item,
       ConditionExpression: 'attribute_not_exists(Id)'
     };
-    return this.dynamo.put(params);
+    return new PutCommand(params);
   }
 
 }

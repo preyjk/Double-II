@@ -1,8 +1,9 @@
 import Doctor from '../dal/Doctor.js';
+import { dynamo } from '../dal/DynamoDB.js';
 
 class ClinicService {
   static async listClinics() {
-    const data = await Doctor.list();
+    const data = await dynamo.send(Doctor.list());
     const workplaces = new Set();
     const clinics = [];
     data.Items.forEach(item => {

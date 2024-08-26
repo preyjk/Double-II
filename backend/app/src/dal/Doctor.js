@@ -1,10 +1,11 @@
 import DynamoTable from "./DynamoTable.js";
 import FilterExpressionBuilder from "./util/FilterExpressionBuilder.js";
+import { ScanCommand } from '@aws-sdk/lib-dynamodb';
 const TABLE_NAME = process.env.DOCTOR_TABLE_NAME || 'Doctors';
 
 class DoctorTable extends DynamoTable {
 
-   async query(criteria) {
+   query(criteria) {
     
     const exBuilder = new FilterExpressionBuilder();
     
@@ -12,7 +13,7 @@ class DoctorTable extends DynamoTable {
     criteria.lastname && exBuilder.addCriteria('LastName', '=', criteria.lastname);
     criteria.workplace && exBuilder.addCriteria('Workplace', '=', criteria.workplace);
     
-    return this.dynamo.scan({TableName: this.tableName, ...exBuilder.build()});    
+    return new ScanCommand({TableName: this.tableName, ...exBuilder.build()});    
   }
 }
 
