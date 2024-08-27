@@ -1,12 +1,8 @@
 <template>
   <div class="hero-section">
     <div class="left-section">
-      <video
-        ref="videoPlayer"
-        @mouseenter="handleMouseEnter"
-        muted
-      >
-        <source :src="videoSrc" type="video/mp4">
+      <video ref="videoPlayer" @mouseenter="handleMouseEnter" muted>
+        <source :src="videoSrc" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
     </div>
@@ -23,40 +19,39 @@
 </template>
 
 <script>
-import robotImage from '@/assets/robot.png';  
-import videoSrc from '@/assets/1.mp4';  
+import robotImage from "@/assets/robot.png";
+import videoSrc from "@/assets/1.mp4";
 export default {
   name: "BannerComponent",
   data() {
     return {
       videoSrc,
-      robotImageSrc: robotImage, 
+      robotImageSrc: robotImage,
       videoReadyToPlay: true,
     };
   },
   methods: {
     handleMouseEnter() {
-      if (this.videoReadyToPlay) {  
+      if (this.videoReadyToPlay) {
         this.playVideoFromStart();
       }
     },
     playVideoFromStart() {
       const videoElement = this.$refs.videoPlayer;
-      this.videoReadyToPlay = false;  
-      videoElement.play().catch(e => {
+      this.videoReadyToPlay = false;
+      videoElement.play().catch((e) => {
         console.error("Error playing the video:", e);
       });
       videoElement.onended = () => {
-        this.videoReadyToPlay = true;  
+        this.videoReadyToPlay = true;
       };
     },
     goChatbotPage() {
       this.$router.push({ name: "Chatbot" });
-    }
-  }
+    },
+  },
 };
 </script>
-
 
 <style scoped>
 .hero-section {
@@ -68,7 +63,7 @@ export default {
 }
 
 .left-section {
-  width: 60%;
+  width: 68%;
   height: 80vh;
   position: relative;
 }
@@ -125,7 +120,7 @@ video {
 }
 
 .play-button:hover {
-  background-color: #ddeeff;  
+  background-color: #ddeeff;
 }
 
 .play-button .triangle {
