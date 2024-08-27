@@ -14,6 +14,7 @@ app.use((err, req, res, next) => {
 describe('Working Schedule API', () => {
   const token = AuthService.generateToken({username: 'admin', roles: ['admin']});
   let scheduleId;
+  let version;
   const doctorId = '12345678';
 
   test('should create a new working schedule', async () => {
@@ -38,6 +39,7 @@ describe('Working Schedule API', () => {
     expect(res.body).toHaveProperty('EndTime', '17:00');
     expect(res.body).toHaveProperty('DoctorName', 'john smith');
     scheduleId = res.body.Id; // Assuming 'id' is part of the response
+    version = res.body.Version;
   });
 
   test('should list all schedules for a given doctorId and date range', async () => {
@@ -54,6 +56,7 @@ describe('Working Schedule API', () => {
       Date: "2023-08-12",
       StartTime: "10:00",
       EndTime: "16:00",
+      Version: version,
     };
 
     const res = await request(app)
@@ -66,6 +69,7 @@ describe('Working Schedule API', () => {
     expect(res.body).toHaveProperty('Date', '2023-08-12');
     expect(res.body).toHaveProperty('StartTime', '10:00');
     expect(res.body).toHaveProperty('EndTime', '16:00');
+    version = res.body.Version;
   });
 
   test('should delete an existing schedule', async () => {

@@ -1,4 +1,5 @@
 export default {
+  transformIgnorePatterns: ['/node_modules/(?!(nanoid)/)'],
   transform: {
     '^.+\\.(t|j)sx?$': ['babel-jest'],
   },

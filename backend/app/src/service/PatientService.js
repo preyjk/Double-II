@@ -1,18 +1,20 @@
 import Patient from '../dal/Patient.js';
+import { dynamo } from '../dal/DynamoDB.js';
 
 class PatientService {
   static async listPatients() {
-    const data = await Patient.list();
+    const data = await dynamo.send(Patient.list());
     return { success: true, data: data.Items };
   }
 
   static async createPatient(patientData) {
-    const newPatient = await Patient.create(patientData);
-    return { success: true, data: newPatient };
+    const putCommand = Patient.create(patientData);
+    await dynamo.send(putCommand);
+    return { success: true, data: putCommand.input.Item };
   }
 
   static async getPatientById(patientId) {
-    const result = await Patient.findById(patientId);
+    const result = await dynamo.send(Patient.findById(patientId));
     if (result.Item) {
       return { success: true, data: result.Item };
     } else {
@@ -21,17 +23,17 @@ class PatientService {
   }
 
   static async updatePatient(patientData) {
-    const updatedPatient = await Patient.findByIdAndUpdate(patientData);
+    const updatedPatient = await dynamo.send(Patient.findByIdAndUpdate(patientData));
     return { success: true, data: updatedPatient.Attributes };
   }
 
   static async deletePatient(patientId) {
-    await Patient.findByIdAndDelete(patientId);
+    await dynamo.send(Patient.findByIdAndDelete(patientId));
     return { success: true, message: 'Patient deleted successfully' };
   }
 
   static async getPatientByUserId(userId) {
-    const result = await Patient.findByUserId(userId);
+    const result = await dynamo.send(Patient.findByUserId(userId));
     return { success: true, data: result.Items };
   }
 }
