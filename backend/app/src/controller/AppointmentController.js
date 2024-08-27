@@ -110,6 +110,9 @@ router.post('/appointments/reschedule',
     });
     if (result.success) {
       const appointment = result.data;
+      if (appointment.UserId) {
+        return res.status(400).json('The appointment is linked to a user, please login to reschedule');
+      }
       const rescheduleResult = await AppointmentService.rescheduleAppointment({
         appointmentId: appointment.Id,
         newScheduleId: ScheduleId
