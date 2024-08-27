@@ -12,6 +12,48 @@ servers:
   - url: https://c8ar5h58d8.execute-api.us-east-1.amazonaws.com/v1
 
 paths:
+  /appointment:
+    get:
+      summary: Get appointment by booking reference
+      description: Retrieve an appointment using the booking reference, last name, and date of birth.
+      parameters:
+        - in: query
+          name: reference
+          required: true
+          schema:
+            type: string
+          description: The booking reference of the appointment.
+        - in: query
+          name: lastname
+          required: true
+          schema:
+            type: string
+          description: The last name of the person who booked the appointment.
+        - in: query
+          name: dob
+          required: true
+          schema:
+            type: string
+            format: date
+          description: The date of birth of the person who booked the appointment.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
   /appointments:
     get:
       summary: List all appointments
@@ -126,6 +168,43 @@ paths:
           description: Appointment deleted successfully
         '404':
           description: Appointment not found
+  /appointments/{appointmentId}/reschedule:
+    post:
+      summary: Reschedule an appointment
+      description: Reschedule an existing appointment to a new schedule.
+      parameters:
+        - in: path
+          name: appointmentId
+          required: true
+          schema:
+            type: string
+          description: The ID of the appointment to be rescheduled.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ScheduleId:
+                  type: string
+                  description: The new schedule ID for the appointment.
+              required:
+                - ScheduleId
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Rescheduling failed"
   /user/appointments:
     get:
       summary: List all appointments under current user

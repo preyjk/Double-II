@@ -13,6 +13,7 @@ app.use((err, req, res, next) => {
 
 describe('Patient API End-to-End Tests', () => {
   let patientId;
+  let version;
   const username = 'testuser';
   const token = AuthService.generateToken({id: username});
   const invalidToken = 'invalid token';
@@ -55,6 +56,7 @@ describe('Patient API End-to-End Tests', () => {
     expect(res.body).toHaveProperty('Address', '123 Main St');
     expect(res.body).toHaveProperty('UserId', username);
     patientId = res.body.Id;  // Save the patient ID for subsequent tests
+    version = res.body.Version;
   });
 
   test('should fail to get a patient by ID with a mismatched username token', async () => {
@@ -67,6 +69,7 @@ describe('Patient API End-to-End Tests', () => {
   test('should fail to update a patient with a mismatched username token', async () => {
     const updatedData = {
       name: 'Jane Doe Updated',
+      Version: version,
     };
 
     await request(app)
@@ -96,6 +99,7 @@ describe('Patient API End-to-End Tests', () => {
   test('should update an existing patient', async () => {
     const updatedData = {
       name: 'Johnathan Doe',
+      Version: version,
     };
 
     const res = await request(app)
@@ -106,6 +110,7 @@ describe('Patient API End-to-End Tests', () => {
       .expect(200);
 
     expect(res.body).toHaveProperty('name', 'Johnathan Doe');
+    version = res.body.Version;
   });
 
   test('should delete a patient', async () => {
@@ -151,6 +156,7 @@ describe('Patient API End-to-End Tests', () => {
     test('should fail to update a patient with an invalid token', async () => {
       const updatedData = {
         name: 'Jane Doe Updated',
+        Version: version
       };
 
       await request(app)
