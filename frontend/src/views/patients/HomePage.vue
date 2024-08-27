@@ -4,7 +4,7 @@
     <div class="container_banner">
       <BannerComponent class="banner"></BannerComponent>
     </div>
-    <ChatComponent></ChatComponent>
+    <ChatWidget></ChatWidget>
     <FooterComponent class="container_footer"></FooterComponent>
   </div>
 </template>
@@ -13,14 +13,14 @@
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
 import BannerComponent from "@/components/patients/BannerComponent.vue";
-import ChatComponent from "@/components/patients/chatbot/ChatComponent.vue";
+import ChatWidget from "@/components/patients/chatbot/ChatWidget.vue";
 
 export default {
   components: {
     HeaderComponent,
     FooterComponent,
     BannerComponent,
-    ChatComponent,
+    ChatWidget,
   },
 };
 </script>
