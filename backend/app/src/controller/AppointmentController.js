@@ -31,7 +31,7 @@ router.get('/appointment',
     });
     if (result.success) {
       return res.status(200).json(result.data);
-    } 
+    }
     return res.status(500).json(result.message);
   }));
 
@@ -47,7 +47,7 @@ router.get('/user/appointments',
     });
     if (result.success) {
       return res.status(200).json(result.data);
-    } 
+    }
     return res.status(500).json(result.message);
   }));
 
@@ -56,7 +56,7 @@ router.post('/appointments',
     const result = await AppointmentService.createAppointment(req.body);
     if (result.success) {
       return res.status(201).json(result.data);
-    } 
+    }
     return res.status(400).json(result.message);
   }));
 
@@ -66,7 +66,7 @@ router.post('/user/appointments',
     const result = await AppointmentService.createAppointment({ ...req.body, UserId: req.auth.id });
     if (result.success) {
       return res.status(201).json(result.data);
-    } 
+    }
     return res.status(400).json(result.message);
   }));
 
@@ -159,6 +159,58 @@ router.delete('/appointments/:appointmentId',
     } else {
       res.status(500).json('Internal server error');
     }
+  }));
+
+router.post('/appointments/:appointmentId/cancel',
+  AuthService.verifyRequest,
+  asyncHandler(async (req, res) => {
+    const appointment = await AppointmentService.getAppointmentById(req.params.appointmentId);
+    if (!appointment.success) {
+      return res.status(404).json(appointment.message);
+    }
+    if (appointment.data.UserId !== req.auth.id && !req.auth.roles.includes('admin')) {
+      return res.status(403).json('Forbidden');
+    }
+    const result = await AppointmentService.cancelAppointment(appointment.data);
+    if (result.success) {
+      return res.status(200).json(result.data);
+    }
+    return res.status(500).json(result.message);
+  }));
+
+router.post('/appointments/cancel',
+  asyncHandler(async (req, res) => {
+    const { BookingReference, LastName, DateOfBirth } = req.body;
+    const result = await AppointmentService.getAppointmentByBookingReference({
+      BookingReference,
+      LastName,
+      DateOfBirth
+    });
+    if (result.success) {
+      if (result.data.UserId) {
+        return res.status(400).json('The appointment is linked to a user, please login to cancel');
+      }
+      const cancelResult = await AppointmentService.cancelAppointment(result.data);
+      if (cancelResult.success) {
+        return res.status(200).json(cancelResult.data);
+      }
+    }
+    return res.status(500).json(cancelResult.message);
+  }));
+
+router.post('/appointments/:appointmentId/complete',
+  AuthService.verifyRequest,
+  AuthService.hasRole(['admin']),
+  asyncHandler(async (req, res) => {
+    const appointment = await AppointmentService.getAppointmentById(req.params.appointmentId);
+    if (!appointment.success) {
+      return res.status(404).json(appointment.message);
+    }
+    const result = await AppointmentService.completeAppointment(appointment.data);
+    if (result.success) {
+      return res.status(200).json(result.data);
+    }
+    return res.status(500).json(result.message);
   }));
 
 export default router;
