@@ -131,12 +131,12 @@ describe('GP Appointment Management API', () => {
 
   test('should link appointment to user', async () => {
     const res = await request(app)
-    .post(`/user/appointments/link`)
-    .set('Authorization', `Bearer ${token}`)
-    .send({ BookingReference: bookingReference, LastName: lastName, DateOfBirth: dateOfBirth })
-    .expect('Content-Type', /json/)
-    .expect(200);
-    
+      .post(`/user/appointments/link`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ BookingReference: bookingReference, LastName: lastName, DateOfBirth: dateOfBirth })
+      .expect('Content-Type', /json/)
+      .expect(200);
+
     expect(res.body).toHaveProperty('Id', appointmentId1);
     expect(res.body).toHaveProperty('ScheduleId', scheduleId1);
     expect(res.body).toHaveProperty('DoctorId', doctorId);
@@ -216,7 +216,7 @@ describe('GP Appointment Management API', () => {
       Version: appointment1.Version
     };
     const res = await request(app)
-      .put(`/user/appointments/${appointmentId1}`)
+      .put(`/appointments/${appointmentId1}`)
       .set('Authorization', `Bearer ${token}`)
       .send(updatedData)
       .expect('Content-Type', /json/)
@@ -237,6 +237,7 @@ describe('GP Appointment Management API', () => {
   test('should reschedule an appointment', async () => {
     const res = await request(app)
       .post(`/appointments/${appointmentId1}/reschedule`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ ScheduleId: scheduleId2 })
       .expect('Content-Type', /json/)
       .expect(200);
@@ -267,6 +268,14 @@ describe('GP Appointment Management API', () => {
         expect(schedule).toHaveProperty('Status', 'occupied');
       }
     });
+  });
+
+  test('should cancel an appointment', async () => {
+    const res = await request(app)
+      .post(`/appointments/${appointmentId1}/cancel`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+    expect(res.body).toHaveProperty('Status', 'cancelled');
   });
 
   test('should delete an appointment', async () => {

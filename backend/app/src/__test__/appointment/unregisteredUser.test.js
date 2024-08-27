@@ -72,7 +72,6 @@ describe('GP Appointment Management API', () => {
       FirstName: "Jane",
       DateOfBirth: "1990-01-01",
       Reason: "Follow-up check",
-      Status: "pending",
     };
 
     const res = await request(app)
@@ -89,7 +88,7 @@ describe('GP Appointment Management API', () => {
     expect(res.body).toHaveProperty('StartTime', '09:00');
     expect(res.body).toHaveProperty('EndTime', '09:15');
     expect(res.body).toHaveProperty('Reason', 'Follow-up check');
-    expect(res.body).toHaveProperty('Status', 'pending');
+    expect(res.body).toHaveProperty('Status', 'active');
     expect(res.body).toHaveProperty('LastName', 'Doe');
     expect(res.body).toHaveProperty('FirstName', 'Jane');
     expect(res.body).toHaveProperty('DateOfBirth', '1990-01-01');
@@ -113,7 +112,7 @@ describe('GP Appointment Management API', () => {
     expect(res.body).toHaveProperty('StartTime', '09:00');
     expect(res.body).toHaveProperty('EndTime', '09:15');
     expect(res.body).toHaveProperty('Reason', 'Follow-up check');
-    expect(res.body).toHaveProperty('Status', 'pending');
+    expect(res.body).toHaveProperty('Status', 'active');
     expect(res.body).toHaveProperty('LastName', 'Doe');
     expect(res.body).toHaveProperty('FirstName', 'Jane');
     expect(res.body).toHaveProperty('DateOfBirth', '1990-01-01');
@@ -122,8 +121,8 @@ describe('GP Appointment Management API', () => {
 
   test('should reschedule an appointment', async () => {
     const res = await request(app)
-      .post(`/appointments/${appointmentId}/reschedule`)
-      .send({ ScheduleId: scheduleId2 })
+      .post(`/appointments/reschedule`)
+      .send({ BookingReference: bookingReference, LastName: lastName, DateOfBirth: dateOfBirth, ScheduleId: scheduleId2 })
       .expect('Content-Type', /json/)
       .expect(200);
 
@@ -134,7 +133,7 @@ describe('GP Appointment Management API', () => {
     expect(res.body).toHaveProperty('StartTime', '09:15');
     expect(res.body).toHaveProperty('EndTime', '09:30');
     expect(res.body).toHaveProperty('Reason', 'Follow-up check');
-    expect(res.body).toHaveProperty('Status', 'pending');
+    expect(res.body).toHaveProperty('Status', 'active');
     expect(res.body).toHaveProperty('LastName', 'Doe');
     expect(res.body).toHaveProperty('FirstName', 'Jane');
     expect(res.body).toHaveProperty('DateOfBirth', '1990-01-01');
@@ -154,6 +153,16 @@ describe('GP Appointment Management API', () => {
       }
     });
   });
+
+  test('should cancel an appointment', async () => {
+    const res = await request(app)
+      .post('/appointments/cancel')
+      .send({ BookingReference: bookingReference, LastName: lastName, DateOfBirth: dateOfBirth })
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(res.body).toHaveProperty('Id', appointmentId);
+    expect(res.body).toHaveProperty('Status', 'cancelled');
+  })
 
   test('should delete an appointment', async () => {
     await request(app)
