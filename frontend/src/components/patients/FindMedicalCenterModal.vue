@@ -9,13 +9,38 @@
       <!-- side bar -->
       <div class="modal-body">
         <div class="sidebar">
-          <input
-            type="text"
-            placeholder="Search clinics..."
-            v-model="searchQuery"
-            @input="filterClinics"
-            class="search-bar"
-          />
+          <div class="search-container">
+            <input
+              type="text"
+              placeholder="Search clinics..."
+              v-model="searchQuery"
+              @input="filterClinics"
+              class="search-bar"
+            />
+            <el-icon class="filter-icon" @click="toggleFilterMenu"
+              ><Filter
+            /></el-icon>
+            <div v-if="showFilterMenu" class="filter-menu">
+              <label>
+                <input
+                  type="radio"
+                  value="distance"
+                  v-model="sortBy"
+                  @change="filterClinics"
+                />
+                Sort by distance
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="name"
+                  v-model="sortBy"
+                  @change="filterClinics"
+                />
+                Sort by name
+              </label>
+            </div>
+          </div>
           <ul class="clinic-list">
             <li
               v-for="clinic in filteredClinics"
@@ -23,7 +48,7 @@
               @click="selectClinic(clinic)"
               class="clinic-item"
             >
-              {{ clinic.name }}
+              {{ clinic.name }} - {{ clinic.distance.toFixed(1) }} km
             </li>
           </ul>
         </div>
@@ -34,6 +59,13 @@
             :zoom="13"
             style="width: 100%; height: 75vh"
           >
+            <!-- Marker for user's current location -->
+            <GMapMarker
+              :position="userLocation"
+              icon="http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+            >
+            </GMapMarker>
+            <!-- Markers for clinics -->
             <GMapMarker
               v-for="clinic in clinics"
               :key="clinic.id"
@@ -91,25 +123,59 @@ export default {
     const mapCenter = ref({ lat: -36.8478, lng: 174.7622 });
     const showBookingModal = ref(false);
     const selectedClinic = ref(null);
+    const userLocation = ref(null);
+    const sortByDistance = ref(false);
+    const showFilterMenu = ref(false);
+    const sortBy = ref("name");
+
+    const toggleFilterMenu = () => {
+      showFilterMenu.value = !showFilterMenu.value;
+    };
+    // Function to calculate distance between two coordinates using Haversine formula
+    const calculateDistance = (lat1, lng1, lat2, lng2) => {
+      const R = 6371; // Radius of the Earth in km
+      const dLat = ((lat2 - lat1) * Math.PI) / 180;
+      const dLng = ((lng2 - lng1) * Math.PI) / 180;
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos((lat1 * Math.PI) / 180) *
+          Math.cos((lat2 * Math.PI) / 180) *
+          Math.sin(dLng / 2) *
+          Math.sin(dLng / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    };
 
     const fetchClinics = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/clinics`);
+        const response = await fetch(
+          `${import.meta.env.VITE_API_ENDPOINT}/clinics`
+        );
         const data = await response.json();
 
         clinics.value = await Promise.all(
           data.map(async (clinic, index) => {
             const coords = await geocodeAddress(clinic.address);
+            const distance = userLocation.value
+              ? calculateDistance(
+                  userLocation.value.lat,
+                  userLocation.value.lng,
+                  coords.lat,
+                  coords.lng
+                )
+              : 0;
 
             return {
               id: index + 1,
               name: clinic.workplace,
               address: clinic.address,
               location: coords || { lat: -36.8478, lng: 174.7622 },
+              distance,
             };
           })
         );
-        filteredClinics.value = clinics.value;
+
+        filterClinics();
       } catch (error) {
         console.error("Error fetching clinics:", error);
       }
@@ -117,9 +183,16 @@ export default {
 
     const filterClinics = () => {
       const query = searchQuery.value.toLowerCase();
-      filteredClinics.value = clinics.value.filter((clinic) =>
-        clinic.name.toLowerCase().includes(query)
-      );
+      filteredClinics.value = clinics.value
+        .filter((clinic) => clinic.name.toLowerCase().includes(query))
+        .sort((a, b) => {
+          if (sortBy.value === "distance") {
+            return a.distance - b.distance;
+          } else if (sortBy.value === "name") {
+            return a.name.localeCompare(b.name);
+          }
+          return 0;
+        });
     };
 
     const selectClinic = (clinic) => {
@@ -144,7 +217,29 @@ export default {
       }
     };
 
-    onMounted(fetchClinics);
+    const getCurrentLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            userLocation.value = { lat: latitude, lng: longitude };
+            mapCenter.value = { lat: latitude, lng: longitude };
+            fetchClinics();
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+            fetchClinics();
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+        fetchClinics();
+      }
+    };
+
+    onMounted(() => {
+      getCurrentLocation();
+    });
 
     return {
       clinics,
@@ -153,16 +248,20 @@ export default {
       mapCenter,
       showBookingModal,
       selectedClinic,
+      userLocation,
+      sortByDistance,
+      showFilterMenu,
+      sortBy,
       filterClinics,
       selectClinic,
       openBookingModal,
       closeBookingModal,
       bookAppointment,
+      toggleFilterMenu,
     };
   },
 };
 </script>
-
 <style scoped>
 .modal-overlay {
   position: fixed;
@@ -319,5 +418,34 @@ export default {
 
 .cancel-button:hover {
   background-color: #ccc;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.filter-icon {
+  color: gray;
+  margin-left: -28px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.filter-menu {
+  position: absolute;
+  top: 70%;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.filter-menu label {
+  display: block;
+  margin-bottom: 5px;
 }
 </style>
