@@ -13,7 +13,7 @@
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
 import BannerComponent from "@/components/patients/BannerComponent.vue";
-import ChatComponent from "@/components/patients/ChatComponent.vue";
+import ChatComponent from "@/components/patients/chatbot/ChatComponent.vue";
 
 export default {
   components: {

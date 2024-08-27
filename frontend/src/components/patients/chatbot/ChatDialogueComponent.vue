@@ -4,29 +4,35 @@
       <h3>Customer Support</h3>
     </div>
     <div class="chat-body">
-      <div v-for="(message, index) in messages" :key="index" class="chat-message">
+      <div
+        v-for="(message, index) in messages"
+        :key="index"
+        class="chat-message"
+      >
         <span :class="message.sender">
-          <span v-if="message.isLink">
-          </span>
+          <span v-if="message.isLink"> </span>
           <span v-else v-html="message.text"></span>
         </span>
       </div>
     </div>
     <div class="chat-footer">
-      <input type="text" v-model="newMessage" placeholder="Type your message..." @keydown.enter="sendMessage" />
+      <input
+        type="text"
+        v-model="newMessage"
+        placeholder="Type your message..."
+        @keydown.enter="sendMessage"
+      />
       <button @click="sendMessage">Send</button>
     </div>
   </div>
 </template>
 
 <script>
-import { usePost } from '@/utils/useApi';
-
+import { usePost } from "@/utils/useApi";
 
 export default {
   name: "ChatDialogueComponent",
-  components: {
-  },
+  components: {},
   data() {
     return {
       messages: [
@@ -51,12 +57,15 @@ export default {
 
         try {
           // Make API request with user's message
-          let headers = {}
+          let headers = {};
           const token = localStorage.getItem("authToken");
-          if (this.sessionId) headers = {'x-chatbot-session': this.sessionId, ...headers};
-          if (token) headers = {'x-access-token': token, ...headers};
-          const {data: responseData, postData} = usePost("https://api.gpbooking.icu/chatbot/");
-          await postData({prompt: userMessage}, headers);
+          if (this.sessionId)
+            headers = { "x-chatbot-session": this.sessionId, ...headers };
+          if (token) headers = { "x-access-token": token, ...headers };
+          const { data: responseData, postData } = usePost(
+            "https://api.gpbooking.icu/chatbot/"
+          );
+          await postData({ prompt: userMessage }, headers);
 
           this.sessionId = responseData.value.sessionId; // Store the session ID
           this.messages.push({

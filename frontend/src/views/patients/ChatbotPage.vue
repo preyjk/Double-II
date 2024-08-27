@@ -29,7 +29,7 @@
 <script>
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
-import ChatDialogueComponent from "@/components/patients/ChatDialogueComponent.vue";
+import ChatDialogueComponent from "@/components/patients/chatbot/ChatDialogueComponent.vue";
 
 export default {
   components: {
