@@ -85,23 +85,12 @@ router.get('/appointments/:appointmentId',
 
 router.put('/appointments/:appointmentId',
   AuthService.verifyRequest,
-  AuthService.hasRole(['admin']),
-  asyncHandler(async (req, res) => {
-    const result = await AppointmentService.updateAppointment({ Id: req.params.appointmentId, ...req.body });
-    if (result.success) {
-      return res.status(200).json(result.data);
-    }
-    return res.status(500).json(result.message);
-  }));
-
-router.put('/user/appointments/:appointmentId',
-  AuthService.verifyRequest,
   asyncHandler(async (req, res) => {
     const oldAppointment = await AppointmentService.getAppointmentById(req.params.appointmentId);
     if (!oldAppointment.success) {
       return res.status(404).json(oldAppointment.message);
     }
-    if (oldAppointment.data.UserId !== req.auth.id) {
+    if (oldAppointment.data.UserId !== req.auth.id && !req.auth.roles.includes('admin')) {
       return res.status(403).json('Forbidden');
     }
     const result = await AppointmentService.updateAppointment({ Id: req.params.appointmentId, ...req.body });
@@ -111,8 +100,37 @@ router.put('/user/appointments/:appointmentId',
     return res.status(500).json(result.message);
   }));
 
+router.post('/appointments/reschedule', 
+  asyncHandler(async (req, res) => {  
+    const { BookingReference, LastName, DateOfBirth, ScheduleId } = req.body;
+    const result = await AppointmentService.getAppointmentByBookingReference({
+      BookingReference,
+      LastName,
+      DateOfBirth
+    });
+    if (result.success) {
+      const appointment = result.data;
+      const rescheduleResult = await AppointmentService.rescheduleAppointment({
+        appointmentId: appointment.Id,
+        newScheduleId: ScheduleId
+      });
+      if (rescheduleResult.success) {
+        return res.status(200).json(rescheduleResult.data);
+      }
+    }
+    return res.status(500).json(rescheduleResult.message);
+  }));
+
 router.post('/appointments/:appointmentId/reschedule',
+  AuthService.verifyRequest,
   asyncHandler(async (req, res) => {
+    const appointment = await AppointmentService.getAppointmentById(req.params.appointmentId);
+    if (!appointment.success) {
+      return res.status(404).json(appointment.message);
+    }
+    if (appointment.data.UserId !== req.auth.id && !req.auth.roles.includes('admin')) {
+      return res.status(403).json('Forbidden');
+    }
     const result = await AppointmentService.rescheduleAppointment({
       appointmentId: req.params.appointmentId,
       newScheduleId: req.body.ScheduleId

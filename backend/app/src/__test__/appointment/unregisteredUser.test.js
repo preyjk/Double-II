@@ -121,8 +121,8 @@ describe('GP Appointment Management API', () => {
 
   test('should reschedule an appointment', async () => {
     const res = await request(app)
-      .post(`/appointments/${appointmentId}/reschedule`)
-      .send({ ScheduleId: scheduleId2 })
+      .post(`/appointments/reschedule`)
+      .send({ BookingReference: bookingReference, LastName: lastName, DateOfBirth: dateOfBirth, ScheduleId: scheduleId2 })
       .expect('Content-Type', /json/)
       .expect(200);
 

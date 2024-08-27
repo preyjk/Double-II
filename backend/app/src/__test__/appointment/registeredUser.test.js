@@ -216,7 +216,7 @@ describe('GP Appointment Management API', () => {
       Version: appointment1.Version
     };
     const res = await request(app)
-      .put(`/user/appointments/${appointmentId1}`)
+      .put(`/appointments/${appointmentId1}`)
       .set('Authorization', `Bearer ${token}`)
       .send(updatedData)
       .expect('Content-Type', /json/)
@@ -237,6 +237,7 @@ describe('GP Appointment Management API', () => {
   test('should reschedule an appointment', async () => {
     const res = await request(app)
       .post(`/appointments/${appointmentId1}/reschedule`)
+      .set('Authorization', `Bearer ${token}`)
       .send({ ScheduleId: scheduleId2 })
       .expect('Content-Type', /json/)
       .expect(200);

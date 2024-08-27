@@ -195,6 +195,7 @@ describe('Admin - GP Appointment Management API - Happy Cases', () => {
   test('should reschedule an appointment', async () => {
     const res = await request(app)
       .post(`/appointments/${appointmentId}/reschedule`)
+      .set('Authorization', `Bearer ${adminToken}`)
       .send({ ScheduleId: scheduleId2 })
       .expect('Content-Type', /json/)
       .expect(200);
