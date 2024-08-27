@@ -16,6 +16,7 @@ describe('GP Appointment Management API', () => {
   let doctorId = '12345678';
   let scheduleId;
   let bookingReference, lastName, dateOfBirth;
+  let version;
 
   const username = 'testuser';
   const token = AuthService.generateToken({ username });
@@ -85,6 +86,7 @@ describe('GP Appointment Management API', () => {
     bookingReference = res.body.BookingReference;
     lastName = res.body.LastName;
     dateOfBirth = res.body.DateOfBirth;
+    version = res.body.Version;
   });
 
   test('should get an appointment by booking reference', async () => {
@@ -205,6 +207,7 @@ describe('GP Appointment Management API', () => {
   test('should update an appointment', async () => {
     const updatedData = {
       FirstName: "Jane Updated",
+      Version: version,
     };
 
     const res = await request(app)
@@ -214,6 +217,7 @@ describe('GP Appointment Management API', () => {
       .expect(200);
 
     expect(res.body).toHaveProperty('FirstName', 'Jane Updated');
+    version = res.body.Version;
   });
 
   test('should delete an appointment', async () => {

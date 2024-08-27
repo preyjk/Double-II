@@ -26,6 +26,7 @@ class DynamoTable {
         const item = {
             Id: this.generateId(data),
             ...data,
+            Version: 1
         };
         const params = {
             TableName: this.tableName,
@@ -49,19 +50,25 @@ class DynamoTable {
     }
 
     /**
-     * Update an item by its ID in the DynamoDB table.
-     * @param {Object} newData - The new data for the item, including its ID.
+     * Update an item by its ID using optimistic locking.
+     * @param {Object} newData - The new data for the item, including its ID and expected version.
      * @returns {UpdateCommand} The command to update an item by its ID.
      */
     findByIdAndUpdate(newData) {
-        const { Id, ...data } = newData;
+        const { Id, Version, ...data } = newData;
 
         const params = {
             TableName: this.tableName,
             Key: { Id },
             UpdateExpression: '',
-            ExpressionAttributeNames: {},
-            ExpressionAttributeValues: {},
+            ConditionExpression: '#Version = :expectedVersion',
+            ExpressionAttributeNames: {
+                '#Version': 'Version'
+            },
+            ExpressionAttributeValues: {
+                ':expectedVersion': Version,
+                ':newVersion': Version + 1
+            },
             ReturnValues: 'ALL_NEW',
         };
 
@@ -74,6 +81,7 @@ class DynamoTable {
             params.ExpressionAttributeValues[valueKey] = data[key];
         });
 
+        updateExpressions.push('#Version = :newVersion');
         params.UpdateExpression = 'set ' + updateExpressions.join(', ');
 
         return new UpdateCommand(params);

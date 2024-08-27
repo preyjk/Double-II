@@ -5,16 +5,23 @@ const TABLE_NAME = process.env.PATIENTS_TABLE_NAME || 'Patients';
 class PatientTable extends DynamoTable {
 
   findByIdAndUpdate(record) {
-    const {Id, UserId, ...data} = record;
+    const { Id, UserId, Version, ...data } = record;
 
     const params = {
       TableName: this.tableName,
       Key: { Id },
       UpdateExpression: '',
-      ExpressionAttributeNames: {},
-      ExpressionAttributeValues: {},
+      ExpressionAttributeNames: {
+        '#Version': 'Version',
+        '#UserId': 'UserId',
+      },
+      ExpressionAttributeValues: {
+        ':expectedVersion': Version,
+        ':newVersion': Version + 1,
+        ':UserId': UserId,
+      },
       ReturnValues: 'ALL_NEW',
-      ConditionExpression: '#UserId = :UserId',
+      ConditionExpression: '#UserId = :UserId AND #Version = :expectedVersion',
     };
 
     const updateExpressions = [];
@@ -25,12 +32,10 @@ class PatientTable extends DynamoTable {
       params.ExpressionAttributeNames[attributeKey] = key;
       params.ExpressionAttributeValues[valueKey] = data[key];
     });
-
+    
+    updateExpressions.push('#Version = :newVersion');
     params.UpdateExpression = 'set ' + updateExpressions.join(', ');
 
-    params.ExpressionAttributeNames['#UserId'] = 'UserId';
-    params.ExpressionAttributeValues[':UserId'] = UserId;
-    
     return new UpdateCommand(params);
   }
 

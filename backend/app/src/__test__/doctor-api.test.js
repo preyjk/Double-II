@@ -12,6 +12,7 @@ app.use((err, req, res, next) => {
 
 describe('Doctor API End-to-End Tests', () => {
   let doctorId;
+  let version;
   const Workplace = 'Hospital A';
   const Firstname = 'John';
   const Lastname = 'Smith';
@@ -50,6 +51,7 @@ describe('Doctor API End-to-End Tests', () => {
     expect(res.body).toHaveProperty('Workplace', Workplace);
     expect(res.body).toHaveProperty('Address', Workplace);
     doctorId = res.body.Id;  // Save the doctor ID for subsequent tests
+    version = res.body.Version;
   });
 
   test('should get a doctor by ID', async () => {
@@ -59,6 +61,7 @@ describe('Doctor API End-to-End Tests', () => {
       .expect(200);
 
     expect(res.body).toHaveProperty('Id', doctorId);
+    expect(res.body).toHaveProperty('Version', version);
   });
 
   test('should list doctors by workplace', async () => {
@@ -86,7 +89,8 @@ describe('Doctor API End-to-End Tests', () => {
   test('should update an existing doctor', async () => {
     const updatedData = {
       Firstname: 'John',
-      Lastname: 'Smith Jr.'
+      Lastname: 'Smith Jr.',
+      Version: version
     };
 
     const res = await request(app)
@@ -96,6 +100,7 @@ describe('Doctor API End-to-End Tests', () => {
       .expect(200);
 
     expect(res.body).toHaveProperty('Lastname', 'Smith Jr.');
+    version = res.body.Version;
   });
 
   test('should list clinics', async () => {

@@ -19,8 +19,10 @@ class AppointmentService {
     if (workingSchedule.data?.Status == 'available') {
       return await retry(async () => {
         const txBuilder = new TransactionBuilder();
-        const updateScheduleCommand = WorkingSchedule.findByIdAndUpdate({ Id: ScheduleId, Status: 'occupied' });
-        updateScheduleCommand.input.ConditionExpression = '#Status = :available';
+        const updateScheduleCommand = WorkingSchedule.findByIdAndUpdate({ 
+          Id: ScheduleId, Status: 'occupied', Version: workingSchedule.data.Version
+        });
+        updateScheduleCommand.input.ConditionExpression += ' AND #Status = :available';
         updateScheduleCommand.input.ExpressionAttributeValues[':available'] = 'available';
 
         const { Id: WorkingScheduleId, ...scheduleData } = workingSchedule.data;
@@ -29,7 +31,6 @@ class AppointmentService {
           BookingReference: nano(),
           ...scheduleData,
           ...appointmentData,
-          Status: 'pending'
         });
 
         const { BookingReference, LastName, DateOfBirth, Id: AppointmentId } = putAppointmentCommand.input.Item;
@@ -64,9 +65,12 @@ class AppointmentService {
     if (!result.Item) {
       return { success: false, message: 'Appointment not found' };
     }
+    const workingSchedule = await WorkingScheduleService.getScheduleById(result.Item.ScheduleId);
     const txBuilder = new TransactionBuilder();
     const { ScheduleId, BookingReference, LastName, DateOfBirth } = result.Item;
-    const updateScheduleCommand = WorkingSchedule.findByIdAndUpdate({ Id: ScheduleId, Status: 'available' });
+    const updateScheduleCommand = WorkingSchedule.findByIdAndUpdate({ 
+      Id: ScheduleId, Status: 'available', Version: workingSchedule.data.Version
+    });
     const deleteAppointmentCommand = Appointment.findByIdAndDelete(appointmentId);
     const bookingReferenceId = BookingReferenceIndex.generateId({ BookingReference, LastName, DateOfBirth });
     const deleteBookingReferenceIndexCommand = BookingReferenceIndex.findByIdAndDelete(bookingReferenceId);

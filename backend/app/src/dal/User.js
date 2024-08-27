@@ -7,7 +7,7 @@ class UserTable extends DynamoTable {
   create(item) {
     const params = {
       TableName: this.tableName,
-      Item: item,
+      Item: {...item, Version: 1},
       ConditionExpression: 'attribute_not_exists(Id)'
     };
     return new PutCommand(params);
