@@ -19,13 +19,13 @@ class AppointmentService {
     if (workingSchedule.data?.Status == 'available') {
       return await retry(async () => {
         const txBuilder = new TransactionBuilder();
-        const updateScheduleCommand = WorkingSchedule.findByIdAndUpdate({ 
+        const updateScheduleCommand = WorkingSchedule.findByIdAndUpdate({
           Id: ScheduleId, Status: 'occupied', Version: workingSchedule.data.Version
         });
         updateScheduleCommand.input.ConditionExpression += ' AND #Status = :available';
         updateScheduleCommand.input.ExpressionAttributeValues[':available'] = 'available';
 
-        const { Id: WorkingScheduleId, ...scheduleData } = workingSchedule.data;
+        const { Id: WorkingScheduleId, Status, Version, ...scheduleData } = workingSchedule.data;
         const putAppointmentCommand = Appointment.create({
           ScheduleId: WorkingScheduleId,
           BookingReference: nano(),
@@ -55,9 +55,42 @@ class AppointmentService {
     }
   }
 
+  static async rescheduleAppointment({ appointmentId, newScheduleId }) {
+    const appointment = await dynamo.send(Appointment.findById(appointmentId));
+    if (!appointment.Item) {
+      return { success: false, message: 'Appointment not found' };
+    }
+    const workingSchedule = await WorkingScheduleService.getScheduleById(newScheduleId);
+    if (workingSchedule.data?.Status == 'available') {
+      const oldScheduleId = appointment.Item.ScheduleId;
+      const oldSchedule = await WorkingScheduleService.getScheduleById(oldScheduleId);
+      const updateOldScheduleCommand = WorkingSchedule.findByIdAndUpdate({
+        Id: oldScheduleId, Status: 'available', Version: oldSchedule.data.Version
+      });
+      const { Id: WorkingScheduleId, Status, Version, ...scheduleData } = workingSchedule.data;
+      const updateScheduleCommand = WorkingSchedule.findByIdAndUpdate({
+        Id: newScheduleId, Status: 'occupied', Version: workingSchedule.data.Version
+      });
+      updateScheduleCommand.input.ConditionExpression += ' AND #Status = :available';
+      updateScheduleCommand.input.ExpressionAttributeValues[':available'] = 'available';
+
+      const updateAppointmentCommand = Appointment.findByIdAndUpdate({
+        Id: appointmentId, ScheduleId: newScheduleId, Version: appointment.Item.Version, ...scheduleData
+      });
+      const txBuilder = new TransactionBuilder();
+      await txBuilder
+        .add(updateOldScheduleCommand)
+        .add(updateScheduleCommand)
+        .add(updateAppointmentCommand)
+        .execute();
+      return { success: true, data: (await dynamo.send(Appointment.findById(appointmentId))).Item };
+    }
+    return { success: false, message: 'Not available' };
+  }
+
   static async updateAppointment(appointmentData) {
     const updatedAppointment = await dynamo.send(Appointment.findByIdAndUpdate(appointmentData));
-    return { success: true, data: updatedAppointment.Attributes };
+    return { success: true, data: ((await dynamo.send(Appointment.findById(appointmentData.Id))).Item) };
   }
 
   static async deleteAppointment(appointmentId) {
@@ -68,7 +101,7 @@ class AppointmentService {
     const workingSchedule = await WorkingScheduleService.getScheduleById(result.Item.ScheduleId);
     const txBuilder = new TransactionBuilder();
     const { ScheduleId, BookingReference, LastName, DateOfBirth } = result.Item;
-    const updateScheduleCommand = WorkingSchedule.findByIdAndUpdate({ 
+    const updateScheduleCommand = WorkingSchedule.findByIdAndUpdate({
       Id: ScheduleId, Status: 'available', Version: workingSchedule.data.Version
     });
     const deleteAppointmentCommand = Appointment.findByIdAndDelete(appointmentId);

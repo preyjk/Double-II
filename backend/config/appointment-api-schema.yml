@@ -168,6 +168,43 @@ paths:
           description: Appointment deleted successfully
         '404':
           description: Appointment not found
+  /appointments/{appointmentId}/reschedule:
+    post:
+      summary: Reschedule an appointment
+      description: Reschedule an existing appointment to a new schedule.
+      parameters:
+        - in: path
+          name: appointmentId
+          required: true
+          schema:
+            type: string
+          description: The ID of the appointment to be rescheduled.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ScheduleId:
+                  type: string
+                  description: The new schedule ID for the appointment.
+              required:
+                - ScheduleId
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "Rescheduling failed"
   /user/appointments:
     get:
       summary: List all appointments under current user

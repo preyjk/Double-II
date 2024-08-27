@@ -62,6 +62,18 @@ router.put('/appointments/:appointmentId', asyncHandler(async (req, res) => {
   }
 }));
 
+router.post('/appointments/:appointmentId/reschedule', asyncHandler(async (req, res) => {
+  const result = await AppointmentService.rescheduleAppointment({ 
+    appointmentId: req.params.appointmentId, 
+    newScheduleId: req.body.ScheduleId
+  });
+  if (result.success) {
+    res.status(200).json(result.data);
+  } else {
+    res.status(500).json(result.message);
+  }
+}));
+
 router.delete('/appointments/:appointmentId', asyncHandler(async (req, res) => {
   const result = await AppointmentService.deleteAppointment(req.params.appointmentId);
   if (result.success) {
