@@ -19,23 +19,23 @@ paths:
       parameters:
         - in: query
           name: reference
+          description: The booking reference of the appointment.
           required: true
           schema:
             type: string
-          description: The booking reference of the appointment.
         - in: query
           name: lastname
+          description: The last name of the person who booked the appointment.
           required: true
           schema:
             type: string
-          description: The last name of the person who booked the appointment.
         - in: query
           name: dob
+          description: The date of birth of the person who booked the appointment.
           required: true
           schema:
             type: string
             format: date
-          description: The date of birth of the person who booked the appointment.
       responses:
         '200':
           description: Successful response
@@ -45,15 +45,7 @@ paths:
                 $ref: '#/components/schemas/Appointment'
         '500':
           description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  success:
-                    type: boolean
-                  message:
-                    type: string
+
   /appointments:
     get:
       summary: List all appointments
@@ -61,21 +53,21 @@ paths:
       parameters:
         - in: query
           name: doctorId
+          description: ID of the doctor to filter schedules.
           schema:
             type: string
-          description: ID of the doctor to filter schedules.
         - in: query
           name: startDate
+          description: Start date to filter schedules.
           schema:
             type: string
             format: date
-          description: Start date to filter schedules.
         - in: query
           name: endDate
+          description: End date to filter schedules.
           schema:
             type: string
             format: date
-          description: End date to filter schedules.
       responses:
         '200':
           description: A list of appointments
@@ -85,6 +77,9 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Appointment'
+        '500':
+          description: Internal server error
+
     post:
       summary: Create a new appointment
       operationId: createAppointment
@@ -125,6 +120,7 @@ paths:
                 $ref: '#/components/schemas/Appointment'
         '404':
           description: Appointment not found
+
     put:
       summary: Update an existing appointment
       operationId: updateAppointment
@@ -153,6 +149,7 @@ paths:
           description: Invalid input
         '404':
           description: Appointment not found
+
     delete:
       summary: Delete an appointment
       operationId: deleteAppointment
@@ -168,6 +165,7 @@ paths:
           description: Appointment deleted successfully
         '404':
           description: Appointment not found
+
   /appointments/{appointmentId}/reschedule:
     post:
       summary: Reschedule an appointment
@@ -175,10 +173,10 @@ paths:
       parameters:
         - in: path
           name: appointmentId
+          description: The ID of the appointment to be rescheduled.
           required: true
           schema:
             type: string
-          description: The ID of the appointment to be rescheduled.
       requestBody:
         required: true
         content:
@@ -200,35 +198,31 @@ paths:
                 $ref: '#/components/schemas/Appointment'
         '500':
           description: Internal server error
-          content:
-            application/json:
-              schema:
-                type: string
-                example: "Rescheduling failed"
+
   /user/appointments:
     get:
       summary: List all appointments under current user
-      operationId: listAppointments
+      operationId: listUserAppointments
       security:
         - bearerAuth: []
       parameters:
         - in: query
           name: doctorId
+          description: ID of the doctor to filter schedules.
           schema:
             type: string
-          description: ID of the doctor to filter schedules.
         - in: query
           name: startDate
+          description: Start date to filter schedules.
           schema:
             type: string
             format: date
-          description: Start date to filter schedules.
         - in: query
           name: endDate
+          description: End date to filter schedules.
           schema:
             type: string
             format: date
-          description: End date to filter schedules.
       responses:
         '200':
           description: A list of appointments
@@ -238,6 +232,93 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Appointment'
+        '500':
+          description: Internal server error
+
+    post:
+      summary: Create a new appointment for the current user
+      operationId: createUserAppointment
+      security:
+        - bearerAuth: []
+      requestBody:
+        description: Appointment object that needs to be added
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Appointment'
+      responses:
+        '201':
+          description: Appointment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '400':
+          description: Invalid input
+  /user/appointments/{appointmentId}:
+    put:
+      summary: Update an existing appointment for the current user
+      operationId: updateUserAppointment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: appointmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Updated appointment object
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Appointment'
+      responses:
+        '200':
+          description: Appointment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '403':
+          description: Forbidden
+        '404':
+          description: Appointment not found
+        '500':
+          description: Internal server error
+  /appointments/link:
+    post:
+      summary: Link an appointment to the current user
+      operationId: linkAppointmentToUser
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                BookingReference:
+                  type: string
+                LastName:
+                  type: string
+                DateOfBirth:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Appointment linked successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '400':
+          description: The appointment is already linked to a user
+        '500':
+          description: Internal server error
 
   #
   # signup and login api
