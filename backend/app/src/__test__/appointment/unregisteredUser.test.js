@@ -141,7 +141,7 @@ describe('GP Appointment Management API', () => {
 
 
     const res2 = await request(app)
-      .get('/schedules?doctorId=12345678')
+      .get(`/schedules?doctorId=${doctorId}`)
       .expect('Content-Type', /json/)
       .expect(200);
     res2.body.forEach(schedule => {
