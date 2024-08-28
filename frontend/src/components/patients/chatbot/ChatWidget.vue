@@ -8,7 +8,7 @@
     </div>
     <!-- Chat Window -->
     <transition name="fade">
-      <div class="chat-window" v-show="chatOpen">
+      <div class="chat-window" v-show="chatOpen" ref="chatWindow">
         <div class="chat-header">
           <span>Customer Support</span>
           <button class="close-btn" @click="toggleChat">×</button>
@@ -110,10 +110,24 @@ export default {
         },
       },
     };
+
+    document.addEventListener("click", this.handleOutsideClick);
+  },
+  beforeDestroy() {
+    document.removeEventListener("click", this.handleOutsideClick);
   },
   methods: {
     toggleChat() {
       this.chatOpen = !this.chatOpen;
+    },
+    handleOutsideClick(event) {
+      if (
+        this.chatOpen &&
+        !this.$refs.chatWindow.contains(event.target) &&
+        !event.target.closest(".chat-icon")
+      ) {
+        this.chatOpen = false;
+      }
     },
   },
 };
