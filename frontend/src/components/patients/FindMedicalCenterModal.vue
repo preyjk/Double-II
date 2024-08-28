@@ -105,7 +105,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import geocodeAddress from "@/funs/geocodeAddress";
 
 export default {
@@ -237,8 +237,26 @@ export default {
       }
     };
 
+    const handleClickOutside = (event) => {
+      const filterMenu = document.querySelector(".filter-menu");
+      const filterIcon = document.querySelector(".filter-icon");
+
+      if (
+        filterMenu &&
+        !filterMenu.contains(event.target) &&
+        !filterIcon.contains(event.target)
+      ) {
+        showFilterMenu.value = false;
+      }
+    };
+
     onMounted(() => {
       getCurrentLocation();
+      document.addEventListener("click", handleClickOutside);
+    });
+
+    onBeforeUnmount(() => {
+      document.removeEventListener("click", handleClickOutside);
     });
 
     return {
