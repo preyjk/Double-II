@@ -84,7 +84,6 @@ export const getSchedules = function (doctorId, startDate, endDate) {
 
   return request(config)
     .then((res) => {
-      // console.log("Schedules fetched successfully:", res.data);
       return res.data;
     })
     .catch((err) => {

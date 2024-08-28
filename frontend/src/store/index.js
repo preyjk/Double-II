@@ -1,4 +1,5 @@
 import { createStore } from "vuex";
+import { bookAppointment } from "@/network/netService";
 
 export default createStore({
   state: {
@@ -16,26 +17,35 @@ export default createStore({
     },
   },
   actions: {
-    addBooking({ commit }, booking) {
-      // Perform any async operations if necessary (e.g., API calls)
-      // Then commit the mutation to add booking
-      commit("ADD_BOOKING", booking);
-      localStorage.setItem("lastBooking", JSON.stringify(booking)); // Save to localStorage
+    // addBooking({ commit }, booking) {
+    //   // Perform any async operations if necessary (e.g., API calls)
+    //   // Then commit the mutation to add booking
+    //   commit("ADD_BOOKING", booking);
+    //   localStorage.setItem("lastBooking", JSON.stringify(booking)); // Save to localStorage
+    // },
+    async addBooking({ commit }, booking) {
+      try {
+        const response = await bookAppointment(booking);
+        commit("ADD_BOOKING", response);
+        localStorage.setItem("lastBooking", JSON.stringify(response));
+      } catch (err) {
+        console.error("Error during booking:", err);
+        throw err;
+      }
     },
     removeBooking({ commit }, index) {
-      commit("REMOVE_BOOKING", index); // Call the mutation to remove the booking
+      commit("REMOVE_BOOKING", index);
     },
     clearBookings({ commit }) {
-      // Clear bookings, this can also be used when user logs out
       commit("CLEAR_BOOKINGS");
     },
   },
   getters: {
-    allBookings: (state) => state.bookings, // Get all bookings
+    allBookings: (state) => state.bookings,
     getBookingDetails: (state) => {
       return state.bookings.length
         ? state.bookings[state.bookings.length - 1]
-        : JSON.parse(localStorage.getItem("lastBooking")); // Fallback to localStorage
+        : JSON.parse(localStorage.getItem("lastBooking"));
     },
   },
 });

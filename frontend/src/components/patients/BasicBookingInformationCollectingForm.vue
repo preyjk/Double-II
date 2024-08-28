@@ -52,8 +52,6 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
-
 export default {
   props: {
     doctor: {
@@ -74,56 +72,19 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["addBooking"]),
-
-    getRandomTime() {
-      const startTime = 8 * 60;
-      const endTime = 16 * 60;
-      const interval = 15;
-
-      const randomMinutes =
-        Math.floor(Math.random() * ((endTime - startTime) / interval)) *
-          interval +
-        startTime;
-
-      const hours = Math.floor(randomMinutes / 60);
-      const minutes = randomMinutes % 60;
-      return `${hours.toString().padStart(2, "0")}:${minutes
-        .toString()
-        .padStart(2, "0")}`;
-    },
-
-    getTodayDate() {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = (today.getMonth() + 1).toString().padStart(2, "0");
-      const day = today.getDate().toString().padStart(2, "0");
-      return `${year}-${month}-${day}`;
-    },
-
     submitForm() {
-      const date = this.getTodayDate();
-      const time = this.getRandomTime();
       const booking = {
         doctorName: `${this.doctor.FirstName} ${this.doctor.LastName}`,
-        date: date,
-        time: time,
+        date: this.doctor.Date,
+        startTime: this.doctor.StartTime,
+        endTime: this.doctor.EndTime,
         patientName: `${this.form.firstName} ${this.form.lastName}`,
         email: this.form.email,
         phone: this.form.phone,
         dob: this.form.dob,
+        location: this.doctor.Location,
       };
-
-      this.addBooking(booking)
-        .then(() => {
-          this.$router.push({
-            name: "ConfirmationPage",
-          });
-        })
-        .catch((err) => {
-          console.error("Error submitting booking:", err);
-          alert("Failed to book the appointment. Please try again.");
-        });
+      this.$emit("SubmitForm", booking);
     },
   },
 };

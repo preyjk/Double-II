@@ -3,7 +3,6 @@
     <img :src="avatarSrc" alt="User Avatar" class="avatar" />
     <div v-if="dropdownVisible" class="dropdown-menu" ref="dropdownMenu">
       <ul>
-        <!-- <li @click="goToProfile">Profile</li> -->
         <li @click="viewBookings">My Bookings</li>
         <li @click="logout">Logout</li>
       </ul>
@@ -32,12 +31,15 @@ export default {
       this.dropdownVisible = !this.dropdownVisible;
     },
     handleOutsideClick(event) {
-      if (
-        this.dropdownVisible &&
-        !this.$refs.dropdownMenu.contains(event.target) &&
-        !event.target.closest(".avatar-container")
-      ) {
-        this.dropdownVisible = false;
+      if (this.dropdownVisible) {
+        const dropdownMenu = this.$refs.dropdownMenu;
+        if (
+          dropdownMenu &&
+          !dropdownMenu.contains(event.target) &&
+          !event.target.closest(".avatar-container")
+        ) {
+          this.dropdownVisible = false;
+        }
       }
     },
     goToProfile() {

@@ -144,10 +144,11 @@ export default {
       console.log(this.selectedDate);
     },
     selectTimeSlot(schedule) {
-      alert(
-        `You have selected: ${schedule.Date} from ${schedule.StartTime} to ${schedule.EndTime}`
-      );
-      this.$emit("scheduleSelected", schedule);
+      const selectedSchedule = {
+        ...schedule,
+        Date: this.selectedDate,
+      };
+      this.$emit("scheduleSelected", selectedSchedule);
     },
   },
   mounted() {
