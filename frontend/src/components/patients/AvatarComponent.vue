@@ -1,7 +1,7 @@
 <template>
-  <div class="avatar-container" @click="toggleDropdown">
+  <div class="avatar-container" @click.stop="toggleDropdown">
     <img :src="avatarSrc" alt="User Avatar" class="avatar" />
-    <div v-if="dropdownVisible" class="dropdown-menu">
+    <div v-if="dropdownVisible" class="dropdown-menu" ref="dropdownMenu">
       <ul>
         <!-- <li @click="goToProfile">Profile</li> -->
         <li @click="viewBookings">My Bookings</li>
@@ -21,9 +21,24 @@ export default {
       avatarSrc: avatarSrc,
     };
   },
+  mounted() {
+    document.addEventListener("click", this.handleOutsideClick);
+  },
+  beforeDestroy() {
+    document.removeEventListener("click", this.handleOutsideClick);
+  },
   methods: {
     toggleDropdown() {
       this.dropdownVisible = !this.dropdownVisible;
+    },
+    handleOutsideClick(event) {
+      if (
+        this.dropdownVisible &&
+        !this.$refs.dropdownMenu.contains(event.target) &&
+        !event.target.closest(".avatar-container")
+      ) {
+        this.dropdownVisible = false;
+      }
     },
     goToProfile() {
       this.$router.push({ name: "PersonalProfile" });
@@ -37,6 +52,7 @@ export default {
       localStorage.removeItem("authToken");
       this.$emit("logout");
       this.$router.push({ name: "Home" });
+      this.dropdownVisible = false;
     },
   },
 };
