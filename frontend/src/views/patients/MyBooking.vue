@@ -5,7 +5,11 @@
       <h2>Your Appointments</h2>
       <div v-if="bookings && bookings.length">
         <ul class="appointments-list">
-          <li v-for="(booking, index) in bookings" :key="index" class="appointment-item">
+          <li
+            v-for="(booking, index) in bookings"
+            :key="index"
+            class="appointment-item"
+          >
             <div class="appointment-details">
               <p><strong>Doctor:</strong> Dr. {{ booking.DoctorName }}</p>
               <p><strong>Date:</strong> {{ booking.Date }}</p>
@@ -14,8 +18,18 @@
                 {{ booking.EndTime }}
               </p>
               <p><strong>Patient:</strong> {{ booking.LastName }}</p>
+              <p
+                v-if="booking.Status === 'cancelled'"
+                class="cancelled-message"
+              >
+                <strong>Status:</strong> Appointment Cancelled
+              </p>
             </div>
-            <button @click="cancelBooking(index)" class="cancel-button">
+            <button
+              @click="cancelBooking(index)"
+              class="cancel-button"
+              :disabled="booking.Status === 'cancelled'"
+            >
               Cancel
             </button>
           </li>
@@ -32,7 +46,7 @@
 <script>
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
-import { getAppointments, deleteAppointment } from "@/network/netService";
+import { getAppointments, cancelAppointment } from "@/network/netService";
 
 export default {
   components: { HeaderComponent, FooterComponent },
@@ -58,9 +72,9 @@ export default {
     cancelBooking(index) {
       const appointmentId = this.bookings[index].Id;
 
-      deleteAppointment(appointmentId)
+      cancelAppointment(appointmentId)
         .then(() => {
-          this.bookings.splice(index, 1);
+          this.bookings[index].Status = "cancelled";
           console.log("Appointment canceled successfully");
         })
         .catch((error) => {
@@ -69,7 +83,6 @@ export default {
     },
   },
 };
-
 </script>
 
 <style scoped>
@@ -146,6 +159,11 @@ h2 {
   color: #333;
 }
 
+.cancelled-message {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
 .cancel-button {
   background-color: #e74c3c;
   color: white;
@@ -164,5 +182,10 @@ h2 {
 
 .cancel-button:active {
   transform: scale(1);
+}
+
+.cancel-button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
 }
 </style>

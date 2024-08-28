@@ -60,7 +60,7 @@ export default {
               "https://api.gpbooking.icu/chatbot/"
             );
             await postData({ prompt }, headers);
-            console.log(data);
+            console.log("chat widget session id:", data.value.sessionId);
             this.sessionId = data.value.sessionId;
             signals.onResponse({ text: data.value.response });
           } catch (error) {

@@ -123,6 +123,31 @@ export const deleteAppointment = function (appointmentId) {
     });
 };
 
+export const cancelAppointment = function (appointmentId) {
+  const token = localStorage.getItem("authToken");
+
+  if (!token) {
+    throw new Error("Token not found. Please log in again.");
+  }
+
+  const config = {
+    url: `/appointments/${appointmentId}/cancel`,
+    method: "post",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  return request(config)
+    .then((res) => {
+      console.log("Appointment canceled successfully:", res.data);
+      return res.data;
+    })
+    .catch((err) => {
+      console.error("Error canceling appointment:", err);
+      throw err;
+    });
+};
 
 export const getSchedules = function (doctorId, startDate, endDate) {
   const config = {

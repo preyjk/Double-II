@@ -77,7 +77,6 @@ export default {
         }
       }
     }`),
-      inputAreaStyle: JSON.parse('{"backgroundColor": ""}'),
       chatConnect: {
         handler: async (body, signals) => {
           try {
@@ -95,6 +94,7 @@ export default {
             await postData({ prompt }, headers);
             console.log(data);
             this.sessionId = data.value.sessionId;
+            console.log("chat panel session id:", data.value.sessionId);
             signals.onResponse({ text: data.value.response });
           } catch (error) {
             console.error("Error during API request:", error);
