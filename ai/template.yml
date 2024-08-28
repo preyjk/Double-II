@@ -2,7 +2,10 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
-  ResourceName:
+  BedrockAgentForUnregisteredUserResourceName:
+    Type: String
+    Description: The ARN of the resource that will have InvokeFunction permission.
+  BedrockAgentForRegisteredUserResourceName:
     Type: String
     Description: The ARN of the resource that will have InvokeFunction permission.
 
@@ -15,25 +18,21 @@ Resources:
       CodeUri: ./src  # Adjust to your code location
       MemorySize: 128
       Timeout: 10
-      Role: !GetAtt LambdaExecutionRole.Arn
-
-  LambdaExecutionRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: lambda.amazonaws.com
-            Action: sts:AssumeRole
   
-  LambdaPermission:
+  LambdaPermission1:
     Type: "AWS::Lambda::Permission"
     Properties:
       FunctionName: !GetAtt GPBoookingAIAgentLambdaFunction.Arn
       Action: "lambda:InvokeFunction"
-      SourceArn: !Sub "${ResourceName}"
+      SourceArn: !Sub "${BedrockAgentForUnregisteredUserResourceName}"
+      Principal: "bedrock.amazonaws.com"
+
+  LambdaPermission2:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      FunctionName: !GetAtt GPBoookingAIAgentLambdaFunction.Arn
+      Action: "lambda:InvokeFunction"
+      SourceArn: !Sub "${BedrockAgentForRegisteredUserResourceName}"
       Principal: "bedrock.amazonaws.com"
 
 Outputs:

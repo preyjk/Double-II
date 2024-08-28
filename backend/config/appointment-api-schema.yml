@@ -1032,11 +1032,16 @@ components:
         Status:
           type: string
           enum:
-            - pending
-            - scheduled
+            - active
             - cancelled
             - completed
           description: Status of the appointment
+        Email:
+          type: string
+          description: Email address of the patient
+        PhoneNumber:
+          type: string
+          description: Phone number of the patient
     User:
       type: object
       properties:

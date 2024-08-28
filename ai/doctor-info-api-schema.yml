@@ -4,55 +4,7 @@ info:
   version: 1.0.0
   description: API to manage appointments with General Practitioners (GPs)
 
-servers:
-  - url: http://localhost:3000
-    description: Local development server
-  - url: https://api.gpbooking.icu
-    description: AWS server
-
 paths:
-  /appointments:
-    post:
-      summary: Create a new appointment
-      operationId: createAppointment
-      description: to create a new appointment. the user should confirm the information before calling this api
-      requestBody:
-        description: Appointment object that needs to be added
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Appointment'
-      responses:
-        '201':
-          description: Appointment created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Appointment'
-        '400':
-          description: Invalid input
-  /user/appointments:
-    get:
-      summary: List all appointments of current user.
-      description: List all appointments of current user.
-      operationId: listAppointments
-      parameters:
-        - in: query
-          name: x_access_token
-          schema:
-            type: string
-          required: true
-          description: x_access_token
-      responses:
-        '200':
-          description: A list of appointments
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Appointment'
   #
   # doctor info api
   #
@@ -100,12 +52,14 @@ paths:
           description: ID of the doctor to filter schedules.
         - in: query
           name: startDate
+          required: true
           schema:
             type: string
             format: date
           description: Start date to filter schedules.
         - in: query
           name: endDate
+          required: true
           schema:
             type: string
             format: date
@@ -148,58 +102,39 @@ paths:
 
 components:
   schemas:
-    Appointment:
-      type: object
-      required:
-        - s_ScheduleId
-        - PatientName
-      properties:
-        Id:
-          type: string
-          description: Unique identifier for the appointment
-        s_ScheduleId:
-          type: string
-          description: Unique identifier for the booking timeslot
-        PatientName:
-          type: string
-          description: Name of the patient
-        Reason:
-          type: string
-          description: Reason for the appointment
-
     Doctor:
       type: object
       properties:
-        Id:
+        DoctorId:
           type: string
-          description: Unique identifier for the doctor. doctorId. s_DoctorId.
-        FirstName:
+          description: Unique identifier for the doctor. DoctorId.
+        DoctorFirstName:
           type: string
-          description: First name of the doctor
-        LastName:
+          description: First name of the Doctor. DoctorFirstName.
+        DoctorLastName:
           type: string
-          description: Last name of the doctor
-        Specialty:
+          description: Last name of the Doctor. DoctorLastName.
+        DoctorSpecialty:
           type: string
-          description: Medical specialty of the doctor
-        Phone:
+          description: Medical specialty of the Doctor. DoctorSpecialty.
+        DoctorPhone:
           type: string
-          description: Contact phone number of the doctor
-        Email:
+          description: Contact phone number of the Doctor. DoctorPhone.
+        DocotrEmail:
           type: string
-          description: Email address of the doctor
-        Workplace:
+          description: Email address of the Doctor. DoctorEmail.
+        DoctorWorkplace:
           type: string
-          description: Workplace
-        Address:
+          description: Workplace. DoctorWorkplace.
+        DoctorAddress:
           type: string
-          description: Address of the workplace
+          description: Address of the workplace. DoctorAddress.
     Schedule:
       type: object
       properties:
         Id:
           type: string
-          description: it is s_ScheduleId
+          description: it is ScheduleId
         DoctorId:
           type: string
           description: id of the doctor
