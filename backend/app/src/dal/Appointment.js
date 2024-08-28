@@ -3,7 +3,7 @@ import { ScanCommand } from '@aws-sdk/lib-dynamodb';
 import FilterExpressionBuilder from './util/FilterExpressionBuilder.js';
 
 const TABLE_NAME = process.env.APPOINTMENT_TABLE_NAME || 'Appointments';
-const INDEX_NAME = process.env.APPOINTMENT_INDEX_NAME || 'BookingReferenceIndex';
+const INDEX_NAME = process.env.APPOINTMENT_INDEX_TABLE_NAME || 'BookingReferenceIndex';
 
 class AppointmentTable extends DynamoTable {
 
