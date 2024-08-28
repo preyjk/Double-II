@@ -23,6 +23,10 @@ export default {
   text-decoration: none;
 }
 
+body {
+  font-family: "Roboto", sans-serif;
+}
+
 ul li {
   list-style: none;
   margin: 0;

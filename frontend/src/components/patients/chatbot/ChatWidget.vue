@@ -211,7 +211,7 @@ export default {
 }
 
 .chat-header {
-  background-color: #007bff;
+  background-color: #4887cb;
   color: white;
   padding: 10px;
   display: flex;
