@@ -1,25 +1,21 @@
 <template>
   <div class="confirmation-container">
     <h2>Booking Confirmation</h2>
-    <div v-if="bookingDetails" class="detail">
+    <div v-if="booking" class="detail">
       <p>
-        Thank you, {{ bookingDetails.firstName }} {{ bookingDetails.lastName }}!
+        Thank you, {{ booking.FirstName }} {{ booking.LastName }}!
       </p>
       <p>
-        Your appointment with Dr. {{ bookingDetails.doctorName }} has been
+        Your appointment with Dr. {{ booking.DoctorName }} has been
         successfully booked.
       </p>
       <p class="p-detail">Details of your booking:</p>
       <ul>
-        <li><strong>Email:</strong> {{ bookingDetails.email }}</li>
-        <li><strong>Phone:</strong> {{ bookingDetails.phone }}</li>
-        <li><strong>Date of Birth:</strong> {{ bookingDetails.dob }}</li>
-        <li><strong>Appointment Date:</strong> {{ bookingDetails.date }}</li>
+        <li><strong>Appointment Date:</strong> {{ booking.Date }}</li>
         <li>
-          <strong>Appointment Time:</strong> {{ bookingDetails.startTime }} -
-          {{ bookingDetails.endTime }}
+          <strong>Appointment Time:</strong> {{ booking.StartTime }} -
+          {{ booking.EndTime }}
         </li>
-        <li><strong>Location:</strong> {{ bookingDetails.location }}</li>
       </ul>
     </div>
     <div v-else>
@@ -30,14 +26,29 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { getAppointments } from "@/network/netService";
 export default {
   name: "ConfirmationPage",
-  computed: {
-    ...mapGetters(["getBookingDetails"]),
-    bookingDetails() {
-      const details = this.getBookingDetails || {};
-      return details;
+  data() {
+    return {
+      booking: null,
+    };
+  },
+  mounted() {
+    this.fetchBookingDetails();
+  },
+  methods: {
+    async fetchBookingDetails() {
+      try {
+        const appointments = await getAppointments();
+        if (appointments && appointments.length > 0) {
+          this.booking = appointments[appointments.length - 1];
+        } else {
+          console.error("No bookings found");
+        }
+      } catch (error) {
+        console.error("Error fetching booking details:", error);
+      }
     },
   },
 };

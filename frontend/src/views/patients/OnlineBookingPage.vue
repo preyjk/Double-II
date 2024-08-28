@@ -98,10 +98,9 @@ export default {
       this.selectedDoctor.EndTime = schedule.EndTime;
       this.selectedDoctor.Date = schedule.Date;
       this.selectedDoctor.Location = this.clinicName;
+      this.selectedDoctor.scheduleId = schedule.Id;
     },
     handleSubmitForm(booking) {
-      console.log(booking);
-
       this.addBooking(booking)
         .then(() => {
           this.$router.push({

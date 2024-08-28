@@ -1,51 +1,72 @@
 import { createStore } from "vuex";
-import { bookAppointment } from "@/network/netService";
+import { makeAppointment,getAppointments } from "@/network/netService";
 
 export default createStore({
   state: {
-    bookings: [], // Store all bookings here
+    bookings: [],
   },
   mutations: {
     ADD_BOOKING(state, booking) {
-      state.bookings.push(booking); // Add booking to the state
+      state.bookings.push(booking);
     },
     REMOVE_BOOKING(state, index) {
-      state.bookings.splice(index, 1); // Remove booking by index
+      state.bookings.splice(index, 1);
     },
     CLEAR_BOOKINGS(state) {
-      state.bookings = []; // Clear all bookings
+      state.bookings = [];
+    },
+    SET_BOOKINGS(state, bookings) {
+      state.bookings = bookings;
     },
   },
   actions: {
-    // addBooking({ commit }, booking) {
-    //   // Perform any async operations if necessary (e.g., API calls)
-    //   // Then commit the mutation to add booking
-    //   commit("ADD_BOOKING", booking);
-    //   localStorage.setItem("lastBooking", JSON.stringify(booking)); // Save to localStorage
-    // },
     async addBooking({ commit }, booking) {
       try {
-        const response = await bookAppointment(booking);
+        const token = localStorage.getItem("authToken");
+
+        const formData = {
+          Id: "string",
+          FirstName: booking.firstName,
+          LastName: booking.lastName,
+          DateOfBirth: booking.dob,
+          BookingReference: "string",
+          ScheduleId: booking.scheduleId,
+          DoctorId: booking.DoctorId,
+          DoctorName: booking.doctorName,
+          Date: booking.date,
+          StartTime: booking.startTime,
+          EndTime: booking.endTime,
+          Reason: "string",
+          Status: "pending",
+        };
+        
+        const response = await makeAppointment(formData, token);
+
         commit("ADD_BOOKING", response);
-        localStorage.setItem("lastBooking", JSON.stringify(response));
+
       } catch (err) {
         console.error("Error during booking:", err);
         throw err;
       }
     },
+
+    async getBookings({ commit }) {
+      try {
+        const bookings = await getAppointments(); 
+        commit("SET_BOOKINGS", bookings);
+      } catch (err) {
+        console.error("Error fetching bookings:", err);
+        throw err;
+      }
+    },
+
     removeBooking({ commit }, index) {
       commit("REMOVE_BOOKING", index);
     },
+
     clearBookings({ commit }) {
       commit("CLEAR_BOOKINGS");
     },
   },
-  getters: {
-    allBookings: (state) => state.bookings,
-    getBookingDetails: (state) => {
-      return state.bookings.length
-        ? state.bookings[state.bookings.length - 1]
-        : JSON.parse(localStorage.getItem("lastBooking"));
-    },
-  },
+  
 });

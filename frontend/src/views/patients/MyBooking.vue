@@ -5,22 +5,15 @@
       <h2>Your Appointments</h2>
       <div v-if="bookings && bookings.length">
         <ul class="appointments-list">
-          <li
-            v-for="(booking, index) in bookings"
-            :key="index"
-            class="appointment-item"
-          >
+          <li v-for="(booking, index) in bookings" :key="index" class="appointment-item">
             <div class="appointment-details">
-              <p><strong>Doctor:</strong> Dr. {{ booking.doctorName }}</p>
-              <p><strong>Date:</strong> {{ booking.date }}</p>
+              <p><strong>Doctor:</strong> Dr. {{ booking.DoctorName }}</p>
+              <p><strong>Date:</strong> {{ booking.Date }}</p>
               <p>
-                <strong>Time:</strong> {{ booking.startTime }} -
-                {{ booking.endTime }}
+                <strong>Time:</strong> {{ booking.StartTime }} -
+                {{ booking.EndTime }}
               </p>
-              <p><strong>Location:</strong> {{ booking.location }}</p>
-              <p><strong>Patient:</strong> {{ booking.patientName }}</p>
-              <p><strong>Email:</strong> {{ booking.email }}</p>
-              <p><strong>Phone:</strong> {{ booking.phone }}</p>
+              <p><strong>Patient:</strong> {{ booking.LastName }}</p>
             </div>
             <button @click="cancelBooking(index)" class="cancel-button">
               Cancel
@@ -37,26 +30,46 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
+import { getAppointments, deleteAppointment } from "@/network/netService";
 
 export default {
   components: { HeaderComponent, FooterComponent },
   name: "AppointmentList",
-  computed: {
-    ...mapGetters(["allBookings"]),
-    bookings() {
-      return this.allBookings;
-    },
+  data() {
+    return {
+      bookings: [],
+    };
+  },
+  created() {
+    this.fetchAppointments();
   },
   methods: {
-    ...mapActions(["removeBooking"]),
+    fetchAppointments() {
+      getAppointments()
+        .then((data) => {
+          this.bookings = data;
+        })
+        .catch((error) => {
+          console.error("Error fetching appointments:", error);
+        });
+    },
     cancelBooking(index) {
-      this.removeBooking(index);
+      const appointmentId = this.bookings[index].Id;
+
+      deleteAppointment(appointmentId)
+        .then(() => {
+          this.bookings.splice(index, 1);
+          console.log("Appointment canceled successfully");
+        })
+        .catch((error) => {
+          console.error("Error canceling appointment:", error);
+        });
     },
   },
 };
+
 </script>
 
 <style scoped>

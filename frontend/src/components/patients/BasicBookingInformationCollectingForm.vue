@@ -74,7 +74,10 @@ export default {
   methods: {
     submitForm() {
       const booking = {
+        firstName:this.form.firstName,
+        lastName:this.form.lastName,
         doctorName: `${this.doctor.FirstName} ${this.doctor.LastName}`,
+        doctorId:this.doctor.doctorId,
         date: this.doctor.Date,
         startTime: this.doctor.StartTime,
         endTime: this.doctor.EndTime,
@@ -83,6 +86,7 @@ export default {
         phone: this.form.phone,
         dob: this.form.dob,
         location: this.doctor.Location,
+        scheduleId: this.doctor.scheduleId,
       };
       this.$emit("SubmitForm", booking);
     },

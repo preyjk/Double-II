@@ -141,7 +141,6 @@ export default {
     },
     handleDatePick(date) {
       this.selectedDate = date.toISOString().split("T")[0];
-      console.log(this.selectedDate);
     },
     selectTimeSlot(schedule) {
       const selectedSchedule = {
