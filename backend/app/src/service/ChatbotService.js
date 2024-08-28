@@ -1,25 +1,16 @@
 import { BedrockAgentRuntimeClient, InvokeAgentCommand } from "@aws-sdk/client-bedrock-agent-runtime";
 
-async function decodeMessage(response) {
-    let completion = '';
-
-    // Access the stream from the `SmithyMessageDecoderStream`
-    const decoderStream = response.completion.options.messageStream;
-
-    // Read from the stream
-    for await (const chunk of decoderStream) {
-        completion += chunk.toString(); // Assuming chunks are Buffer objects
+class ChatBotService {
+    constructor(agentAliasId, agentId) {
+        this.BEDROCK_AGENT_ALIAS = agentAliasId;
+        this.BEDROCK_AGENT_ID = agentId;
     }
 
-    return completion;
-}
-
-class ChatBotService {
-    static async send({ sessionId, prompt }) {
+    async send({ sessionId, prompt }) {
         const client = new BedrockAgentRuntimeClient();
         const input = { // InvokeAgentRequest
-            agentId: process.env.BEDROCK_AGENT_ID, // required
-            agentAliasId: process.env.BEDROCK_AGENT_ALIAS, // required
+            agentId: this.BEDROCK_AGENT_ID, // required
+            agentAliasId: this.BEDROCK_AGENT_ALIAS, // required
             sessionId: sessionId, // required
             inputText: prompt,
         };
@@ -39,7 +30,8 @@ class ChatBotService {
     }
 }
 
-export default ChatBotService;
+export const ChatBotForUnregisteredUsers = new ChatBotService(process.env.BEDROCK_AGENT_ALIAS_UNREGISTERED, process.env.BEDROCK_AGENT_ID_UNREGISTERED);
+export const ChatBotForRegisteredUsers = new ChatBotService(process.env.BEDROCK_AGENT_ALIAS_REGISTERED, process.env.BEDROCK_AGENT_ID_REGISTERED);
 
 
 

@@ -10,10 +10,16 @@ Parameters:
     Type: String
     Description: "The name of the stage (e.g., dev, prod)"
     Default: "v1"
-  BedrockAgentId:
+  BedrockAgentIdUnregisteredUser:
     Type: String
     Description: "id of the bedrock agent"
-  BedrockAgentAlias:
+  BedrockAgentAliasUnregisteredUser:
+    Type: String
+    Description: "alias id of the bedrock agent"
+  BedrockAgentIdRegisteredUser:
+    Type: String
+    Description: "id of the bedrock agent"
+  BedrockAgentAliasRegisteredUser:
     Type: String
     Description: "alias id of the bedrock agent"
 
@@ -33,8 +39,8 @@ Resources:
           KeyType: HASH
       BillingMode: 'PAY_PER_REQUEST'
       OnDemandThroughput:
-        MaxReadRequestUnits: 1
-        MaxWriteRequestUnits: 1
+        MaxReadRequestUnits: 10
+        MaxWriteRequestUnits: 10
   
   WorkingScheduleTable:
     Type: AWS::DynamoDB::Table
@@ -49,8 +55,8 @@ Resources:
           KeyType: HASH
       BillingMode: 'PAY_PER_REQUEST'
       OnDemandThroughput:
-        MaxReadRequestUnits: 1
-        MaxWriteRequestUnits: 1
+        MaxReadRequestUnits: 10
+        MaxWriteRequestUnits: 10
       GlobalSecondaryIndexes:
         - IndexName: DoctorIdIndex
           KeySchema:
@@ -72,8 +78,8 @@ Resources:
           KeyType: HASH
       BillingMode: 'PAY_PER_REQUEST'
       OnDemandThroughput:
-        MaxReadRequestUnits: 1
-        MaxWriteRequestUnits: 1
+        MaxReadRequestUnits: 10
+        MaxWriteRequestUnits: 10
       GlobalSecondaryIndexes:
         - IndexName: UserIdIndex
           KeySchema:
@@ -93,8 +99,8 @@ Resources:
           KeyType: HASH
       BillingMode: 'PAY_PER_REQUEST'
       OnDemandThroughput:
-        MaxReadRequestUnits: 1
-        MaxWriteRequestUnits: 1
+        MaxReadRequestUnits: 10
+        MaxWriteRequestUnits: 10
 
   UsersTable:
     Type: AWS::DynamoDB::Table
@@ -107,8 +113,8 @@ Resources:
           KeyType: HASH
       BillingMode: 'PAY_PER_REQUEST'
       OnDemandThroughput:
-        MaxReadRequestUnits: 1
-        MaxWriteRequestUnits: 1
+        MaxReadRequestUnits: 10
+        MaxWriteRequestUnits: 10
   
   AppointmentIndexTable:
     Type: AWS::DynamoDB::Table
@@ -121,8 +127,8 @@ Resources:
           KeyType: HASH
       BillingMode: 'PAY_PER_REQUEST'
       OnDemandThroughput:
-        MaxReadRequestUnits: 1
-        MaxWriteRequestUnits: 1
+        MaxReadRequestUnits: 10
+        MaxWriteRequestUnits: 10
 
   BackendApi:
     Type: AWS::Serverless::HttpApi
@@ -149,8 +155,10 @@ Resources:
           PATIENTS_TABLE_NAME: !Ref PatientsTable
           WORKING_SCHEDULE_TABLE_NAME: !Ref WorkingScheduleTable
           API_STAGE_NAME: !Ref StageName
-          BEDROCK_AGENT_ID: !Ref BedrockAgentId
-          BEDROCK_AGENT_ALIAS: !Ref BedrockAgentAlias
+          BEDROCK_AGENT_ID_UNREGISTERED: !Ref BedrockAgentIdUnregisteredUser
+          BEDROCK_AGENT_ALIAS_UNREGISTERED: !Ref BedrockAgentAliasUnregisteredUser
+          BEDROCK_AGENT_ID_REGISTERED: !Ref BedrockAgentIdRegisteredUser
+          BEDROCK_AGENT_ALIAS_REGISTERED: !Ref BedrockAgentAliasRegisteredUser
           APPOINTMENT_INDEX_TABLE_NAME: !Ref AppointmentIndexTable
       Events:
         Root:
