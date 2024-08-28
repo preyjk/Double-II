@@ -31,6 +31,7 @@ class AppointmentService {
           BookingReference: nano(),
           ...scheduleData,
           ...appointmentData,
+          Status: 'active'
         });
 
         const { BookingReference, LastName, DateOfBirth, Id: AppointmentId } = putAppointmentCommand.input.Item;
@@ -124,6 +125,32 @@ class AppointmentService {
     } else {
       return { success: false, message: 'Appointment not found' };
     }
+  }
+
+  static async cancelAppointment(appointment) {
+    const workingSchedule = await WorkingScheduleService.getScheduleById(appointment.ScheduleId);
+    const txBuilder = new TransactionBuilder();
+    const { ScheduleId } = appointment;
+    const updateScheduleCommand = WorkingSchedule.findByIdAndUpdate({
+      Id: ScheduleId, Status: 'available', Version: workingSchedule.data.Version
+    });
+    const updateAppointmentCommand = Appointment.findByIdAndUpdate({
+      Id: appointment.Id, Status: 'cancelled', Version: appointment.Version
+    });
+    await txBuilder
+      .add(updateScheduleCommand)
+      .add(updateAppointmentCommand)
+      .execute();
+    return { success: true, data: (await dynamo.send(Appointment.findById(appointment.Id))).Item };
+  }
+
+  static async completeAppointment(appointment) {
+    const {Id, Version} = appointment;
+    const updateAppointmentCommand = Appointment.findByIdAndUpdate({
+      Id, Version, Status: 'completed'
+    });
+    await dynamo.send(updateAppointmentCommand);
+    return { success: true, data: (await dynamo.send(Appointment.findById(Id))).Item };
   }
 
 }

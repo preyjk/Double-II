@@ -50,6 +50,8 @@ paths:
     get:
       summary: List all appointments
       operationId: listAppointments
+      security:
+        - bearerAuth: []
       parameters:
         - in: query
           name: doctorId
@@ -104,6 +106,8 @@ paths:
     get:
       summary: Get details of an appointment
       operationId: getAppointmentById
+      security:
+        - bearerAuth: []
       parameters:
         - name: appointmentId
           in: path
@@ -124,6 +128,8 @@ paths:
     put:
       summary: Update an existing appointment
       operationId: updateAppointment
+      security:
+        - bearerAuth: []
       parameters:
         - name: appointmentId
           in: path
@@ -153,6 +159,8 @@ paths:
     delete:
       summary: Delete an appointment
       operationId: deleteAppointment
+      security:
+        - bearerAuth: []
       parameters:
         - name: appointmentId
           in: path
@@ -170,6 +178,9 @@ paths:
     post:
       summary: Reschedule an appointment
       description: Reschedule an existing appointment to a new schedule.
+      operationId: rescheduleAppointment
+      security:
+        - bearerAuth: []
       parameters:
         - in: path
           name: appointmentId
@@ -256,39 +267,50 @@ paths:
                 $ref: '#/components/schemas/Appointment'
         '400':
           description: Invalid input
-  /user/appointments/{appointmentId}:
-    put:
-      summary: Update an existing appointment for the current user
-      operationId: updateUserAppointment
-      security:
-        - bearerAuth: []
-      parameters:
-        - name: appointmentId
-          in: path
-          required: true
-          schema:
-            type: string
+  /appointments/reschedule:
+    post:
+      summary: Reschedule an appointment
+      description: Reschedule an existing appointment to a new schedule.
+      operationId: rescheduleAppointmentByBookingReference
       requestBody:
-        description: Updated appointment object
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Appointment'
+              type: object
+              properties:
+                BookingReference:
+                  type: string
+                  description: The booking reference of the appointment
+                LastName:
+                  type: string
+                  description: The last name of the person who booked the appointment
+                DateOfBirth:
+                  type: string
+                  format: date
+                  description: The date of birth of the person who booked the appointment
+                ScheduleId:
+                  type: string
+                  description: The new schedule ID for rescheduling the appointment
+              required:
+                - BookingReference
+                - LastName
+                - DateOfBirth
+                - ScheduleId
       responses:
         '200':
-          description: Appointment updated successfully
+          description: Appointment rescheduled successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Appointment'
-        '403':
-          description: Forbidden
+        '400':
+          description: Appointment linked to a user, login required to reschedule
         '404':
           description: Appointment not found
         '500':
           description: Internal server error
-  /appointments/link:
+  /user/appointments/link:
     post:
       summary: Link an appointment to the current user
       operationId: linkAppointmentToUser
@@ -319,7 +341,93 @@ paths:
           description: The appointment is already linked to a user
         '500':
           description: Internal server error
+  /appointments/cancel:
+    post:
+      summary: Cancel an appointment
+      operationId: cancelAppointmentByBookingReference
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                BookingReference:
+                  type: string
+                  description: The booking reference of the appointment
+                LastName:
+                  type: string
+                  description: The last name of the person who booked the appointment
+                DateOfBirth:
+                  type: string
+                  format: date
+                  description: The date of birth of the person who booked the appointment
+              required:
+                - BookingReference
+                - LastName
+                - DateOfBirth
+      responses:
+        '200':
+          description: Appointment cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '400':
+          description: Appointment linked to a user, login required to cancel
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal server error
+  /appointments/{appointmentId}/cancel:
+    post:
+      summary: Cancel an appointment
+      operationId: cancelAppointment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: appointmentId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the appointment to cancel
+      responses:
+        '200':
+          description: Appointment cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '404':
+          description: Appointment not found
+        '500':
+          description: Internal server error
 
+  /appointments/{appointmentId}/complete:
+    post:
+      summary: Complete an appointment
+      operationId: completeAppointment
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: appointmentId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: The ID of the appointment to complete
+      responses:
+        '200':
+          description: Appointment completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '404':
+          description: Appointment not found
+        '500':
+          description: Internal server error
   #
   # signup and login api
   #

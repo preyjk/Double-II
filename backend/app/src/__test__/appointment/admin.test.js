@@ -195,6 +195,7 @@ describe('Admin - GP Appointment Management API - Happy Cases', () => {
   test('should reschedule an appointment', async () => {
     const res = await request(app)
       .post(`/appointments/${appointmentId}/reschedule`)
+      .set('Authorization', `Bearer ${adminToken}`)
       .send({ ScheduleId: scheduleId2 })
       .expect('Content-Type', /json/)
       .expect(200);
@@ -214,7 +215,7 @@ describe('Admin - GP Appointment Management API - Happy Cases', () => {
 
 
     const res2 = await request(app)
-      .get('/schedules?doctorId=12345678')
+      .get(`/schedules?doctorId=${doctorId}`)
       .expect('Content-Type', /json/)
       .expect(200);
     res2.body.forEach(schedule => {
@@ -225,6 +226,26 @@ describe('Admin - GP Appointment Management API - Happy Cases', () => {
         expect(schedule).toHaveProperty('Status', 'occupied');
       }
     });
+  });
+
+  test('should cancel an appointment', async () => {
+    const res = await request(app)
+      .post(`/appointments/${appointmentId}/cancel`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send()
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(res.body).toHaveProperty('Status', 'cancelled');
+  });
+
+  test('should complete an appointment', async () => {
+    const res = await request(app)
+      .post(`/appointments/${appointmentId}/complete`)
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send()
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(res.body).toHaveProperty('Status', 'completed');
   });
 
   test('should delete an appointment', async () => {
