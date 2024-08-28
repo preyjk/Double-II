@@ -56,13 +56,13 @@ export const makeAppointment = function (formData, token) {
       StartTime: formData.StartTime,
       EndTime: formData.EndTime,
       Reason: formData.Reason,
-      Status: "pending",
+      Status: formData.Status,
     },
   };
 
   return request(config)
     .then((res) => {
-      // console.log("Appointment booked successfully:", res.data);
+      console.log("Appointment booked successfully:", res.data);
       return res.data;
     })
     .catch((err) => {

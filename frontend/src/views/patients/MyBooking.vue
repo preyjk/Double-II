@@ -154,6 +154,7 @@ h2 {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
+  margin-left: 12px;
 }
 
 .cancel-button:hover {

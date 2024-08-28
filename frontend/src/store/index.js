@@ -4,6 +4,7 @@ import { makeAppointment,getAppointments } from "@/network/netService";
 export default createStore({
   state: {
     bookings: [],
+    tempBooking:{}
   },
   mutations: {
     ADD_BOOKING(state, booking) {
@@ -17,6 +18,9 @@ export default createStore({
     },
     SET_BOOKINGS(state, bookings) {
       state.bookings = bookings;
+    },
+    set_tempBooking(state, tempBooking) {
+      state.tempBooking = tempBooking;
     },
   },
   actions: {
@@ -38,6 +42,9 @@ export default createStore({
           EndTime: booking.endTime,
           Reason: "string",
           Status: "pending",
+          Email: booking.email,
+          Phone: booking.phone,
+          Location: booking.Location,
         };
         
         const response = await makeAppointment(formData, token);

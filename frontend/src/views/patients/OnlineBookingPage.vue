@@ -101,6 +101,7 @@ export default {
       this.selectedDoctor.scheduleId = schedule.Id;
     },
     handleSubmitForm(booking) {
+      this.$store.commit('set_tempBooking', booking);
       this.addBooking(booking)
         .then(() => {
           this.$router.push({

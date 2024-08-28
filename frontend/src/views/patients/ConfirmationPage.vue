@@ -16,6 +16,15 @@
           <strong>Appointment Time:</strong> {{ booking.StartTime }} -
           {{ booking.EndTime }}
         </li>
+        <li>
+          <strong>Location:</strong> {{ tempBooking.location }}
+        </li>
+        <li>
+          <strong>Booking email:</strong> {{ tempBooking.email }}
+        </li>
+        <li>
+          <strong>Booking phone:</strong> {{ tempBooking.phone }}
+        </li>
       </ul>
     </div>
     <div v-else>
@@ -32,10 +41,13 @@ export default {
   data() {
     return {
       booking: null,
+      tempBooking: {}
     };
   },
   mounted() {
     this.fetchBookingDetails();
+    this.tempBooking = this.$store.state.tempBooking;
+    console.log(this.tempBooking);
   },
   methods: {
     async fetchBookingDetails() {
