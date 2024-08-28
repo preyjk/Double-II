@@ -117,6 +117,7 @@ video {
   align-items: center;
   cursor: pointer;
   transition: background-color 0.3s;
+  animation: breathing 2s infinite ease-in-out;
 }
 
 .play-button:hover {
@@ -127,5 +128,20 @@ video {
   border-left: 25px solid white;
   border-top: 15px solid transparent;
   border-bottom: 15px solid transparent;
+}
+
+@keyframes breathing {
+  0% {
+    transform: scale(1);
+    background-color: #accfd8;
+  }
+  50% {
+    transform: scale(1.1);
+    background-color: #8fbcd3;
+  }
+  100% {
+    transform: scale(1);
+    background-color: #accfd8;
+  }
 }
 </style>
