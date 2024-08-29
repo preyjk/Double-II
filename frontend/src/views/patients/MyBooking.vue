@@ -11,12 +11,25 @@
             class="appointment-item"
           >
             <div class="appointment-details">
-              <p><strong>Doctor:</strong> {{ booking.doctorName }}</p>
-              <p><strong>Date:</strong> {{ booking.date }}</p>
-              <p><strong>Time:</strong> {{ booking.time }}</p>
-              <p><strong>Patient:</strong> {{ booking.patientName }}</p>
+              <p><strong>Doctor:</strong> Dr. {{ booking.DoctorName }}</p>
+              <p><strong>Date:</strong> {{ booking.Date }}</p>
+              <p>
+                <strong>Time:</strong> {{ booking.StartTime }} -
+                {{ booking.EndTime }}
+              </p>
+              <p><strong>Patient:</strong> {{ booking.LastName }}</p>
+              <p
+                v-if="booking.Status === 'cancelled'"
+                class="cancelled-message"
+              >
+                <strong>Status:</strong> Appointment Cancelled
+              </p>
             </div>
-            <button @click="cancelBooking(index)" class="cancel-button">
+            <button
+              @click="cancelBooking(index)"
+              class="cancel-button"
+              :disabled="booking.Status === 'cancelled'"
+            >
               Cancel
             </button>
           </li>
@@ -31,23 +44,42 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
+import { getAppointments, cancelAppointment } from "@/network/netService";
 
 export default {
   components: { HeaderComponent, FooterComponent },
   name: "AppointmentList",
-  computed: {
-    ...mapGetters(["allBookings"]), // Get all bookings from Vuex store
-    bookings() {
-      return this.allBookings; // Return the bookings
-    },
+  data() {
+    return {
+      bookings: [],
+    };
+  },
+  created() {
+    this.fetchAppointments();
   },
   methods: {
-    ...mapActions(["removeBooking"]), // Map Vuex action to remove a booking
+    fetchAppointments() {
+      getAppointments()
+        .then((data) => {
+          this.bookings = data;
+        })
+        .catch((error) => {
+          console.error("Error fetching appointments:", error);
+        });
+    },
     cancelBooking(index) {
-      this.removeBooking(index); // Remove the booking from the store
+      const appointmentId = this.bookings[index].Id;
+
+      cancelAppointment(appointmentId)
+        .then(() => {
+          this.bookings[index].Status = "cancelled";
+          console.log("Appointment canceled successfully");
+        })
+        .catch((error) => {
+          console.error("Error canceling appointment:", error);
+        });
     },
   },
 };
@@ -67,48 +99,93 @@ export default {
   width: 100%;
   align-items: center;
 }
+
 .container_footer {
   display: flex;
   width: 100%;
   justify-content: center;
   align-items: center;
 }
+
 .appointments-container {
   padding: 20px;
   max-width: 600px;
   margin: auto;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
 }
 
 .appointments-list {
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 .appointment-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 15px;
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ddd;
-  border-radius: 5px;
+  border-radius: 8px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.appointment-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .appointment-details {
-  max-width: 70%;
+  max-width: 75%;
+}
+
+.appointment-details p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.appointment-details strong {
+  color: #333;
+}
+
+.cancelled-message {
+  color: #e74c3c;
+  font-weight: bold;
 }
 
 .cancel-button {
   background-color: #e74c3c;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.2s;
+  margin-left: 12px;
 }
 
 .cancel-button:hover {
   background-color: #c0392b;
+  transform: scale(1.05);
+}
+
+.cancel-button:active {
+  transform: scale(1);
+}
+
+.cancel-button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
 }
 </style>

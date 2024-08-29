@@ -30,6 +30,7 @@
         <BasicBookingInformationCollectingForm
           :doctor="selectedDoctor"
           v-if="isScheduleChosen"
+          @submitForm="handleSubmitForm"
         />
       </div>
     </div>
@@ -45,6 +46,8 @@ import FindMedicalCenterModal from "@/components/patients/FindMedicalCenterModal
 import GPSelectForm from "@/components/patients/GPSelectForm.vue";
 import BasicBookingInformationCollectingForm from "@/components/patients/BasicBookingInformationCollectingForm.vue";
 import DoctorSchedule from "@/components/patients/DoctorSchedule.vue";
+import { mapActions } from "vuex";
+
 export default {
   components: {
     HeaderComponent,
@@ -67,6 +70,8 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["addBooking"]),
+
     closeGPS() {
       this.isShowGPS = false;
       this.isShowGPSResponse = true;
@@ -87,6 +92,26 @@ export default {
     },
     handleScheduleSelected(schedule) {
       this.isScheduleChosen = true;
+      this.selectedDoctor.DoctorId = schedule.DoctorId;
+      this.selectedDoctor.DoctorName = schedule.DoctorName;
+      this.selectedDoctor.StartTime = schedule.StartTime;
+      this.selectedDoctor.EndTime = schedule.EndTime;
+      this.selectedDoctor.Date = schedule.Date;
+      this.selectedDoctor.Location = this.clinicName;
+      this.selectedDoctor.scheduleId = schedule.Id;
+    },
+    handleSubmitForm(booking) {
+      this.$store.commit('set_tempBooking', booking);
+      this.addBooking(booking)
+        .then(() => {
+          this.$router.push({
+            name: "ConfirmationPage",
+          });
+        })
+        .catch((err) => {
+          console.error("Error submitting booking:", err);
+          alert("Failed to book the appointment. Please try again.");
+        });
     },
   },
 };

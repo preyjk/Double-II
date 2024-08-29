@@ -8,7 +8,7 @@
     </div>
     <!-- Chat Window -->
     <transition name="fade">
-      <div class="chat-window" v-show="chatOpen">
+      <div class="chat-window" v-show="chatOpen" ref="chatWindow">
         <div class="chat-header">
           <span>Customer Support</span>
           <button class="close-btn" @click="toggleChat">×</button>
@@ -60,7 +60,7 @@ export default {
               "https://api.gpbooking.icu/chatbot/"
             );
             await postData({ prompt }, headers);
-            console.log(data);
+            console.log("chat widget session id:", data.value.sessionId);
             this.sessionId = data.value.sessionId;
             signals.onResponse({ text: data.value.response });
           } catch (error) {
@@ -110,10 +110,24 @@ export default {
         },
       },
     };
+
+    document.addEventListener("click", this.handleOutsideClick);
+  },
+  beforeDestroy() {
+    document.removeEventListener("click", this.handleOutsideClick);
   },
   methods: {
     toggleChat() {
       this.chatOpen = !this.chatOpen;
+    },
+    handleOutsideClick(event) {
+      if (
+        this.chatOpen &&
+        !this.$refs.chatWindow.contains(event.target) &&
+        !event.target.closest(".chat-icon")
+      ) {
+        this.chatOpen = false;
+      }
     },
   },
 };
@@ -197,7 +211,7 @@ export default {
 }
 
 .chat-header {
-  background-color: #007bff;
+  background-color: #4887cb;
   color: white;
   padding: 10px;
   display: flex;

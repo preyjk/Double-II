@@ -36,11 +36,28 @@ export const register = function (username, password) {
     });
 };
 
-export const bookAppointment = function (formData) {
+export const makeAppointment = function (formData, token) {
   const config = {
-    url: "/appointments",
+    url: "/user/appointments",
     method: "post",
-    data: formData,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data: {
+      Id: formData.Id,
+      FirstName: formData.FirstName,
+      LastName: formData.LastName,
+      DateOfBirth: formData.DateOfBirth,
+      BookingReference: formData.BookingReference,
+      ScheduleId: formData.ScheduleId,
+      DoctorId: formData.DoctorId,
+      DoctorName: formData.DoctorName,
+      Date: formData.Date,
+      StartTime: formData.StartTime,
+      EndTime: formData.EndTime,
+      Reason: formData.Reason,
+      Status: formData.Status,
+    },
   };
 
   return request(config)
@@ -55,18 +72,79 @@ export const bookAppointment = function (formData) {
 };
 
 export const getAppointments = function () {
+  const token = localStorage.getItem("authToken");
+
+  if (!token) {
+    throw new Error("Token not found. Please log in again.");
+  }
+
   const config = {
-    url: "/appointments",
+    url: "/user/appointments",
     method: "get",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   };
 
   return request(config)
     .then((res) => {
-      console.log("Appointments fetched successfully:", res.data);
+      // console.log("Appointments fetched successfully:", res.data);
       return res.data;
     })
     .catch((err) => {
       console.error("Error fetching appointments:", err);
+      throw err;
+    });
+};
+
+export const deleteAppointment = function (appointmentId) {
+  const token = localStorage.getItem("authToken");
+
+  if (!token) {
+    throw new Error("Token not found. Please log in again.");
+  }
+
+  const config = {
+    url: `/user/appointments/${appointmentId}`,
+    method: "delete",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  return request(config)
+    .then((res) => {
+      console.log("Appointment deleted successfully:", res.data);
+      return res.data;
+    })
+    .catch((err) => {
+      console.error("Error deleting appointment:", err);
+      throw err;
+    });
+};
+
+export const cancelAppointment = function (appointmentId) {
+  const token = localStorage.getItem("authToken");
+
+  if (!token) {
+    throw new Error("Token not found. Please log in again.");
+  }
+
+  const config = {
+    url: `/appointments/${appointmentId}/cancel`,
+    method: "post",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  return request(config)
+    .then((res) => {
+      console.log("Appointment canceled successfully:", res.data);
+      return res.data;
+    })
+    .catch((err) => {
+      console.error("Error canceling appointment:", err);
       throw err;
     });
 };
@@ -84,7 +162,6 @@ export const getSchedules = function (doctorId, startDate, endDate) {
 
   return request(config)
     .then((res) => {
-      // console.log("Schedules fetched successfully:", res.data);
       return res.data;
     })
     .catch((err) => {

@@ -3,7 +3,7 @@
     <el-container class="dashboard-container">
       <el-aside class="dashboard-left">
         <div class="sidebar-header">
-          <!-- <img src="logo.png" alt="Logo" class="logo" /> -->
+          <img :src="logoSrc" alt="Logo" class="logo" />
           <h2 class="title">FRW</h2>
         </div>
 
@@ -15,13 +15,18 @@
           <p>123 Main St</p>
         </div>
 
-        <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
+        <el-radio-group v-model="isCollapse" style="margin-bottom: 20px">
           <el-radio-button :value="false">expand</el-radio-button>
           <el-radio-button :value="true">collapse</el-radio-button>
         </el-radio-group>
 
-        <el-menu default-active="2" class="el-menu-vertical" :collapse="isCollapse" @open="handleOpen"
-          @close="handleClose">
+        <el-menu
+          default-active="2"
+          class="el-menu-vertical"
+          :collapse="isCollapse"
+          @open="handleOpen"
+          @close="handleClose"
+        >
           <el-menu-item index="1">
             <el-icon>
               <Menu />
@@ -116,7 +121,6 @@
             <span>Customer Support</span>
           </el-menu-item>
         </el-menu>
-
       </el-aside>
 
       <el-container class="dashboard-right">
@@ -165,17 +169,19 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-import { ref } from "vue";
-
-const isCollapse = ref(false);
-
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-};
-
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
+<script>
+import logoSrc from "@/assets/logo.png";
+export default {
+  data() {
+    return {
+      isCollapse: false,
+      logoSrc,
+    };
+  },
+  methods: {
+    handleOpen() {},
+    handleClose() {},
+  },
 };
 </script>
 
