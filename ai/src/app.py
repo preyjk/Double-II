@@ -14,7 +14,7 @@ def lambda_handler(event, context):
     requestBodyContent = event.get('requestBody', {}).get('content', {}).get('application/json', {}).get('properties', [])
 
     # Extract parameters into a dictionary
-    params_dict = {param['name']: param['value'] for param in parameters}
+    params_dict = {param['name'][2:] if param['name'].startswith('s_') else param['name']: param['value'] for param in parameters}
 
     # Extract request body properties into a dictionary
     requestBody_dict = {prop['name'][2:] if prop['name'].startswith('s_') else prop['name']: prop['value'] for prop in requestBodyContent}

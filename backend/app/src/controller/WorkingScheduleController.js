@@ -14,6 +14,24 @@ router.get('/schedules', asyncHandler(async (req, res) => {
     res.status(500).json(result.message);
   }
 }));
+ 
+router.get('/doctor/available-dates', asyncHandler(async (req, res) => {
+  const { doctorId, startDate, endDate } = req.query;
+  const result = await WorkingScheduleService.getAvailableDates({ doctorId, startDate, endDate });
+  if (result.success) {
+    return res.status(200).json(result.data);
+  } 
+  return res.status(500).json(result.message);
+}));
+
+router.get('/doctor/schedules', asyncHandler(async (req, res) => {
+  const { doctorId, date } = req.query;
+  const result = await WorkingScheduleService.getTimeSlots({ doctorId, date });
+  if (result.success) {
+    return res.status(200).json(result.data);
+  } 
+  return res.status(500).json(result.message);
+}));
 
 router.post('/schedules', AuthService.verifyRequest, AuthService.hasRole(['admin']), asyncHandler(async (req, res) => {
   const result = await WorkingScheduleService.createSchedule(req.body);
