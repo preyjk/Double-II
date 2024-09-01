@@ -32,6 +32,28 @@ class WorkingScheduleService {
     return { success: true, message: 'Schedule deleted successfully' };
   }
 
+  static async getAvailableDates({ doctorId, startDate, endDate }) {
+    const data = await dynamo.send(WorkingSchedule.query({ doctorId, scheduleStartDate: startDate, scheduleEndDate: endDate }));
+    console.log(data);
+    const availableDates = data.Items.reduce((acc, schedule) => {
+      if (schedule.Status === 'available') {
+        acc.add(schedule.Date);
+      }
+      return acc;
+    }, new Set());
+    return { success: true, data: Array.from(availableDates) };
+  }
+
+  static async getTimeSlots({ doctorId, date }) {
+    const data = await dynamo.send(WorkingSchedule.findByDoctorIdAndDate(doctorId, date));
+    return { success: true, data: data.Items.map(item => ({
+      Id: item.Id,
+      StartTime: item.StartTime,
+      EndTime: item.EndTime,
+      Status: item.Status
+    }))};
+  }
+
 }
 
 export default WorkingScheduleService;

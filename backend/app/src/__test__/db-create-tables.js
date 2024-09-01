@@ -90,6 +90,7 @@ const tableDefinitions = [
         AttributeDefinitions: [
             { AttributeName: 'Id', AttributeType: 'S' },
             { AttributeName: 'DoctorId', AttributeType: 'S' },
+            { AttributeName: 'Date', AttributeType: 'S' },
         ],
         ProvisionedThroughput: {
             ReadCapacityUnits: 5,
@@ -97,9 +98,10 @@ const tableDefinitions = [
         },
         GlobalSecondaryIndexes: [
             {
-                IndexName: 'DoctorIdIndex',
+                IndexName: 'DoctorIdAndDateIndex',
                 KeySchema: [
-                    { AttributeName: 'DoctorId', KeyType: 'HASH' }, // GSI key
+                    { AttributeName: 'DoctorId', KeyType: 'HASH' }, 
+                    { AttributeName: 'Date', KeyType: 'RANGE' }
                 ],
                 Projection: { ProjectionType: 'ALL' },
                 ProvisionedThroughput: {

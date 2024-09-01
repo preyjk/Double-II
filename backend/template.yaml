@@ -50,6 +50,8 @@ Resources:
           AttributeType: S
         - AttributeName: DoctorId
           AttributeType: S
+        - AttributeName: Date
+          AttributeType: S
       KeySchema:
         - AttributeName: Id
           KeyType: HASH
@@ -58,10 +60,12 @@ Resources:
         MaxReadRequestUnits: 10
         MaxWriteRequestUnits: 10
       GlobalSecondaryIndexes:
-        - IndexName: DoctorIdIndex
+        - IndexName: DoctorIdAndDateIndex
           KeySchema:
             - AttributeName: DoctorId
               KeyType: HASH
+            - AttributeName: Date
+              KeyType: RANGE
           Projection:
             ProjectionType: ALL
   
