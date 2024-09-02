@@ -15,6 +15,7 @@
     "deep-chat": "^2.0.1",
     "element-plus": "^2.8.0",
     "lottie-web": "^5.12.2",
+    "uuid": "^10.0.0",
     "vue": "^3.4.37",
     "vue-router": "^4.4.3",
     "vuex": "^4.1.0"
