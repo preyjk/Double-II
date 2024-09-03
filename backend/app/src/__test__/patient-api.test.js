@@ -17,12 +17,12 @@ describe('Patient API End-to-End Tests', () => {
   let token;
   const invalidToken = 'invalid token';
   const mismatchedUsername = 'mismatcheduser';
-  const mismatchedToken = AuthService.generateToken({id: mismatchedUsername});
-  
+  const mismatchedToken = AuthService.generateToken({ id: mismatchedUsername });
+
   beforeAll(async () => {
     const res = await request(app)
       .post('/public/auth/login')
-      .send({ username: 'test', password: 'test' })
+      .send({ email: 'test', password: 'test' })
       .expect('Content-Type', /json/)
       .expect(200);
     token = res.body.token;
@@ -34,7 +34,7 @@ describe('Patient API End-to-End Tests', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200);
-      
+
     expect(Array.isArray(res.body)).toBe(true);
   });
 
@@ -50,10 +50,12 @@ describe('Patient API End-to-End Tests', () => {
 
     const res = await request(app)
       .post('/user/patients')
-      .set('Authorization', `Bearer ${token}`) 
+      .set('Authorization', `Bearer ${token}`) // Assuming authorization token or email is passed this way
       .send(newPatient)
       .expect('Content-Type', /json/)
       .expect(201);
+
+    const { id } = AuthService.verifyToken(token).data;
 
     expect(res.body).toHaveProperty('Name', 'John Doe');
     expect(res.body).toHaveProperty('Age', 30);
@@ -61,19 +63,19 @@ describe('Patient API End-to-End Tests', () => {
     expect(res.body).toHaveProperty('Phone', '1234567890');
     expect(res.body).toHaveProperty('Email', 'john.doe@example.com');
     expect(res.body).toHaveProperty('Address', '123 Main St');
-    expect(res.body).toHaveProperty('UserId', 'test');
-    patientId = res.body.Id;
+    expect(res.body).toHaveProperty('UserId', id);
+    patientId = res.body.Id;  // Save the patient ID for subsequent tests
     version = res.body.Version;
   });
 
-  test('should fail to get a patient by ID with a mismatched username token', async () => {
+  test('should fail to get a patient by ID with a mismatched email token', async () => {
     await request(app)
       .get(`/user/patients/${patientId}`)
       .set('Authorization', `Bearer ${mismatchedToken}`)
       .expect(404); // Not Found
   });
 
-  test('should fail to update a patient with a mismatched username token', async () => {
+  test('should fail to update a patient with a mismatched email token', async () => {
     const updatedData = {
       name: 'Jane Doe Updated',
       Version: version,
@@ -86,7 +88,7 @@ describe('Patient API End-to-End Tests', () => {
       .expect(404); // Not Found
   });
 
-  test('should fail to delete a patient with a mismatched username token', async () => {
+  test('should fail to delete a patient with a mismatched email token', async () => {
     await request(app)
       .delete(`/user/patients/${patientId}`)
       .set('Authorization', `Bearer ${mismatchedToken}`)
@@ -96,7 +98,7 @@ describe('Patient API End-to-End Tests', () => {
   test('should get a patient by ID', async () => {
     const res = await request(app)
       .get(`/user/patients/${patientId}`)
-      .set('Authorization', `Bearer ${token}`) // Assuming authorization token or username is passed this way
+      .set('Authorization', `Bearer ${token}`) // Assuming authorization token or email is passed this way
       .expect('Content-Type', /json/)
       .expect(200);
 
@@ -111,7 +113,7 @@ describe('Patient API End-to-End Tests', () => {
 
     const res = await request(app)
       .put(`/user/patients/${patientId}`)
-      .set('Authorization', `Bearer ${token}`) // Assuming authorization token or username is passed this way
+      .set('Authorization', `Bearer ${token}`) // Assuming authorization token or email is passed this way
       .send(updatedData)
       .expect('Content-Type', /json/)
       .expect(200);
@@ -123,7 +125,7 @@ describe('Patient API End-to-End Tests', () => {
   test('should delete a patient', async () => {
     await request(app)
       .delete(`/user/patients/${patientId}`)
-      .set('Authorization', `Bearer ${token}`) // Assuming authorization token or username is passed this way
+      .set('Authorization', `Bearer ${token}`) // Assuming authorization token or email is passed this way
       .expect(204);
   });
 
@@ -138,12 +140,12 @@ describe('Patient API End-to-End Tests', () => {
 
     test('should fail to create a new patient with an invalid token', async () => {
       const newPatient = {
-        name: 'Jane Doe',
-        age: 28,
-        gender: 'Female',
-        phone: '0987654321',
-        email: 'jane.doe@example.com',
-        address: '456 Oak St',
+        Name: 'John Doe',
+        Age: 30,
+        Gender: 'Male',
+        Phone: '1234567890',
+        Email: 'john.doe@example.com',
+        Address: '123 Main St',
       };
 
       await request(app)

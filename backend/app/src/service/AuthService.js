@@ -1,12 +1,12 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import User from '../dal/User.js';
-import { dynamo } from '../dal/DynamoDB.js';
+import User, { UserIndex } from '../dal/User.js';
+import { dynamo, TransactionBuilder } from '../dal/DynamoDB.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'JWT_SECRET';
 
 class AuthService {
-  
+
   static verifyToken(token) {
     try {
       const decoded = jwt.verify(token, JWT_SECRET);
@@ -51,8 +51,8 @@ class AuthService {
     }
   }
 
-  static generateToken(authContent) {
-    return jwt.sign(authContent, JWT_SECRET, { expiresIn: '1h' });
+  static generateToken(content, expiresIn = '1h') {
+    return jwt.sign(content, JWT_SECRET, { expiresIn });
   }
 
   static verifyPassword(inputPassword, storedPassword) {
@@ -64,13 +64,27 @@ class AuthService {
     return crypto.createHash('sha256').update(password).digest('hex');
   }
 
-  static async signup({ username, password, roles }) {
+  static async signup({ email, password, roles }) {
     try {
-      const hashedPassword = AuthService.hashPassword(password);
-      await dynamo.send(User.create({ Id: username, Password: hashedPassword, Roles: roles}));
+      const hashedPassword = AuthService.hashPassword(password);      
+      const createUserCommand = User.create({ 
+        Password: hashedPassword, 
+        Providers: [{ Provider: 'email', ProviderId: email }],
+        Roles: roles 
+      });
+      const createUserIndexCommand = UserIndex.create({ 
+        Provider: 'email', 
+        ProviderId: email, 
+        UserId: createUserCommand.input.Item.Id
+      });
+      await new TransactionBuilder()
+        .add(createUserIndexCommand)
+        .add(createUserCommand)
+        .execute();
       return { success: true, message: 'Signup successful' };
     } catch (error) {
-      if (error.name === 'ConditionalCheckFailedException') {
+      if (error.name === 'TransactionCanceledException' 
+        && error.CancellationReasons[0].Code === 'ConditionalCheckFailed') {
         return { success: false, message: 'User already exists' };
       } else {
         throw error;
@@ -78,13 +92,19 @@ class AuthService {
     }
   }
 
-  static async login({ username, password }) {
+  static async login({ email, password }) {
     try {
-      const result = await dynamo.send(User.findById(username));
+      const indexResult = await dynamo.send(UserIndex.findById(
+        UserIndex.generateId({ Provider: 'email', ProviderId: email })
+      ));
+      if (!indexResult.Item) {
+        return { success: false, message: 'Unauthorized' };
+      }
+      const result = await dynamo.send(User.findById(indexResult.Item.UserId));
       if (result.Item && AuthService.verifyPassword(password, result.Item.Password)) {
-        const token = AuthService.generateToken({id: username, roles: result.Item.Roles});
+        const token = AuthService.generateToken({ id: result.Item.Id, roles: result.Item.Roles });
         return { success: true, token };
-      } 
+      }
       return { success: false, message: 'Unauthorized' };
     } catch (error) {
       throw error;

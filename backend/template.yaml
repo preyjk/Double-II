@@ -119,6 +119,20 @@ Resources:
       OnDemandThroughput:
         MaxReadRequestUnits: 10
         MaxWriteRequestUnits: 10
+
+  UserIndexTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: Id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Id
+          KeyType: HASH
+      BillingMode: 'PAY_PER_REQUEST'
+      OnDemandThroughput:
+        MaxReadRequestUnits: 10
+        MaxWriteRequestUnits: 10
   
   AppointmentIndexTable:
     Type: AWS::DynamoDB::Table
@@ -156,6 +170,7 @@ Resources:
           APPOINTMENT_TABLE_NAME: !Ref AppointmentsTable
           DOCTOR_TABLE_NAME: !Ref DoctorsTable
           USER_TABLE_NAME: !Ref UsersTable
+          USER_INDEX_TABLE_NAME: !Ref UserIndexTable
           PATIENTS_TABLE_NAME: !Ref PatientsTable
           WORKING_SCHEDULE_TABLE_NAME: !Ref WorkingScheduleTable
           API_STAGE_NAME: !Ref StageName

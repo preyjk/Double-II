@@ -1,20 +1,25 @@
 import DynamoTable from './DynamoTable.js';
-import { PutCommand } from '@aws-sdk/lib-dynamodb';
 
 const TABLE_NAME = process.env.USER_TABLE_NAME || 'Users';
+const INDEX_NAME = process.env.USER_INDEX_TABLE_NAME || 'UserIndex';
 
 class UserTable extends DynamoTable {
-  create(item) {
-    const params = {
-      TableName: this.tableName,
-      Item: {...item, Version: 1},
-      ConditionExpression: 'attribute_not_exists(Id)'
-    };
-    return new PutCommand(params);
-  }
 
 }
 
+class UserIndexTable extends DynamoTable {
+  generateId(data) {
+    return `${data.Provider}_${data.ProviderId}`;
+  }
+
+  create(item) {
+    const putCommand = super.create(item);
+    putCommand.input.ConditionExpression = 'attribute_not_exists(Id)';
+    return putCommand;
+  }
+}
+
 const User = new UserTable(TABLE_NAME);
+export const UserIndex = new UserIndexTable(INDEX_NAME);
 
 export default User;

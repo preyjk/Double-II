@@ -23,15 +23,14 @@ class DynamoTable {
      * @returns {PutCommand} The command to create a new item.
      */
     create(data) {
-        const item = {
-            Id: this.generateId(data),
-            ...data,
-            Version: 1
-        };
         const params = {
             TableName: this.tableName,
-            Item: item,
-            ReturnValues: 'ALL_OLD'
+            Item: {
+                Id: this.generateId(data),
+                ...data,
+                Version: 1,
+                CreatedAt: new Date().toISOString(),
+            }
         };
         return new PutCommand(params);
     }
@@ -55,7 +54,7 @@ class DynamoTable {
      * @returns {UpdateCommand} The command to update an item by its ID.
      */
     findByIdAndUpdate(newData) {
-        const { Id, Version, ...data } = newData;
+        const { Id, Version, UpdatedAt, CreatedAt, ...data } = newData;
 
         const params = {
             TableName: this.tableName,
@@ -63,11 +62,13 @@ class DynamoTable {
             UpdateExpression: '',
             ConditionExpression: '#Version = :expectedVersion',
             ExpressionAttributeNames: {
-                '#Version': 'Version'
+                '#Version': 'Version',
+                '#UpdatedAt': 'UpdatedAt'
             },
             ExpressionAttributeValues: {
                 ':expectedVersion': Version,
-                ':newVersion': Version + 1
+                ':newVersion': Version + 1,
+                ':updatedAt': new Date().toISOString(),
             },
             ReturnValues: 'ALL_NEW',
         };
@@ -82,8 +83,9 @@ class DynamoTable {
         });
 
         updateExpressions.push('#Version = :newVersion');
+        updateExpressions.push('#UpdatedAt = :updatedAt');
         params.UpdateExpression = 'set ' + updateExpressions.join(', ');
-
+        
         return new UpdateCommand(params);
     }
 

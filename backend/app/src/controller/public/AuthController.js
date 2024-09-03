@@ -17,10 +17,10 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             required:
- *               - username
+ *               - email
  *               - password
  *             properties:
- *               username:
+ *               email:
  *                 type: string
  *               password:
  *                 type: string
@@ -31,9 +31,9 @@ const router = express.Router();
  *         description: Sign up failed
  */
 router.post('/signup', asyncHandler(async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  const result = await AuthService.signup({ username, password });
+  const result = await AuthService.signup({ email, password });
   if (result.success) {
     res.status(200).json(result.message);
   } else {
@@ -54,10 +54,10 @@ router.post('/signup', asyncHandler(async (req, res) => {
  *           schema:
  *             type: object
  *             required:
- *               - username
+ *               - email
  *               - password
  *             properties:
- *               username:
+ *               email:
  *                 type: string
  *               password:
  *                 type: string
@@ -70,9 +70,9 @@ router.post('/signup', asyncHandler(async (req, res) => {
  *         description: Internal server error
  */
 router.post('/login', asyncHandler(async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
-  const result = await AuthService.login({ username, password });
+  const result = await AuthService.login({ email, password });
   if (result.success) {
     res.status(200).json({ token: result.token });
   } else {

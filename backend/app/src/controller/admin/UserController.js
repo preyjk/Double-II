@@ -2,8 +2,34 @@ import express from 'express';
 import asyncHandler from '../asyncHandler.js';
 import UserService from '../../service/UserService.js';
 import AuthService from '../../service/AuthService.js';
+import { filterResponse } from '../utils.js';
 
 const router = express.Router();
+
+/**
+ * @openapi
+ * /admin/users:
+ *   get:
+ *     summary: List users
+ *     description: List users
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: A list of users
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/UserDTO'
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/', asyncHandler(async (req, res) => {
+    const result = await UserService.listUsers();
+    return res.status(200).json(filterResponse(result.data));
+}));
 
 /**
  * @openapi

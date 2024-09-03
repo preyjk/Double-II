@@ -1,6 +1,8 @@
 import request from 'supertest';
 import express from 'express';
 import router from '../routes/routes';
+import AuthService from '../service/AuthService.js';
+import UserService from '../service/UserService.js';
 
 const app = express();
 app.use(express.json());
@@ -12,13 +14,14 @@ app.use((err, req, res, next) => {
 
 describe('User Authentication API', () => {
 
-    let username = `testuser_${Math.floor(Math.random() * 10000)}`;
+    let email = `testuser_${Math.floor(Math.random() * 10000)}`;
     let password = 'testpassword';
+    let userId;
 
     it('should sign up a new user', async () => {
       const response = await request(app)
         .post('/public/auth/signup')
-        .send({ username, password })
+        .send({ email, password })
         .expect(200);
       
       expect(response.text).toBe('"Signup successful"');
@@ -27,7 +30,7 @@ describe('User Authentication API', () => {
     it('should not sign up an existing user', async () => {
       const response = await request(app)
         .post('/public/auth/signup')
-        .send({ username, password })
+        .send({ email, password })
         .expect(400);
       
       expect(response.text).toBe('"User already exists"');
@@ -36,20 +39,25 @@ describe('User Authentication API', () => {
     it('should log in an existing user', async () => {
       const response = await request(app)
         .post('/public/auth/login')
-        .send({ username, password })
+        .send({ email, password })
         .expect(200);
       
       expect(response.body).toHaveProperty('token');
       const token = response.body.token;
       expect(typeof token).toBe('string');
+      userId = AuthService.verifyToken(token).data.id;
     });
 
     it('should not log in with incorrect password', async () => {
       const response = await request(app)
         .post('/public/auth/login')
-        .send({ username, password: 'wrongpassword' })
+        .send({ email, password: 'wrongpassword' })
         .expect(401);
       
       expect(response.text).toBe('"Unauthorized"');
+    });
+
+    afterAll(async () => {
+      await UserService.deleteUser(userId);
     });
 });

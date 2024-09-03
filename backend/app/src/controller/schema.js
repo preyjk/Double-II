@@ -220,3 +220,32 @@
  *               type: integer
  *               description: The version of the record
  */
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     UserDTO:
+ *       type: object
+ *       properties:
+ *         Id:
+ *           type: string
+ *           description: The ID of the user
+ *         Roles:
+ *           type: array
+ *           description: The roles of the user
+ *           items:
+ *             type: string
+ *         Providers:
+ *           type: array
+ *           description: The providers of the user
+ *           items:
+ *             type: object
+ *             properties:
+ *               Provider:
+ *                 type: string
+ *               ProviderId:
+ *                 type: string
+ *         Version:
+ *           type: integer
+ */
