@@ -9,4 +9,7 @@ docker compose up -d --build
 
 # use this command to create tables in local dynamodb
 docker compose exec backend npm run init-db
+
+# use this command to update the openapi.json
+docker compose exec backend npm run gen:openapi
 ```

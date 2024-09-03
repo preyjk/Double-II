@@ -34,7 +34,6 @@ class WorkingScheduleService {
 
   static async getAvailableDates({ doctorId, startDate, endDate }) {
     const data = await dynamo.send(WorkingSchedule.query({ doctorId, scheduleStartDate: startDate, scheduleEndDate: endDate }));
-    console.log(data);
     const availableDates = data.Items.reduce((acc, schedule) => {
       if (schedule.Status === 'available') {
         acc.add(schedule.Date);

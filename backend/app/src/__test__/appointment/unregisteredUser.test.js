@@ -11,13 +11,12 @@ app.use((err, req, res, next) => {
   return res.status(500).json();
 });
 
-describe('GP Appointment Management API', () => {
+describe('Unregistered User Making Appointments - Happy Flow', () => {
   let appointmentId;
   let doctorId = '1';
   let scheduleId1, scheduleId2;
   let bookingReference, lastName, dateOfBirth;
-
-  const adminToken = AuthService.generateToken({ id: 'admin', roles: ['admin'] });
+  let adminToken;
 
   const schedule1 = {
     DoctorId: doctorId,
@@ -36,8 +35,15 @@ describe('GP Appointment Management API', () => {
   }
 
   beforeAll(async () => {
+    const loginRes = await request(app)
+      .post('/public/auth/login')
+      .send({ username: 'admin', password: 'admin' })
+      .expect('Content-Type', /json/)
+      .expect(200);
+    adminToken = loginRes.body.token;
+
     const res = await request(app)
-      .post('/schedules')
+      .post('/admin/schedules')
       .set('Authorization', `Bearer ${adminToken}`)
       .send(schedule1)
       .expect('Content-Type', /json/)
@@ -51,7 +57,7 @@ describe('GP Appointment Management API', () => {
     scheduleId1 = res.body.Id;
 
     const res2 = await request(app)
-      .post('/schedules')
+      .post('/admin/schedules')
       .set('Authorization', `Bearer ${adminToken}`)
       .send(schedule2)
       .expect('Content-Type', /json/)
@@ -65,6 +71,41 @@ describe('GP Appointment Management API', () => {
     scheduleId2 = res2.body.Id;
   });
 
+  test('should list available dates', async () => {
+    const res = await request(app)
+      .get(`/public/schedules/available-dates?doctorId=${doctorId}&startDate=2024-11-01&endDate=2024-11-30`)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body).toContain('2024-11-11');
+    expect(res.body).toContain('2024-11-12');
+  });
+
+  test('should list available times', async () => {
+    const res = await request(app)
+      .get(`/public/schedules/available-timeslots?doctorId=${doctorId}&date=2024-11-11`)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ StartTime: '09:00' })
+      ])
+    );
+
+    const res2 = await request(app)
+      .get(`/public/schedules/available-timeslots?doctorId=${doctorId}&date=2024-11-12`)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(Array.isArray(res2.body)).toBe(true);
+    expect(res2.body).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ StartTime: '09:15' })
+      ])
+    );
+  });
+
+
   test('should create a new appointment', async () => {
     const newAppointment = {
       ScheduleId: scheduleId1,
@@ -75,7 +116,7 @@ describe('GP Appointment Management API', () => {
     };
 
     const res = await request(app)
-      .post('/appointments')
+      .post('/public/appointments')
       .send(newAppointment)
       .expect('Content-Type', /json/)
       .expect(201);
@@ -100,7 +141,7 @@ describe('GP Appointment Management API', () => {
 
   test('should get an appointment by booking reference', async () => {
     const res = await request(app)
-      .get(`/appointment?reference=${bookingReference}&lastname=${lastName}&dob=${dateOfBirth}`)
+      .get(`/public/appointments?reference=${bookingReference}&lastname=${lastName}&dob=${dateOfBirth}`)
       .expect('Content-Type', /json/)
       .expect(200);
 
@@ -121,7 +162,7 @@ describe('GP Appointment Management API', () => {
 
   test('should reschedule an appointment', async () => {
     const res = await request(app)
-      .post(`/appointments/reschedule`)
+      .post(`/public/appointments/reschedule`)
       .send({ BookingReference: bookingReference, LastName: lastName, DateOfBirth: dateOfBirth, ScheduleId: scheduleId2 })
       .expect('Content-Type', /json/)
       .expect(200);
@@ -141,7 +182,8 @@ describe('GP Appointment Management API', () => {
 
 
     const res2 = await request(app)
-      .get(`/schedules?doctorId=${doctorId}`)
+      .get(`/admin/schedules?doctorId=${doctorId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
       .expect('Content-Type', /json/)
       .expect(200);
     res2.body.forEach(schedule => {
@@ -156,7 +198,7 @@ describe('GP Appointment Management API', () => {
 
   test('should cancel an appointment', async () => {
     const res = await request(app)
-      .post('/appointments/cancel')
+      .post('/public/appointments/cancel')
       .send({ BookingReference: bookingReference, LastName: lastName, DateOfBirth: dateOfBirth })
       .expect('Content-Type', /json/)
       .expect(200);
@@ -166,19 +208,19 @@ describe('GP Appointment Management API', () => {
 
   test('should delete an appointment', async () => {
     await request(app)
-      .delete(`/appointments/${appointmentId}`)
+      .delete(`/admin/appointments/${appointmentId}`)
       .set('Authorization', `Bearer ${adminToken}`)
       .expect(204);
   });
 
   afterAll(async () => {
     await request(app)
-      .delete(`/schedules/${scheduleId1}`)
+      .delete(`/admin/schedules/${scheduleId1}`)
       .set('Authorization', `Bearer ${adminToken}`)
       .expect(204);
 
     await request(app)
-      .delete(`/schedules/${scheduleId2}`)
+      .delete(`/admin/schedules/${scheduleId2}`)
       .set('Authorization', `Bearer ${adminToken}`)
       .expect(204);
   });

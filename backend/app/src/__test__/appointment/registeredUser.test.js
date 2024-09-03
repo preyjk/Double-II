@@ -11,16 +11,15 @@ app.use((err, req, res, next) => {
   return res.status(500).json();
 });
 
-describe('GP Appointment Management API', () => {
+describe('Registered User Making Appointments - Happy Flow', () => {
   let appointmentId1, appointmentId2;
   let doctorId = '2';
   let scheduleId1, scheduleId2;
   let bookingReference, lastName, dateOfBirth;
   let appointment1;
 
-  const username = 'testuser';
-  const token = AuthService.generateToken({ id: username });
-  const adminToken = AuthService.generateToken({ id: 'admin', roles: ['admin'] });
+  let token;
+  let adminToken;
 
   const schedule1 = {
     DoctorId: doctorId,
@@ -39,8 +38,22 @@ describe('GP Appointment Management API', () => {
   }
 
   beforeAll(async () => {
+    const adminLoginRes = await request(app)
+      .post('/public/auth/login')
+      .send({ username: 'admin', password: 'admin' })
+      .expect('Content-Type', /json/)
+      .expect(200);
+    adminToken = adminLoginRes.body.token;
+
+    const loginRes = await request(app)
+      .post('/public/auth/login')
+      .send({ username: 'test', password: 'test' })
+      .expect('Content-Type', /json/)
+      .expect(200);
+    token = loginRes.body.token;
+
     const res = await request(app)
-      .post('/schedules')
+      .post('/admin/schedules')
       .set('Authorization', `Bearer ${adminToken}`)
       .send(schedule1)
       .expect('Content-Type', /json/)
@@ -54,7 +67,7 @@ describe('GP Appointment Management API', () => {
     scheduleId1 = res.body.Id;
 
     const res2 = await request(app)
-      .post('/schedules')
+      .post('/admin/schedules')
       .set('Authorization', `Bearer ${adminToken}`)
       .send(schedule2)
       .expect('Content-Type', /json/)
@@ -78,7 +91,7 @@ describe('GP Appointment Management API', () => {
     };
 
     const res = await request(app)
-      .post('/appointments')
+      .post('/public/appointments')
       .send(newAppointment)
       .expect('Content-Type', /json/)
       .expect(201);
@@ -122,7 +135,7 @@ describe('GP Appointment Management API', () => {
     expect(res.body).toHaveProperty('StartTime', '09:15');
     expect(res.body).toHaveProperty('EndTime', '09:30');
     expect(res.body).toHaveProperty('Reason', 'Follow-up check');
-    expect(res.body).toHaveProperty('UserId', username);
+    expect(res.body).toHaveProperty('UserId', 'test');
     expect(res.body).toHaveProperty('LastName', 'Doe');
     expect(res.body).toHaveProperty('FirstName', 'Jane');
     expect(res.body).toHaveProperty('DateOfBirth', '1990-01-01');
@@ -148,7 +161,7 @@ describe('GP Appointment Management API', () => {
     expect(res.body).toHaveProperty('LastName', 'Doe');
     expect(res.body).toHaveProperty('FirstName', 'Jane');
     expect(res.body).toHaveProperty('DateOfBirth', '1990-01-01');
-    expect(res.body).toHaveProperty('UserId', username);
+    expect(res.body).toHaveProperty('UserId', 'test');
   });
 
   test('should list appointment under specific user by doctorId, startDate and endDate', async () => {
@@ -165,7 +178,7 @@ describe('GP Appointment Management API', () => {
     expect(res.body[0]).toHaveProperty('EndTime', '09:15');
     expect(res.body[0]).toHaveProperty('Reason', 'Follow-up check');
     expect(res.body[0]).toHaveProperty('Id', appointmentId1);
-    expect(res.body[0]).toHaveProperty('UserId', username);
+    expect(res.body[0]).toHaveProperty('UserId', 'test');
     expect(res.body[0]).toHaveProperty('LastName', 'Doe');
     expect(res.body[0]).toHaveProperty('FirstName', 'Jane');
     expect(res.body[0]).toHaveProperty('DateOfBirth', '1990-01-01');
@@ -184,7 +197,7 @@ describe('GP Appointment Management API', () => {
     expect(res2.body[0]).toHaveProperty('EndTime', '09:30');
     expect(res2.body[0]).toHaveProperty('Reason', 'Follow-up check');
     expect(res2.body[0]).toHaveProperty('Id', appointmentId2);
-    expect(res2.body[0]).toHaveProperty('UserId', username);
+    expect(res2.body[0]).toHaveProperty('UserId', 'test');
     expect(res2.body[0]).toHaveProperty('LastName', 'Doe');
     expect(res2.body[0]).toHaveProperty('FirstName', 'Jane');
     expect(res2.body[0]).toHaveProperty('DateOfBirth', '1990-01-01');
@@ -201,7 +214,7 @@ describe('GP Appointment Management API', () => {
 
   test('should get an appointment by ID', async () => {
     const res = await request(app)
-      .get(`/appointments/${appointmentId1}`)
+      .get(`/user/appointments/${appointmentId1}`)
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200);
@@ -216,7 +229,7 @@ describe('GP Appointment Management API', () => {
       Version: appointment1.Version
     };
     const res = await request(app)
-      .put(`/appointments/${appointmentId1}`)
+      .put(`/user/appointments/${appointmentId1}`)
       .set('Authorization', `Bearer ${token}`)
       .send(updatedData)
       .expect('Content-Type', /json/)
@@ -228,7 +241,7 @@ describe('GP Appointment Management API', () => {
 
   test('should delete an appointment', async () => {
     await request(app)
-      .delete(`/appointments/${appointmentId2}`)
+      .delete(`/admin/appointments/${appointmentId2}`)
       .set('Authorization', `Bearer ${adminToken}`)
       .expect(204);
   });
@@ -236,7 +249,7 @@ describe('GP Appointment Management API', () => {
 
   test('should reschedule an appointment', async () => {
     const res = await request(app)
-      .post(`/appointments/${appointmentId1}/reschedule`)
+      .post(`/user/appointments/${appointmentId1}/reschedule`)
       .set('Authorization', `Bearer ${token}`)
       .send({ ScheduleId: scheduleId2 })
       .expect('Content-Type', /json/)
@@ -249,15 +262,15 @@ describe('GP Appointment Management API', () => {
     expect(res.body).toHaveProperty('StartTime', '09:15');
     expect(res.body).toHaveProperty('EndTime', '09:30');
     expect(res.body).toHaveProperty('Reason', 'Follow-up check');
-    expect(res.body).toHaveProperty('UserId', username);
+    expect(res.body).toHaveProperty('UserId', 'test');
     expect(res.body).toHaveProperty('LastName', 'Doe');
     expect(res.body).toHaveProperty('FirstName', 'Jane Updated');
     expect(res.body).toHaveProperty('DateOfBirth', '1990-01-01');
     expect(res.body).toHaveProperty('BookingReference', bookingReference);
 
-
     const res2 = await request(app)
-      .get(`/schedules?doctorId=${doctorId}`)
+      .get(`/admin/schedules?doctorId=${doctorId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
       .expect('Content-Type', /json/)
       .expect(200);
     res2.body.forEach(schedule => {
@@ -272,7 +285,7 @@ describe('GP Appointment Management API', () => {
 
   test('should cancel an appointment', async () => {
     const res = await request(app)
-      .post(`/appointments/${appointmentId1}/cancel`)
+      .post(`/user/appointments/${appointmentId1}/cancel`)
       .set('Authorization', `Bearer ${token}`)
       .expect(200);
     expect(res.body).toHaveProperty('Status', 'cancelled');
@@ -280,19 +293,19 @@ describe('GP Appointment Management API', () => {
 
   test('should delete an appointment', async () => {
     await request(app)
-      .delete(`/appointments/${appointmentId1}`)
+      .delete(`/admin/appointments/${appointmentId1}`)
       .set('Authorization', `Bearer ${adminToken}`)
       .expect(204);
   });
 
   afterAll(async () => {
     await request(app)
-      .delete(`/schedules/${scheduleId1}`)
+      .delete(`/admin/schedules/${scheduleId1}`)
       .set('Authorization', `Bearer ${adminToken}`)
       .expect(204);
 
     await request(app)
-      .delete(`/schedules/${scheduleId2}`)
+      .delete(`/admin/schedules/${scheduleId2}`)
       .set('Authorization', `Bearer ${adminToken}`)
       .expect(204);
   });

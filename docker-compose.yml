@@ -38,9 +38,9 @@ services:
     ports:
       - "8000:8080"
     volumes:
-      - ./backend/config/appointment-api-schema.yml:/tmp/swagger.yml
+      - ./backend/app/openapi.json:/tmp/swagger.json
     environment:
-      - SWAGGER_JSON=/tmp/swagger.yml
+      - SWAGGER_JSON=/tmp/swagger.json
 
 volumes:
   dynamodb_data:

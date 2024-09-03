@@ -4,6 +4,7 @@ import WorkingScheduleService from './WorkingScheduleService.js';
 import retry from './util/retry.js';
 import { customAlphabet } from 'nanoid';
 import { dynamo, TransactionBuilder } from '../dal/DynamoDB.js';
+import { NotFoundError } from '../exception/Exceptions.js';
 
 const nano = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 8);
 
@@ -97,7 +98,7 @@ class AppointmentService {
   static async deleteAppointment(appointmentId) {
     const result = await dynamo.send(Appointment.findById(appointmentId));
     if (!result.Item) {
-      return { success: false, message: 'Appointment not found' };
+      throw new NotFoundError('Appointment not found');
     }
     const workingSchedule = await WorkingScheduleService.getScheduleById(result.Item.ScheduleId);
     const txBuilder = new TransactionBuilder();
@@ -119,6 +120,9 @@ class AppointmentService {
   static async getAppointmentByBookingReference({ BookingReference, LastName, DateOfBirth }) {
     const bookingReferenceId = BookingReferenceIndex.generateId({ BookingReference, LastName, DateOfBirth });
     const bookingReferenceIndex = await dynamo.send(BookingReferenceIndex.findById(bookingReferenceId));
+    if (!bookingReferenceIndex.Item) {
+      return { success: false, message: 'Booking reference not found' };
+    }
     const result = await dynamo.send(Appointment.findById(bookingReferenceIndex.Item.AppointmentId));
     if (result.Item) {
       return { success: true, data: result.Item };

@@ -14,17 +14,24 @@ app.use((err, req, res, next) => {
 describe('Patient API End-to-End Tests', () => {
   let patientId;
   let version;
-  const username = 'testuser';
-  const token = AuthService.generateToken({id: username});
+  let token;
   const invalidToken = 'invalid token';
   const mismatchedUsername = 'mismatcheduser';
   const mismatchedToken = AuthService.generateToken({id: mismatchedUsername});
   
+  beforeAll(async () => {
+    const res = await request(app)
+      .post('/public/auth/login')
+      .send({ username: 'test', password: 'test' })
+      .expect('Content-Type', /json/)
+      .expect(200);
+    token = res.body.token;
+  });
 
   test('should list all patients', async () => {
     const res = await request(app)
       .get('/user/patients')
-      .set('Authorization', `Bearer ${token}`) // Assuming authorization token or username is passed this way
+      .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200);
       
@@ -43,7 +50,7 @@ describe('Patient API End-to-End Tests', () => {
 
     const res = await request(app)
       .post('/user/patients')
-      .set('Authorization', `Bearer ${token}`) // Assuming authorization token or username is passed this way
+      .set('Authorization', `Bearer ${token}`) 
       .send(newPatient)
       .expect('Content-Type', /json/)
       .expect(201);
@@ -54,8 +61,8 @@ describe('Patient API End-to-End Tests', () => {
     expect(res.body).toHaveProperty('Phone', '1234567890');
     expect(res.body).toHaveProperty('Email', 'john.doe@example.com');
     expect(res.body).toHaveProperty('Address', '123 Main St');
-    expect(res.body).toHaveProperty('UserId', username);
-    patientId = res.body.Id;  // Save the patient ID for subsequent tests
+    expect(res.body).toHaveProperty('UserId', 'test');
+    patientId = res.body.Id;
     version = res.body.Version;
   });
 

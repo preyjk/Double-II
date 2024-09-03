@@ -17,7 +17,7 @@ describe('User Authentication API', () => {
 
     it('should sign up a new user', async () => {
       const response = await request(app)
-        .post('/signup')
+        .post('/public/auth/signup')
         .send({ username, password })
         .expect(200);
       
@@ -26,7 +26,7 @@ describe('User Authentication API', () => {
 
     it('should not sign up an existing user', async () => {
       const response = await request(app)
-        .post('/signup')
+        .post('/public/auth/signup')
         .send({ username, password })
         .expect(400);
       
@@ -35,7 +35,7 @@ describe('User Authentication API', () => {
 
     it('should log in an existing user', async () => {
       const response = await request(app)
-        .post('/login')
+        .post('/public/auth/login')
         .send({ username, password })
         .expect(200);
       
@@ -46,7 +46,7 @@ describe('User Authentication API', () => {
 
     it('should not log in with incorrect password', async () => {
       const response = await request(app)
-        .post('/login')
+        .post('/public/auth/login')
         .send({ username, password: 'wrongpassword' })
         .expect(401);
       

@@ -7,6 +7,10 @@ const DOCTORID_DATE_INDEX = 'DoctorIdAndDateIndex';
 
 class WorkingScheduleTable extends DynamoTable {
 
+  generateId(data) {
+    return `${data.DoctorId}_${data.Date}_${data.StartTime}`;
+  }
+
   query(criteria) {
     const filterExpressionBuilder = new FilterExpressionBuilder();
     criteria.doctorId && filterExpressionBuilder.addCriteria('DoctorId', '=', criteria.doctorId);
