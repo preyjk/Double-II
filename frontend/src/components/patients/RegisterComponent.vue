@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { register } from "@/network/netService";
+import { register } from "@/api/modules/user.js";
 
 export default {
   data() {

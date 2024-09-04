@@ -1,20 +1,42 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomePage from "../views/patients/HomePage.vue";
-import PersonalProfilePage from "../views/patients/PersonalProfilePage.vue";
-import ChatbotPage from "@/views/patients/ChatbotPage.vue";
-import AdminPage from "../views/admin/AdminPage.vue";
-import DashboardPage from "@/views/admin/DashboardPage.vue";
-import AboutPage from "@/views/patients/AboutPage.vue";
-import OnlineBookingPage from "@/views/patients/OnlineBookingPage.vue";
-import ConfirmationPage from "@/views/patients/ConfirmationPage.vue";
-import MyBooking from "@/views/patients/MyBooking.vue";
+import HomePage from "@/pages/patients/HomePage.vue";
+import PersonalProfilePage from "@/pages/patients/PersonalProfilePage.vue";
+import ChatbotPage from "@/pages/patients/ChatbotPage.vue";
+import AdminPage from "@/pages/admin/AdminPage.vue";
+import DashboardPage from "@/pages/admin/DashboardPage.vue";
+import AboutPage from "@/pages/patients/AboutPage.vue";
+import OnlineBookingPage from "@/pages/patients/OnlineBookingPage.vue";
+import ConfirmationPage from "@/pages/patients/ConfirmationPage.vue";
+import MyBooking from "@/pages/patients/MyBooking.vue";
 
 const routes = [
+  /*
+    user routers
+  */
   {
     path: "/",
     name: "Home",
     component: HomePage,
   },
+
+  {
+    path: "/about",
+    name: "about",
+    component: AboutPage,
+  },
+
+  {
+    path: "/profile",
+    name: "PersonalProfile",
+    component: PersonalProfilePage,
+  },
+
+  {
+    path: "/my-booking",
+    name: "MyBooking",
+    component: MyBooking,
+  },
+
   {
     path: "/online-booking",
     name: "OnlineBooking",
@@ -23,20 +45,20 @@ const routes = [
   },
 
   {
-    path: "/profile",
-    name: "PersonalProfile",
-    component: PersonalProfilePage,
+    path: "/confirmation",
+    name: "ConfirmationPage",
+    component: ConfirmationPage,
   },
+
   {
     path: "/chatbot",
     name: "Chatbot",
     component: ChatbotPage,
   },
-  {
-    path: "/my-booking",
-    name: "MyBooking",
-    component: MyBooking,
-  },
+
+  /*
+    admin routers
+  */
   {
     path: "/admin",
     name: "Admin",
@@ -46,16 +68,6 @@ const routes = [
     path: "/dashboard",
     name: "dashboard",
     component: DashboardPage,
-  },
-  {
-    path: "/about",
-    name: "about",
-    component: AboutPage,
-  },
-  {
-    path: "/confirmation",
-    name: "ConfirmationPage",
-    component: ConfirmationPage,
   },
 ];
 

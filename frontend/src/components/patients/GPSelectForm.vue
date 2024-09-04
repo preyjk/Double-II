@@ -17,7 +17,7 @@
 
 <script>
 import { ref } from "vue";
-import { useGet } from "@/utils/useApi";
+import { useGet } from "@/api/useApi";
 
 export default {
   name: "GPSelectForm",

@@ -46,7 +46,7 @@
 <script>
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
-import { getAppointments, cancelAppointment } from "@/network/netService";
+import { getAppointments, cancelAppointment } from "@/api/modules/appointment.js";
 
 export default {
   components: { HeaderComponent, FooterComponent },

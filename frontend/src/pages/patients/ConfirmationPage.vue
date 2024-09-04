@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { getAppointments } from "@/network/netService";
+import { getAppointments } from "@/api/modules/appointment.js";
 export default {
   name: "ConfirmationPage",
   data() {

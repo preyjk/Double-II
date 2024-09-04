@@ -46,7 +46,7 @@
 <script>
 import RegisterComponent from "@/components/patients/RegisterComponent.vue";
 import AvatarComponent from "@/components/patients/AvatarComponent.vue";
-import {login} from "@/network/netService";
+import {login} from "@/api/modules/user.js";
 
 export default {
   data() {
