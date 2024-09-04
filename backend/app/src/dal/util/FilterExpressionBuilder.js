@@ -8,11 +8,21 @@ class FilterExpressionBuilder {
 
     addCriteria(key, op, value) {
         const attributeKey = `#attr_${this.counter}_${key}`;
-        const valueKey = `:val_${this.counter}_${key}`;
-        this.counter++;
         this.ExpressionAttributeNames[attributeKey] = key;
-        this.ExpressionAttributeValues[valueKey] = value;
-        this.filterExpressions.push(`${attributeKey} ${op} ${valueKey}`);
+
+        if (op.toLowerCase() === 'between' && Array.isArray(value) && value.length === 2) {
+            const valueKey1 = `:val_${this.counter}_${key}_1`;
+            const valueKey2 = `:val_${this.counter}_${key}_2`;
+            this.ExpressionAttributeValues[valueKey1] = value[0];
+            this.ExpressionAttributeValues[valueKey2] = value[1];
+            this.filterExpressions.push(`${attributeKey} BETWEEN ${valueKey1} AND ${valueKey2}`);
+        } else {
+            const valueKey = `:val_${this.counter}_${key}`;
+            this.ExpressionAttributeValues[valueKey] = value;
+            this.filterExpressions.push(`${attributeKey} ${op} ${valueKey}`);
+        }
+
+        this.counter++;
     }
 
     build() {

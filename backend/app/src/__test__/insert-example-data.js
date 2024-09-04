@@ -5,9 +5,15 @@ import { dynamo } from '../dal/DynamoDB.js';
 
 const users = [
   {
-    username: 'admin',
+    email: 'admin',
     password: 'admin',
     roles: ['admin'],
+    active: true
+  },
+  {
+    email: 'test',
+    password: 'test',
+    active: true
   }
 ]
 

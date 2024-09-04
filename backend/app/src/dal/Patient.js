@@ -5,38 +5,12 @@ const TABLE_NAME = process.env.PATIENTS_TABLE_NAME || 'Patients';
 class PatientTable extends DynamoTable {
 
   findByIdAndUpdate(record) {
-    const { Id, UserId, Version, ...data } = record;
-
-    const params = {
-      TableName: this.tableName,
-      Key: { Id },
-      UpdateExpression: '',
-      ExpressionAttributeNames: {
-        '#Version': 'Version',
-        '#UserId': 'UserId',
-      },
-      ExpressionAttributeValues: {
-        ':expectedVersion': Version,
-        ':newVersion': Version + 1,
-        ':UserId': UserId,
-      },
-      ReturnValues: 'ALL_NEW',
-      ConditionExpression: '#UserId = :UserId AND #Version = :expectedVersion',
-    };
-
-    const updateExpressions = [];
-    Object.keys(data).forEach((key, index) => {
-      const attributeKey = `#attr${index}`;
-      const valueKey = `:val${index}`;
-      updateExpressions.push(`${attributeKey} = ${valueKey}`);
-      params.ExpressionAttributeNames[attributeKey] = key;
-      params.ExpressionAttributeValues[valueKey] = data[key];
-    });
-    
-    updateExpressions.push('#Version = :newVersion');
-    params.UpdateExpression = 'set ' + updateExpressions.join(', ');
-
-    return new UpdateCommand(params);
+    const { UserId, ...data } = record;
+    const updateCommand = super.findByIdAndUpdate(data);
+    updateCommand.input.ConditionExpression += ' AND #UserId = :UserId'; 
+    updateCommand.input.ExpressionAttributeNames['#UserId'] = 'UserId';
+    updateCommand.input.ExpressionAttributeValues[':UserId'] = UserId;
+    return updateCommand;
   }
 
   findByUserId(userId) {
