@@ -9,12 +9,17 @@
         <h2>Login</h2>
         <form @submit.prevent="handleSubmit">
           <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" v-model="username" required />
+            <label for="email">Email:</label>
+            <input type="email" id="email" v-model="email" required />
           </div>
           <div class="form-group">
             <label for="password">Password:</label>
-            <input type="password" id="password" v-model="password" required />
+            <input
+              type="password"
+              id="password"
+              v-model="password"
+              required
+            />
           </div>
           <div class="form-actions">
             <button type="submit" class="submit-button">Submit</button>
@@ -36,10 +41,12 @@
     </div>
 
     <!-- Register Component -->
-    <RegisterComponent
-      v-if="showRegisterModal"
-      @close="showRegisterModal = false"
-    />
+    <transition name="fade" mode="out-in">
+      <RegisterComponent
+        v-if="showRegisterModal"
+        @close="showRegisterModal = false"
+      />
+    </transition>
   </div>
 </template>
 
@@ -55,7 +62,7 @@ export default {
       showSign: true,
       showAvatar: false,
       showRegisterModal: false,
-      username: "",
+      email: "",
       password: "",
       token: "",
       isLoading: false,
@@ -78,13 +85,13 @@ export default {
       this.isLoading = true;
 
       setTimeout(() => {
-        login(this.username, this.password)
+        login(this.email, this.password)
           .then((token) => {
             this.token = token;
             localStorage.setItem("authToken", token);
             this.showModal = false;
             this.showSign = false;
-            this.username = "";
+            this.email = "";
             this.password = "";
             this.showAvatar = true;
           })
@@ -109,7 +116,6 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .modal-overlay {
   position: fixed;
@@ -121,19 +127,59 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: black;
+  color: #ccc;
   z-index: 999;
 }
 
 .modal {
-  background-color: white;
+  background: rgba(255, 255, 255, 0.3);
   padding: 30px;
-  border-radius: 8px;
+  border-radius: 15px;
   width: 350px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   position: relative;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 4px solid transparent; 
+  overflow: hidden;
 }
 
+.modal::before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 15px;
+  background: none;
+  border: 5px solid transparent; 
+  border-image: repeating-conic-gradient(
+    from var(--a),
+    #accfd8 0%,
+    #accfd8 10%,
+    transparent 10%,
+    transparent 80%,
+    #accfd8 100%
+  ) 1;
+  animation: animate 2.5s linear infinite;
+  pointer-events: none;
+}
+
+@property --a {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes animate {
+  0% {
+    --a: 0deg;
+  }
+  100% {
+    --a: 360deg;
+  }
+}
 .sign-in-button {
   cursor: pointer;
 }
@@ -158,6 +204,9 @@ export default {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px); 
 }
 
 .form-actions {
@@ -190,13 +239,14 @@ export default {
 }
 
 .toggle-text a {
-  color: #64b1e8;
+  color: #ccc;
   text-decoration: none;
   font-weight: bold;
 }
 
 .toggle-text a:hover {
   text-decoration: underline;
+  text-decoration-color:#accfd8;
 }
 
 .loading-spinner {
@@ -215,5 +265,27 @@ export default {
   100% {
     transform: rotate(360deg);
   }
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: all 0.5s ease;
+}
+
+.slide-fade-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateX(100%);
 }
 </style>

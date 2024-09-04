@@ -4,11 +4,12 @@
       <h2>Register</h2>
       <form @submit.prevent="handleRegister">
         <div class="form-group">
-          <label for="reg-username">Username:</label>
-          <input type="text" id="reg-username" v-model="username" required />
+          <label for="reg-email">Email Address</label>
+          <input type="text" id="reg-email" v-model="email" required />
         </div>
+
         <div class="form-group">
-          <label for="reg-password">Password:</label>
+          <label for="reg-password">Create Password</label>
           <input
             type="password"
             id="reg-password"
@@ -16,37 +17,66 @@
             required
           />
         </div>
-        <!-- Email field is commented out in the UI, uncomment if needed -->
-        <!-- <div class="form-group">
-          <label for="reg-email">Email:</label>
-          <input type="email" id="reg-email" v-model="email" required />
-        </div> -->
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <input
+            type="password"
+            id="confirm-password"
+            v-model="confirmPassword"
+            required
+          />
+        </div>
+
         <div class="form-actions">
           <button type="submit" class="submit-button">Register</button>
           <button type="button" @click="closeModal" class="cancel-button">
             Cancel
           </button>
         </div>
+        <p class="toggle-text">
+          Already Have an Account?
+          <a href="#" @click.prevent="switchToLogin">Login</a>
+        </p>
       </form>
     </div>
+    <transition name="fade" mode="out-in">
+      <component
+        :is="loginComponent"
+        v-if="showLoginModal"
+        @close="closeLoginModal"
+      />
+    </transition>
   </div>
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
 import { register } from "@/network/netService";
 
 export default {
   data() {
     return {
       showModal: true,
-      username: "",
-      password: "",
+      showLoginModal: false,
       email: "",
+      password: "",
+      confirmPassword: "",
     };
+  },
+  computed: {
+    loginComponent() {
+      return this.showLoginModal
+        ? defineAsyncComponent(() => import("./LoginComponent.vue"))
+        : null;
+    },
   },
   methods: {
     handleRegister() {
-      register(this.username, this.password)
+      if (this.password !== this.confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+      register(this.email, this.password)
         .then((data) => {
           console.log("Registration data received:", data);
           alert("Registration successful!");
@@ -61,10 +91,16 @@ export default {
       this.showModal = false;
       this.$emit("close");
     },
+    closeLoginModal() {
+      this.showLoginModal = false;
+    },
+    switchToLogin() {
+      this.closeModal();
+      this.showLoginModal = true;
+    },
   },
 };
 </script>
-
 <style scoped>
 .modal-overlay {
   position: fixed;
@@ -76,16 +112,58 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: black;
+  color: #ccc;
+  z-index: 999;
 }
 
 .modal {
-  background-color: white;
+  background: rgba(255, 255, 255, 0.3);
   padding: 30px;
-  border-radius: 8px;
+  border-radius: 15px;
   width: 350px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   position: relative;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 4px solid transparent; 
+  overflow: hidden;
+}
+
+.modal::before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 15px;
+  background: none;
+  border: 5px solid transparent; 
+  border-image: repeating-conic-gradient(
+    from var(--a),
+    #accfd8 0%,
+    #accfd8 10%,
+    transparent 10%,
+    transparent 80%,
+    #accfd8 100%
+  ) 1;
+  animation: animate 2.5s linear infinite;
+  pointer-events: none;
+}
+
+@property --a {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes animate {
+  0% {
+    --a: 0deg;
+  }
+  100% {
+    --a: 360deg;
+  }
 }
 
 .form-group {
@@ -104,6 +182,9 @@ export default {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
+  background: rgba(255, 255, 255, 0.5); 
+  backdrop-filter: blur(5px); 
+  -webkit-backdrop-filter: blur(5px); 
 }
 
 .form-actions {
@@ -121,6 +202,21 @@ export default {
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
+}
+.toggle-text {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.toggle-text a {
+  color: #ccc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.toggle-text a:hover {
+  text-decoration: underline;
+  text-decoration-color:#accfd8;
 }
 
 .submit-button:hover,
