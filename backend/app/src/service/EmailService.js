@@ -1,4 +1,5 @@
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
+import DistributedLockService from "./DistributedLockService.js";
 
 const client = new SESv2Client();
 
@@ -11,6 +12,11 @@ class EmailService {
             console.log(`email will be sent to ${to} with subject ${subject} and body ${body}`);
             return { success: true };
         }
+
+        if (!await DistributedLockService.acquireLock(`send-email-${to}`, 60)) {
+            return { success: false, message: "Please try later" };
+        }
+
         const params = {
             Content: {
                 Simple: {
