@@ -102,7 +102,7 @@ router.post('/login', asyncHandler(async (req, res) => {
  *       '200':
  *         description: Email verified
  *       '401':
- *         description: Invalid token
+ *         description: Verify email failed
  *       '500':
  *         description: Internal server error
  */
@@ -110,6 +110,120 @@ router.post('/verify-email', asyncHandler(async (req, res) => {
   const { token } = req.body;
 
   const result = await AuthService.verifyEmail(token);
+  if (result.success) {
+    res.status(200).json(result.message);
+  } else {
+    res.status(401).json(result.message);
+  }
+}));
+
+/**
+ * @openapi
+ * /public/auth/change-password:
+ *   post:
+ *     summary: Change password
+ *     description: Change password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - oldPassword
+ *               - newPassword
+ *             properties:
+ *               email:
+ *                 type: string
+ *               oldPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Password changed
+ *       '401':
+ *         description: Change password failed
+ *       '500':
+ *         description: Internal server error
+ */
+router.post('/change-password', asyncHandler(async (req, res) => {
+  const { email, oldPassword, newPassword } = req.body;
+  const result = await AuthService.changePassword({ email, oldPassword, newPassword });
+  if (result.success) {
+    res.status(200).json(result.message);
+  } else {
+    res.status(401).json(result.message);
+  }
+}));
+
+/**
+ * @openapi
+ * /public/auth/reset-password:
+ *   post:
+ *     summary: Reset password
+ *     description: Reset password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - token
+ *               - newPassword
+ *             properties:
+ *               token:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Password reset
+ *       '401':
+ *         description: Reset password failed
+ *       '500':
+ *         description: Internal server error
+ */
+router.post('/reset-password', asyncHandler(async (req, res) => {
+  const { token, newPassword } = req.body;
+  const result = await AuthService.resetPassword({ token, newPassword });
+  if (result.success) {
+    res.status(200).json(result.message);
+  } else {
+    res.status(401).json(result.message);
+  }
+}));
+
+/**
+ * @openapi
+ * /public/auth/forgot-password:
+ *   post:
+ *     summary: Forgot password
+ *     description: Forgot password
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Reset password email sent
+ *       '401':
+ *         description: Reset password email failed
+ *       '500':
+ *         description: Internal server error
+ */
+router.post('/forgot-password', asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  const result = await AuthService.sendResetPasswordEmail(email);
   if (result.success) {
     res.status(200).json(result.message);
   } else {

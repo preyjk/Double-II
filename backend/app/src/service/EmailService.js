@@ -49,6 +49,16 @@ class EmailService {
         `;
         return EmailService.sendEmail({ to, subject, body });
     }
+
+    static async sendResetPasswordEmail({ to, token }) {
+        const subject = "Reset your password";
+        const link = `${WEB_BASE_URL}/reset-password?token=${token}/`;
+        const body = `
+            <p>Click the link below to reset your password:</p>
+            <a href="${link}">${link}</a>
+        `;
+        return EmailService.sendEmail({ to, subject, body });
+    }
 }
 
 export default EmailService;
