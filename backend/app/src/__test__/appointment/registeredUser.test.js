@@ -20,6 +20,7 @@ describe('Registered User Making Appointments - Happy Flow', () => {
 
   let token;
   let adminToken;
+  let UserId;
 
   const schedule1 = {
     DoctorId: doctorId,
@@ -40,17 +41,19 @@ describe('Registered User Making Appointments - Happy Flow', () => {
   beforeAll(async () => {
     const adminLoginRes = await request(app)
       .post('/public/auth/login')
-      .send({ username: 'admin', password: 'admin' })
+      .send({ email: 'admin', password: 'admin' })
       .expect('Content-Type', /json/)
       .expect(200);
     adminToken = adminLoginRes.body.token;
 
     const loginRes = await request(app)
       .post('/public/auth/login')
-      .send({ username: 'test', password: 'test' })
+      .send({ email: 'test', password: 'test' })
       .expect('Content-Type', /json/)
       .expect(200);
     token = loginRes.body.token;
+
+    UserId = AuthService.verifyToken(token).data.id;
 
     const res = await request(app)
       .post('/admin/schedules')
@@ -135,7 +138,6 @@ describe('Registered User Making Appointments - Happy Flow', () => {
     expect(res.body).toHaveProperty('StartTime', '09:15');
     expect(res.body).toHaveProperty('EndTime', '09:30');
     expect(res.body).toHaveProperty('Reason', 'Follow-up check');
-    expect(res.body).toHaveProperty('UserId', 'test');
     expect(res.body).toHaveProperty('LastName', 'Doe');
     expect(res.body).toHaveProperty('FirstName', 'Jane');
     expect(res.body).toHaveProperty('DateOfBirth', '1990-01-01');
@@ -161,7 +163,7 @@ describe('Registered User Making Appointments - Happy Flow', () => {
     expect(res.body).toHaveProperty('LastName', 'Doe');
     expect(res.body).toHaveProperty('FirstName', 'Jane');
     expect(res.body).toHaveProperty('DateOfBirth', '1990-01-01');
-    expect(res.body).toHaveProperty('UserId', 'test');
+    expect(res.body).toHaveProperty('UserId', UserId);
   });
 
   test('should list appointment under specific user by doctorId, startDate and endDate', async () => {
@@ -178,7 +180,7 @@ describe('Registered User Making Appointments - Happy Flow', () => {
     expect(res.body[0]).toHaveProperty('EndTime', '09:15');
     expect(res.body[0]).toHaveProperty('Reason', 'Follow-up check');
     expect(res.body[0]).toHaveProperty('Id', appointmentId1);
-    expect(res.body[0]).toHaveProperty('UserId', 'test');
+    expect(res.body[0]).toHaveProperty('UserId', UserId);
     expect(res.body[0]).toHaveProperty('LastName', 'Doe');
     expect(res.body[0]).toHaveProperty('FirstName', 'Jane');
     expect(res.body[0]).toHaveProperty('DateOfBirth', '1990-01-01');
@@ -197,7 +199,7 @@ describe('Registered User Making Appointments - Happy Flow', () => {
     expect(res2.body[0]).toHaveProperty('EndTime', '09:30');
     expect(res2.body[0]).toHaveProperty('Reason', 'Follow-up check');
     expect(res2.body[0]).toHaveProperty('Id', appointmentId2);
-    expect(res2.body[0]).toHaveProperty('UserId', 'test');
+    expect(res2.body[0]).toHaveProperty('UserId', UserId);
     expect(res2.body[0]).toHaveProperty('LastName', 'Doe');
     expect(res2.body[0]).toHaveProperty('FirstName', 'Jane');
     expect(res2.body[0]).toHaveProperty('DateOfBirth', '1990-01-01');
@@ -262,7 +264,7 @@ describe('Registered User Making Appointments - Happy Flow', () => {
     expect(res.body).toHaveProperty('StartTime', '09:15');
     expect(res.body).toHaveProperty('EndTime', '09:30');
     expect(res.body).toHaveProperty('Reason', 'Follow-up check');
-    expect(res.body).toHaveProperty('UserId', 'test');
+    expect(res.body).toHaveProperty('UserId', UserId);
     expect(res.body).toHaveProperty('LastName', 'Doe');
     expect(res.body).toHaveProperty('FirstName', 'Jane Updated');
     expect(res.body).toHaveProperty('DateOfBirth', '1990-01-01');

@@ -21,7 +21,7 @@ describe('Doctor API End-to-End Tests', () => {
   beforeAll(async () => {
     const res = await request(app)
       .post('/public/auth/login')
-      .send({ username: 'admin', password: 'admin' })
+      .send({ email: 'admin', password: 'admin' })
       .expect('Content-Type', /json/)
       .expect(200);
     token = res.body.token;

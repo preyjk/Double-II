@@ -43,6 +43,19 @@ const tableDefinitions = [
         },
     },
     {
+        TableName: 'UserIndex',
+        KeySchema: [
+            { AttributeName: 'Id', KeyType: 'HASH' }, // Primary key
+        ],
+        AttributeDefinitions: [
+            { AttributeName: 'Id', AttributeType: 'S' },
+        ],
+        ProvisionedThroughput: {
+            ReadCapacityUnits: 5,
+            WriteCapacityUnits: 5,
+        },
+    },
+    {
         TableName: 'Doctors',
         KeySchema: [
             { AttributeName: 'Id', KeyType: 'HASH' }, // Primary key

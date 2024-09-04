@@ -22,6 +22,12 @@ Parameters:
   BedrockAgentAliasRegisteredUser:
     Type: String
     Description: "alias id of the bedrock agent"
+  SesArn:
+    Type: String
+    Description: "SES ARN"
+  WebBaseUrl:
+    Type: String
+    Description: "Base URL of the web app"
 
 Globals:
   Function:
@@ -119,6 +125,20 @@ Resources:
       OnDemandThroughput:
         MaxReadRequestUnits: 10
         MaxWriteRequestUnits: 10
+
+  UserIndexTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: Id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: Id
+          KeyType: HASH
+      BillingMode: 'PAY_PER_REQUEST'
+      OnDemandThroughput:
+        MaxReadRequestUnits: 10
+        MaxWriteRequestUnits: 10
   
   AppointmentIndexTable:
     Type: AWS::DynamoDB::Table
@@ -151,11 +171,19 @@ Resources:
             - Effect: 'Allow'
               Action: 'bedrock:InvokeAgent'
               Resource: '*'
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: 'Allow'
+              Action:
+                - 'ses:SendEmail'
+                - 'ses:SendRawEmail'
+              Resource: !Ref SesArn
       Environment:
         Variables:
           APPOINTMENT_TABLE_NAME: !Ref AppointmentsTable
           DOCTOR_TABLE_NAME: !Ref DoctorsTable
           USER_TABLE_NAME: !Ref UsersTable
+          USER_INDEX_TABLE_NAME: !Ref UserIndexTable
           PATIENTS_TABLE_NAME: !Ref PatientsTable
           WORKING_SCHEDULE_TABLE_NAME: !Ref WorkingScheduleTable
           API_STAGE_NAME: !Ref StageName
@@ -164,6 +192,8 @@ Resources:
           BEDROCK_AGENT_ID_REGISTERED: !Ref BedrockAgentIdRegisteredUser
           BEDROCK_AGENT_ALIAS_REGISTERED: !Ref BedrockAgentAliasRegisteredUser
           APPOINTMENT_INDEX_TABLE_NAME: !Ref AppointmentIndexTable
+          SES_ARN: !Ref SesArn
+          WEB_BASE_URL: !Ref WebBaseUrl
       Events:
         Root:
           Type: HttpApi

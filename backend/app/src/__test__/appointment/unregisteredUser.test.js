@@ -37,7 +37,7 @@ describe('Unregistered User Making Appointments - Happy Flow', () => {
   beforeAll(async () => {
     const loginRes = await request(app)
       .post('/public/auth/login')
-      .send({ username: 'admin', password: 'admin' })
+      .send({ email: 'admin', password: 'admin' })
       .expect('Content-Type', /json/)
       .expect(200);
     adminToken = loginRes.body.token;
