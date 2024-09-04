@@ -1,4 +1,5 @@
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
+import DistributedLockService from "./DistributedLockService.js";
 
 const client = new SESv2Client();
 
@@ -11,6 +12,11 @@ class EmailService {
             console.log(`email will be sent to ${to} with subject ${subject} and body ${body}`);
             return { success: true };
         }
+
+        if (!await DistributedLockService.acquireLock(`send-email-${to}`, 60)) {
+            return { success: false, message: "Please try later" };
+        }
+
         const params = {
             Content: {
                 Simple: {
@@ -45,6 +51,16 @@ class EmailService {
         const link = `${WEB_BASE_URL}/verify-email?token=${token}/`;
         const body = `
             <p>Click the link below to verify your email address:</p>
+            <a href="${link}">${link}</a>
+        `;
+        return EmailService.sendEmail({ to, subject, body });
+    }
+
+    static async sendResetPasswordEmail({ to, token }) {
+        const subject = "Reset your password";
+        const link = `${WEB_BASE_URL}/reset-password?token=${token}/`;
+        const body = `
+            <p>Click the link below to reset your password:</p>
             <a href="${link}">${link}</a>
         `;
         return EmailService.sendEmail({ to, subject, body });

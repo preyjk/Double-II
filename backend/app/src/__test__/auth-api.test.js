@@ -16,6 +16,8 @@ describe('User Authentication API', () => {
 
     let email = `testuser_${Math.floor(Math.random() * 10000)}`;
     let password = 'testpassword';
+    let newPassword = 'newpassword';
+    let resetPassword = 'resetedpassword';
     let userId;
 
     it('should sign up a new user', async () => {
@@ -46,7 +48,7 @@ describe('User Authentication API', () => {
     });
 
     it('should verify email', async () => {
-      const token = AuthService.generateToken({ email }, '1d');
+      const token = AuthService.generateToken({ email, action: 'verify email' }, '1d');
       const response = await request(app)
         .post(`/public/auth/verify-email`)
         .send({ token })
@@ -74,6 +76,64 @@ describe('User Authentication API', () => {
         .expect(401);
       
       expect(response.text).toBe('"Unauthorized"');
+    });
+
+    it('should change password', async () => {
+      const response = await request(app)
+        .post('/public/auth/change-password')
+        .send({ email, oldPassword: password, newPassword })
+        .expect(200);
+      
+      expect(response.text).toBe('"Password updated"');
+    });
+
+    it('should not change password with incorrect old password', async () => {
+      await request(app)
+        .post('/public/auth/change-password')
+        .send({ email, oldPassword: password, newPassword })
+        .expect(401);
+    });
+
+    it('should login with new password', async () => {
+      const response = await request(app)
+        .post('/public/auth/login')
+        .send({ email, password: newPassword })
+        .expect(200);
+      
+      expect(response.body).toHaveProperty('token');
+    });
+
+    it('should send reset password email', async () => {
+      await request(app)
+        .post('/public/auth/forgot-password')
+        .send({ email })
+        .expect(200);
+    });
+
+    it('should reset password', async () => {
+      const token = AuthService.generateToken({ email, version: 3, action: 'reset password' }, '1d');
+      await request(app)
+        .post('/public/auth/reset-password')
+        .send({ token, newPassword: resetPassword })
+        .expect(200);
+    });
+
+    it('should not reset password again with same token', async () => {
+      const token = AuthService.generateToken({ email, version: 3, action: 'reset password' }, '1d');
+      await request(app)
+        .post('/public/auth/reset-password')
+        .send({ token, newPassword: '123' })
+        .expect(500);
+      
+    });
+
+    it('should login with reset password', async () => {
+      const response = await request(app)
+        .post('/public/auth/login')
+        .send({ email, password: resetPassword })
+        .expect(200);
+      
+      expect(response.body).toHaveProperty('token');
     });
 
     afterAll(async () => {

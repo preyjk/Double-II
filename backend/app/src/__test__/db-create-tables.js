@@ -123,6 +123,23 @@ const tableDefinitions = [
                 },
             },
         ]
+    },
+    {
+        TableName: 'DistributedLocks',
+        KeySchema: [
+            { AttributeName: 'Id', KeyType: 'HASH' }, 
+        ],
+        AttributeDefinitions: [
+            { AttributeName: 'Id', AttributeType: 'S' },
+        ],
+        ProvisionedThroughput: {
+            ReadCapacityUnits: 5,
+            WriteCapacityUnits: 5,
+        },
+        TimeToLiveSpecification: {
+            AttributeName: 'ExpiredAt',
+            Enabled: true,
+        },
     }
 ];
 

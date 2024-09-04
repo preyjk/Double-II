@@ -6,6 +6,9 @@ import { dynamo, TransactionBuilder } from '../dal/DynamoDB.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'JWT_SECRET';
 
+const ACTION_VERIFY_EMAIL = 'verify email';
+const ACTION_RESET_PASSWORD = 'reset password';
+
 class AuthService {
 
   static verifyToken(token) {
@@ -66,13 +69,13 @@ class AuthService {
   }
 
   static async sendVerificationEmail(emailAddress) {
-    const token = AuthService.generateToken({ email: emailAddress }, '1d');
+    const token = AuthService.generateToken({ action: ACTION_VERIFY_EMAIL, email: emailAddress }, '1d');
     return EmailService.sendVerificationEmail({ to: emailAddress, token });
   }
 
   static async verifyEmail(token) {
     const verificationResult = AuthService.verifyToken(token);
-    if (!verificationResult.success) {
+    if (!verificationResult.success || verificationResult.data.action !== ACTION_VERIFY_EMAIL) {
       return { success: false, message: 'Invalid token' };
     }
     const indexResult = await dynamo.send(UserIndex.findById(
@@ -138,6 +141,66 @@ class AuthService {
     }
     return { success: false, message: 'Unauthorized' };
 
+  }
+
+  static async changePassword({ email, oldPassword, newPassword }) {
+    const indexResult = await dynamo.send(UserIndex.findById(
+      UserIndex.generateId({ Provider: 'email', ProviderId: email })
+    ));
+    if (!indexResult.Item) {
+      return { success: false, message: 'Unauthorized' };
+    }
+    const result = await dynamo.send(User.findById(indexResult.Item.UserId));
+    if (result.Item && AuthService.verifyPassword(oldPassword, result.Item.Password)) {
+      const updateCommand = User.findByIdAndUpdate({
+        Id: result.Item.Id,
+        Version: result.Item.Version,
+        Password: AuthService.hashPassword(newPassword)
+      });
+      await dynamo.send(updateCommand);
+      return { success: true, message: 'Password updated' };
+    }
+    return { success: false, message: 'Unauthorized' };
+  }
+
+  static async resetPassword({ token, newPassword }) {
+    const verificationResult = AuthService.verifyToken(token);
+    if (!verificationResult.success || verificationResult.data.action !== ACTION_RESET_PASSWORD) {
+      return { success: false, message: 'Invalid token' };
+    }
+    const { email, version } = verificationResult.data;
+    const indexResult = await dynamo.send(UserIndex.findById(
+      UserIndex.generateId({ Provider: 'email', ProviderId: email })
+    ));
+    if (!indexResult.Item) {
+      return { success: false, message: 'Unauthorized' };
+    }
+    const updateCommand = User.findByIdAndUpdate({
+      Id: indexResult.Item.UserId,
+      Version: version,
+      Password: AuthService.hashPassword(newPassword)
+    });
+    await dynamo.send(updateCommand);
+    return { success: true, message: 'Password updated' };
+  }
+
+  static async sendResetPasswordEmail(emailAddress) {
+    const indexResult = await dynamo.send(UserIndex.findById(
+      UserIndex.generateId({ Provider: 'email', ProviderId: emailAddress })
+    ));
+    if (!indexResult.Item) {
+      return { success: true };
+    }
+    const user = await dynamo.send(User.findById(indexResult.Item.UserId));
+    if (!user.Item) {
+      return { success: true };
+    }
+    const token = AuthService.generateToken({
+      action: ACTION_RESET_PASSWORD,
+      version: user.Item.Version,
+      email: emailAddress
+    }, '1d');
+    return EmailService.sendResetPasswordEmail({ to: emailAddress, token });
   }
 }
 
