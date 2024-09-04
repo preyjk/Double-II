@@ -57,7 +57,7 @@ export default {
             if (token) headers = { "x-access-token": token, ...headers };
             const prompt = body.messages[0]?.text || "";
             const { data, postData } = usePost(
-              "https://api.gpbooking.icu/chatbot/"
+              "https://api.gpbooking.icu/public/chatbot/"
             );
             await postData({ prompt }, headers);
             console.log("chat widget session id:", data.value.sessionId);

@@ -2,7 +2,7 @@ import request from "@/api/axios";
 
 export const login = async function (username, password) {
   const config = {
-    url: "/login",
+    url: "/public/auth/login",
     method: "post",
     data: { username, password },
   };
@@ -19,7 +19,7 @@ export const login = async function (username, password) {
 
 export const register = async function (username, password) {
   const config = {
-    url: "/signup",
+    url: "/public/auth/signup",
     method: "post",
     data: { username, password },
   };

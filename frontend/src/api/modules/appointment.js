@@ -92,7 +92,7 @@ export const cancelAppointment = async function (appointmentId) {
   }
 
   const config = {
-    url: `/appointments/${appointmentId}/cancel`,
+    url: `/user/appointments/${appointmentId}/cancel`,
     method: "post",
     headers: {
       Authorization: `Bearer ${token}`,
