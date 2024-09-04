@@ -12,10 +12,19 @@ app.use((err, req, res, next) => {
 });
 
 describe('Admin API End-to-End Tests', () => {
-  const token = AuthService.generateToken({username: 'admin', roles: ['admin']});
+  let token;
   const username = 'abc';
   const password = 'abc';
   const role = 'abc';
+  
+  beforeAll(async () => {
+    const res = await request(app)
+      .post('/public/auth/login')
+      .send({ username: 'admin', password: 'admin' })
+      .expect('Content-Type', /json/)
+      .expect(200);
+    token = res.body.token;
+  });
 
   test('should create a new user', async () => {
     const res = await request(app)
@@ -27,7 +36,7 @@ describe('Admin API End-to-End Tests', () => {
 
   test('new user should be able to login', async () => {
     const res = await request(app)
-      .post('/login')
+      .post('/public/auth/login')
       .send({username, password})
       .expect(200);
     
