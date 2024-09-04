@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { makeAppointment,getAppointments } from "@/network/netService";
+import { makeAppointment,getAppointments } from "@/api/modules/appointment.js";
 
 export default createStore({
   state: {

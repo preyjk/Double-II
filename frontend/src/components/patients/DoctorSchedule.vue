@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { getSchedules } from "@/network/netService";
+import { getSchedules } from "@/api/modules/appointment.js";
 
 export default {
   props: {
