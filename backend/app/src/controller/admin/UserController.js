@@ -64,7 +64,7 @@ router.get('/', asyncHandler(async (req, res) => {
  *         description: Bad request
  */
 router.post('/', asyncHandler(async (req, res) => {
-    const result = await AuthService.signup(req.body);
+    const result = await AuthService.signup({...req.body, active: true});
     if (result.success) {
         return res.status(200).json(result.message);
     } else {

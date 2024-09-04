@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import User, { UserIndex } from '../dal/User.js';
+import EmailService from './EmailService.js';
 import { dynamo, TransactionBuilder } from '../dal/DynamoDB.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'JWT_SECRET';
@@ -64,17 +65,43 @@ class AuthService {
     return crypto.createHash('sha256').update(password).digest('hex');
   }
 
-  static async signup({ email, password, roles }) {
+  static async sendVerificationEmail(emailAddress) {
+    const token = AuthService.generateToken({ email: emailAddress }, '1d');
+    return EmailService.sendVerificationEmail({ to: emailAddress, token });
+  }
+
+  static async verifyEmail(token) {
+    const verificationResult = AuthService.verifyToken(token);
+    if (!verificationResult.success) {
+      return { success: false, message: 'Invalid token' };
+    }
+    const indexResult = await dynamo.send(UserIndex.findById(
+      UserIndex.generateId({ Provider: 'email', ProviderId: verificationResult.data.email })
+    ));
+    if (!indexResult.Item) {
+      return { success: false, message: 'User not found' };
+    }
+    const updateUserCommand = User.findByIdAndUpdate({
+      Id: indexResult.Item.UserId,
+      Version: indexResult.Item.Version,
+      Active: true
+    });
+    await dynamo.send(updateUserCommand);
+    return { success: true, message: 'Email verified' };
+  }
+
+  static async signup({ email, password, roles, active }) {
     try {
-      const hashedPassword = AuthService.hashPassword(password);      
-      const createUserCommand = User.create({ 
-        Password: hashedPassword, 
+      const hashedPassword = AuthService.hashPassword(password);
+      const createUserCommand = User.create({
+        Password: hashedPassword,
         Providers: [{ Provider: 'email', ProviderId: email }],
-        Roles: roles 
+        Roles: roles || [],
+        Active: active || false
       });
-      const createUserIndexCommand = UserIndex.create({ 
-        Provider: 'email', 
-        ProviderId: email, 
+      const createUserIndexCommand = UserIndex.create({
+        Provider: 'email',
+        ProviderId: email,
         UserId: createUserCommand.input.Item.Id
       });
       await new TransactionBuilder()
@@ -83,7 +110,7 @@ class AuthService {
         .execute();
       return { success: true, message: 'Signup successful' };
     } catch (error) {
-      if (error.name === 'TransactionCanceledException' 
+      if (error.name === 'TransactionCanceledException'
         && error.CancellationReasons[0].Code === 'ConditionalCheckFailed') {
         return { success: false, message: 'User already exists' };
       } else {
@@ -93,22 +120,24 @@ class AuthService {
   }
 
   static async login({ email, password }) {
-    try {
-      const indexResult = await dynamo.send(UserIndex.findById(
-        UserIndex.generateId({ Provider: 'email', ProviderId: email })
-      ));
-      if (!indexResult.Item) {
-        return { success: false, message: 'Unauthorized' };
+    const indexResult = await dynamo.send(UserIndex.findById(
+      UserIndex.generateId({ Provider: 'email', ProviderId: email })
+    ));
+    if (!indexResult.Item) {
+      return { success: false, message: 'Unauthorized' };
+    }
+    const result = await dynamo.send(User.findById(indexResult.Item.UserId));
+    if (result.Item) {
+      if (!result.Item.Active) {
+        return { success: false, message: 'Unverified Email Address' };
       }
-      const result = await dynamo.send(User.findById(indexResult.Item.UserId));
-      if (result.Item && AuthService.verifyPassword(password, result.Item.Password)) {
+      if (AuthService.verifyPassword(password, result.Item.Password)) {
         const token = AuthService.generateToken({ id: result.Item.Id, roles: result.Item.Roles });
         return { success: true, token };
       }
-      return { success: false, message: 'Unauthorized' };
-    } catch (error) {
-      throw error;
     }
+    return { success: false, message: 'Unauthorized' };
+
   }
 }
 

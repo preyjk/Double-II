@@ -1219,6 +1219,41 @@
         }
       }
     },
+    "/public/auth/verify-email": {
+      "get": {
+        "summary": "Verify email",
+        "description": "Verify email",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "redirect",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email verified"
+          },
+          "401": {
+            "description": "Invalid token"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/public/chatbot": {
       "post": {
         "summary": "Chatbot",

@@ -35,6 +35,7 @@ router.post('/signup', asyncHandler(async (req, res) => {
 
   const result = await AuthService.signup({ email, password });
   if (result.success) {
+    await AuthService.sendVerificationEmail(email);
     res.status(200).json(result.message);
   } else {
     res.status(400).json(result.message);
@@ -75,6 +76,42 @@ router.post('/login', asyncHandler(async (req, res) => {
   const result = await AuthService.login({ email, password });
   if (result.success) {
     res.status(200).json({ token: result.token });
+  } else {
+    res.status(401).json(result.message);
+  }
+}));
+
+/**
+ * @openapi
+ * /public/auth/verify-email:
+ *   post:
+ *     summary: Verify email
+ *     description: Verify email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - token
+ *             properties:
+ *               token:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Email verified
+ *       '401':
+ *         description: Invalid token
+ *       '500':
+ *         description: Internal server error
+ */
+router.post('/verify-email', asyncHandler(async (req, res) => {
+  const { token } = req.body;
+
+  const result = await AuthService.verifyEmail(token);
+  if (result.success) {
+    res.status(200).json(result.message);
   } else {
     res.status(401).json(result.message);
   }

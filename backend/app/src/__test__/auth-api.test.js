@@ -36,6 +36,25 @@ describe('User Authentication API', () => {
       expect(response.text).toBe('"User already exists"');
     });
 
+    it('should not login with unverified email', async () => {
+      const response = await request(app)
+        .post('/public/auth/login')
+        .send({ email, password })
+        .expect(401);
+      
+      expect(response.text).toBe('"Unverified Email Address"');
+    });
+
+    it('should verify email', async () => {
+      const token = AuthService.generateToken({ email }, '1d');
+      const response = await request(app)
+        .post(`/public/auth/verify-email`)
+        .send({ token })
+        .expect(200);
+      
+      expect(response.text).toBe('"Email verified"');
+    });
+
     it('should log in an existing user', async () => {
       const response = await request(app)
         .post('/public/auth/login')

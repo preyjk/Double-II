@@ -8,10 +8,12 @@ const users = [
     email: 'admin',
     password: 'admin',
     roles: ['admin'],
+    active: true
   },
   {
     email: 'test',
-    password: 'test'
+    password: 'test',
+    active: true
   }
 ]
 
