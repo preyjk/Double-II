@@ -1,7 +1,6 @@
 import { ref, watch, onMounted } from 'vue';
 import axios from 'axios';
 
-// useGet Hook
 export function useGet(url, dependency = null) {
   const data = ref(null);
   const error = ref(null);
@@ -28,7 +27,6 @@ export function useGet(url, dependency = null) {
   return { data, error, loading, refetch: fetchData };
 }
 
-// usePost Hook
 export function usePost(url) {
   const data = ref(null);
   const error = ref(null);
@@ -49,7 +47,6 @@ export function usePost(url) {
   return { data, error, loading, postData };
 }
 
-// useDelete Hook
 export function useDelete(url) {
   const data = ref(null);
   const error = ref(null);
@@ -70,7 +67,6 @@ export function useDelete(url) {
   return { data, error, loading, deleteData };
 }
 
-// usePut Hook
 export function usePut(url) {
   const data = ref(null);
   const error = ref(null);

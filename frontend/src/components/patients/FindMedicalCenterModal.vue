@@ -106,7 +106,7 @@
 
 <script>
 import { ref, onMounted, onBeforeUnmount } from "vue";
-import geocodeAddress from "@/funs/geocodeAddress";
+import geocodeAddress from "@/utils/geocodeAddress";
 
 export default {
   name: "FindMedicalCenterModal",

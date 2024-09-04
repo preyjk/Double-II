@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { usePost } from "@/utils/useApi";
+import { usePost } from "@/api/useApi";
 import "deep-chat";
 import LottieAnimation from "@/components/patients/animation/LottieAnimation.vue";
 import animationData from "@/assets/animation-robot.json";

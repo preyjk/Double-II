@@ -50,8 +50,8 @@
 </template>
 
 <script>
+import { register } from "@/api/modules/user.js";
 import { defineAsyncComponent } from "vue";
-import { register } from "@/network/netService";
 
 export default {
   data() {

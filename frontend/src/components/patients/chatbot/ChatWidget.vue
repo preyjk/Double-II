@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import { usePost } from "@/utils/useApi";
+import { usePost } from "@/api/useApi";
 import "deep-chat";
 
 export default {
