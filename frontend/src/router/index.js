@@ -8,6 +8,7 @@ import AboutPage from "@/pages/patients/AboutPage.vue";
 import OnlineBookingPage from "@/pages/patients/OnlineBookingPage.vue";
 import ConfirmationPage from "@/pages/patients/ConfirmationPage.vue";
 import MyBooking from "@/pages/patients/MyBooking.vue";
+import VerifyEmailPage from "@/pages/patients/VerifyEmailPage.vue";
 
 const routes = [
   /*
@@ -69,6 +70,11 @@ const routes = [
     name: "dashboard",
     component: DashboardPage,
   },
+  {
+    path: "/verify-email",
+    name: "verify-email",
+    component: VerifyEmailPage,
+  }
 ];
 
 const router = createRouter({
