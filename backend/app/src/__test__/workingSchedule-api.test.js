@@ -12,9 +12,19 @@ app.use((err, req, res, next) => {
 });
 
 describe('Working Schedule API', () => {
-  const token = AuthService.generateToken({username: 'admin', roles: ['admin']});
+  let token;
   let scheduleId;
+  let version;
   const doctorId = '12345678';
+
+  beforeAll(async () => {
+    const res = await request(app)
+      .post('/public/auth/login')
+      .send({ email: 'admin', password: 'admin' })
+      .expect('Content-Type', /json/)
+      .expect(200);
+    token = res.body.token;
+  });
 
   test('should create a new working schedule', async () => {
     const newSchedule = {
@@ -26,7 +36,7 @@ describe('Working Schedule API', () => {
     };
 
     const res = await request(app)
-      .post('/schedules')
+      .post('/admin/schedules')
       .set('Authorization', `Bearer ${token}`) 
       .send(newSchedule)
       .expect('Content-Type', /json/)
@@ -38,15 +48,16 @@ describe('Working Schedule API', () => {
     expect(res.body).toHaveProperty('EndTime', '17:00');
     expect(res.body).toHaveProperty('DoctorName', 'john smith');
     scheduleId = res.body.Id; // Assuming 'id' is part of the response
+    version = res.body.Version;
   });
 
   test('should list all schedules for a given doctorId and date range', async () => {
     const res = await request(app)
-      .get(`/schedules?doctorId=${doctorId}&startDate=2023-08-10&endDate=2023-08-10`)
+      .get(`/admin/schedules?doctorId=${doctorId}&startDate=2023-08-10&endDate=2023-08-10`)
+      .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200);
     expect(res.body[0].Id).toBe(scheduleId);
-    // Add further expectations based on the actual data structure
   });
 
   test('should update an existing schedule', async () => {
@@ -54,10 +65,11 @@ describe('Working Schedule API', () => {
       Date: "2023-08-12",
       StartTime: "10:00",
       EndTime: "16:00",
+      Version: version,
     };
 
     const res = await request(app)
-      .put(`/schedules/${scheduleId}`)
+      .put(`/admin/schedules/${scheduleId}`)
       .set('Authorization', `Bearer ${token}`) 
       .send(updatedData)
       .expect('Content-Type', /json/)
@@ -66,11 +78,12 @@ describe('Working Schedule API', () => {
     expect(res.body).toHaveProperty('Date', '2023-08-12');
     expect(res.body).toHaveProperty('StartTime', '10:00');
     expect(res.body).toHaveProperty('EndTime', '16:00');
+    version = res.body.Version;
   });
 
   test('should delete an existing schedule', async () => {
     await request(app)
-      .delete(`/schedules/${scheduleId}`)
+      .delete(`/admin/schedules/${scheduleId}`)
       .set('Authorization', `Bearer ${token}`) 
       .expect(204);
   });

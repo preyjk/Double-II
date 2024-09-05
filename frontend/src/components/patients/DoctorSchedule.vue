@@ -9,23 +9,37 @@
       </template>
     </el-calendar>
 
-    <h2>Available Time Slots for Dr. {{ doctorName }} on {{ selectedDate }}</h2>
+    <div class="title-container">
+      <h2 class="title">Available Time Slots</h2>
+      <p class="subtitle">Dr. {{ doctorName }} on {{ formattedDate }}</p>
+    </div>
 
     <div v-if="loading" class="loading">Loading schedules...</div>
     <div v-if="error" class="error">
       Failed to load schedules. Please try again later.
     </div>
 
-    <ul v-if="!loading && !error && filteredSchedules.length">
-      <li
-        v-for="schedule in filteredSchedules"
-        :key="schedule.Id"
-        class="schedule-item"
+    <div v-if="!loading && !error && groupedSchedules">
+      <div
+        v-for="(schedules, hour) in groupedSchedules"
+        :key="hour"
+        class="hour-group"
       >
-        Time: {{ schedule.StartTime }} - {{ schedule.EndTime }}
-        <button @click="selectTimeSlot(schedule)">Book This Slot</button>
-      </li>
-    </ul>
+        <h3>{{ hour }}:00</h3>
+        <ul class="schedule-list">
+          <li
+            v-for="schedule in schedules"
+            :key="schedule.Id"
+            class="schedule-item"
+          >
+            <span>Time: {{ schedule.StartTime }} - {{ schedule.EndTime }}</span>
+            <button @click="selectTimeSlot(schedule)" class="select-button">
+              Book
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
 
     <div v-if="!loading && !error && !filteredSchedules.length">
       No available time slots for the selected date.
@@ -34,7 +48,7 @@
 </template>
 
 <script>
-import { getSchedules } from "@/network/netService";
+import { getSchedules } from "@/api/modules/appointment.js";
 
 export default {
   props: {
@@ -61,7 +75,38 @@ export default {
         (schedule) => schedule.Date === this.selectedDate
       );
     },
+    groupedSchedules() {
+      const groups = {};
+
+      this.filteredSchedules
+        .sort((a, b) => {
+          const timeA = new Date(`${a.Date}T${a.StartTime}`);
+          const timeB = new Date(`${b.Date}T${b.StartTime}`);
+          return timeA - timeB;
+        })
+        .forEach((schedule) => {
+          const hour = parseInt(schedule.StartTime.split(":")[0], 10);
+          if (!groups[hour]) {
+            groups[hour] = [];
+          }
+          groups[hour].push(schedule);
+        });
+
+      const sortedGroups = Object.keys(groups)
+        .sort((a, b) => a - b)
+        .reduce((acc, key) => {
+          acc[key] = groups[key];
+          return acc;
+        }, {});
+
+      return sortedGroups;
+    },
+    formattedDate() {
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return new Date(this.selectedDate).toLocaleDateString(undefined, options);
+    },
   },
+
   methods: {
     fetchSchedules() {
       const startDate = this.getTodayDate();
@@ -78,7 +123,6 @@ export default {
             return timeA - timeB;
           });
           this.loading = false;
-          // console.log(data);
         })
         .catch((error) => {
           console.error("Failed to fetch schedules:", error);
@@ -97,13 +141,13 @@ export default {
     },
     handleDatePick(date) {
       this.selectedDate = date.toISOString().split("T")[0];
-      console.log(this.selectedDate);
     },
     selectTimeSlot(schedule) {
-      alert(
-        `You have selected: ${schedule.Date} from ${schedule.StartTime} to ${schedule.EndTime}`
-      );
-      this.$emit("scheduleSelected", schedule);
+      const selectedSchedule = {
+        ...schedule,
+        Date: this.selectedDate,
+      };
+      this.$emit("scheduleSelected", selectedSchedule);
     },
   },
   mounted() {
@@ -115,43 +159,101 @@ export default {
 <style scoped>
 .schedule-container {
   padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
+  background-color: #f5f7fa;
+  border-radius: 10px;
   max-width: 600px;
-  margin: auto;
+  margin: 20px auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.title-container {
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.title {
+  font-size: 24px;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: #34495e;
 }
 
 .loading {
   color: #3498db;
+  text-align: center;
+  font-size: 18px;
+  padding: 20px 0;
 }
 
 .error {
-  color: red;
+  color: #e74c3c;
+  text-align: center;
+  font-size: 18px;
+  padding: 20px 0;
+}
+
+.hour-group {
+  margin-bottom: 20px;
+}
+
+.hour-group h3 {
+  font-size: 18px;
+  color: #2c3e50;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #dcdfe6;
+  padding-bottom: 5px;
+}
+
+.schedule-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
 .schedule-item {
-  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 5px 0;
   padding: 10px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  background-color: #ffffff;
+  border: 1px solid #dcdfe6;
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
 }
 
-.schedule-item button {
-  margin-left: 20px;
-  padding: 5px 10px;
+.schedule-item:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.select-button {
   background-color: #3498db;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  padding: 8px 16px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.schedule-item button:hover {
+.select-button:hover {
   background-color: #2980b9;
+  transform: translateY(-2px);
+}
+
+.select-button:active {
+  transform: translateY(0);
 }
 
 .is-selected {
-  color: #1989fa;
+  color: #3498db;
+  font-weight: bold;
 }
 </style>

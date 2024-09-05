@@ -1,20 +1,25 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import path from 'path'
+import { defineConfig } from "vite";
+import vue from "@vitejs/plugin-vue";
+import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          isCustomElement: (tag) => tag === "deep-chat",
+        },
+      },
+    }),
+  ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
+      "@": path.resolve(__dirname, "src"),
     },
   },
   optimizeDeps: {
-    include: [
-      "@fawmi/vue-google-maps",
-      "fast-deep-equal",
-    ],
+    include: ["@fawmi/vue-google-maps", "fast-deep-equal"],
   },
   test: {
     globals: true,
@@ -27,6 +32,6 @@ export default defineConfig({
     hmr: {
       overlay: false,
     },
-    host: '0.0.0.0',
+    host: "0.0.0.0",
   },
-})
+});

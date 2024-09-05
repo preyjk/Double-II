@@ -14,7 +14,7 @@ def lambda_handler(event, context):
     requestBodyContent = event.get('requestBody', {}).get('content', {}).get('application/json', {}).get('properties', [])
 
     # Extract parameters into a dictionary
-    params_dict = {param['name']: param['value'] for param in parameters}
+    params_dict = {param['name'][2:] if param['name'].startswith('s_') else param['name']: param['value'] for param in parameters}
 
     # Extract request body properties into a dictionary
     requestBody_dict = {prop['name'][2:] if prop['name'].startswith('s_') else prop['name']: prop['value'] for prop in requestBodyContent}
@@ -55,10 +55,13 @@ def lambda_handler(event, context):
     except urllib.error.HTTPError as e:
         status_code = e.code
         response_data = e.read().decode()
-
+    
+    if response_data:
+        body = json.loads(response_data)
+        body = convert_response_data(apiPath, body)
     responseBody = {
         "application/json": {
-            "body": json.loads(response_data) if response_data else "No Content"
+            "body": body if response_data else "No Content"
         }
     }
 
@@ -74,3 +77,15 @@ def lambda_handler(event, context):
     print("Response: {}".format(api_response))
 
     return api_response
+
+
+
+def convert_response_data(apiPath, data):
+    response_data = data
+    if apiPath == "/doctors":
+        transformed_data = []
+        for item in data:
+            transformed_item = {f"Doctor{key}": value for key, value in item.items()}
+            transformed_data.append(transformed_item)
+        response_data = transformed_data
+    return response_data

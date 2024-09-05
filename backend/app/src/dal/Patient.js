@@ -1,42 +1,22 @@
 import DynamoTable from "./DynamoTable.js";
+import { QueryCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
 const TABLE_NAME = process.env.PATIENTS_TABLE_NAME || 'Patients';
 
 class PatientTable extends DynamoTable {
 
-  async findByIdAndUpdate(record) {
-    const {Id, UserId, ...data} = record;
-
-    const params = {
-      TableName: this.tableName,
-      Key: { Id },
-      UpdateExpression: '',
-      ExpressionAttributeNames: {},
-      ExpressionAttributeValues: {},
-      ReturnValues: 'ALL_NEW',
-      ConditionExpression: '#UserId = :UserId',
-    };
-
-    const updateExpressions = [];
-    Object.keys(data).forEach((key, index) => {
-      const attributeKey = `#attr${index}`;
-      const valueKey = `:val${index}`;
-      updateExpressions.push(`${attributeKey} = ${valueKey}`);
-      params.ExpressionAttributeNames[attributeKey] = key;
-      params.ExpressionAttributeValues[valueKey] = data[key];
-    });
-
-    params.UpdateExpression = 'set ' + updateExpressions.join(', ');
-
-    params.ExpressionAttributeNames['#UserId'] = 'UserId';
-    params.ExpressionAttributeValues[':UserId'] = UserId;
-    
-    return this.dynamo.update(params);
+  findByIdAndUpdate(record) {
+    const { UserId, ...data } = record;
+    const updateCommand = super.findByIdAndUpdate(data);
+    updateCommand.input.ConditionExpression += ' AND #UserId = :UserId'; 
+    updateCommand.input.ExpressionAttributeNames['#UserId'] = 'UserId';
+    updateCommand.input.ExpressionAttributeValues[':UserId'] = UserId;
+    return updateCommand;
   }
 
-  async findByUserId(userId) {
+  findByUserId(userId) {
     const params = {
       TableName: this.tableName,
-      IndexName: 'UserIdIndex', // Assumes there's a GSI on username
+      IndexName: 'UserIdIndex', 
       KeyConditionExpression: '#UserId = :UserId',
       ExpressionAttributeNames: {
         '#UserId': 'UserId',
@@ -45,7 +25,7 @@ class PatientTable extends DynamoTable {
         ':UserId': userId,
       }
     };
-    return this.dynamo.query(params);
+    return new QueryCommand(params);
   }
 }
 

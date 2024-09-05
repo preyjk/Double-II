@@ -12,13 +12,25 @@ app.use((err, req, res, next) => {
 
 describe('Doctor API End-to-End Tests', () => {
   let doctorId;
+  let version;
+  let token;
   const Workplace = 'Hospital A';
   const Firstname = 'John';
   const Lastname = 'Smith';
 
+  beforeAll(async () => {
+    const res = await request(app)
+      .post('/public/auth/login')
+      .send({ email: 'admin', password: 'admin' })
+      .expect('Content-Type', /json/)
+      .expect(200);
+    token = res.body.token;
+  });
+
   test('should list all doctors', async () => {
     const res = await request(app)
-      .get('/doctors')
+      .get('/admin/doctors')
+      .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200);
       
@@ -37,7 +49,8 @@ describe('Doctor API End-to-End Tests', () => {
     };
 
     const res = await request(app)
-      .post('/doctors')
+      .post('/admin/doctors')
+      .set('Authorization', `Bearer ${token}`)
       .send(newDoctor)
       .expect('Content-Type', /json/)
       .expect(201);
@@ -50,20 +63,24 @@ describe('Doctor API End-to-End Tests', () => {
     expect(res.body).toHaveProperty('Workplace', Workplace);
     expect(res.body).toHaveProperty('Address', Workplace);
     doctorId = res.body.Id;  // Save the doctor ID for subsequent tests
+    version = res.body.Version;
   });
 
   test('should get a doctor by ID', async () => {
     const res = await request(app)
-      .get(`/doctors/${doctorId}`)
+      .get(`/admin/doctors/${doctorId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200);
 
     expect(res.body).toHaveProperty('Id', doctorId);
+    expect(res.body).toHaveProperty('Version', version);
   });
 
   test('should list doctors by workplace', async () => {
     const res = await request(app)
-      .get(`/doctors?workplace=${Workplace}`)
+      .get(`/admin/doctors?workplace=${Workplace}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200);
 
@@ -74,7 +91,8 @@ describe('Doctor API End-to-End Tests', () => {
   // New test case for listing doctors by firstname and lastname
   test('should list doctors by firstname and lastname', async () => {
     const res = await request(app)
-      .get(`/doctors?firstname=${Firstname}&lastname=${Lastname}`)
+      .get(`/admin/doctors?firstname=${Firstname}&lastname=${Lastname}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200);
 
@@ -86,21 +104,24 @@ describe('Doctor API End-to-End Tests', () => {
   test('should update an existing doctor', async () => {
     const updatedData = {
       Firstname: 'John',
-      Lastname: 'Smith Jr.'
+      Lastname: 'Smith Jr.',
+      Version: version
     };
 
     const res = await request(app)
-      .put(`/doctors/${doctorId}`)
+      .put(`/admin/doctors/${doctorId}`)
+      .set('Authorization', `Bearer ${token}`)
       .send(updatedData)
       .expect('Content-Type', /json/)
       .expect(200);
 
     expect(res.body).toHaveProperty('Lastname', 'Smith Jr.');
+    version = res.body.Version;
   });
 
   test('should list clinics', async () => {
     const res = await request(app)
-      .get('/clinics')
+      .get('/public/clinics')
       .expect('Content-Type', /json/)
       .expect(200);
       
@@ -112,7 +133,8 @@ describe('Doctor API End-to-End Tests', () => {
 
   test('should delete a doctor', async () => {
     await request(app)
-      .delete(`/doctors/${doctorId}`)
+      .delete(`/admin/doctors/${doctorId}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204);
   });
 });

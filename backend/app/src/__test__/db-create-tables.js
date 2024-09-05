@@ -17,7 +17,33 @@ const tableDefinitions = [
         },
     },
     {
+        TableName: 'BookingReferenceIndex',
+        KeySchema: [
+            { AttributeName: 'Id', KeyType: 'HASH' }, // Primary key
+        ],
+        AttributeDefinitions: [
+            { AttributeName: 'Id', AttributeType: 'S' },
+        ],
+        ProvisionedThroughput: {
+            ReadCapacityUnits: 5,
+            WriteCapacityUnits: 5,
+        },
+    },
+    {
         TableName: 'Users',
+        KeySchema: [
+            { AttributeName: 'Id', KeyType: 'HASH' }, // Primary key
+        ],
+        AttributeDefinitions: [
+            { AttributeName: 'Id', AttributeType: 'S' },
+        ],
+        ProvisionedThroughput: {
+            ReadCapacityUnits: 5,
+            WriteCapacityUnits: 5,
+        },
+    },
+    {
+        TableName: 'UserIndex',
         KeySchema: [
             { AttributeName: 'Id', KeyType: 'HASH' }, // Primary key
         ],
@@ -77,6 +103,7 @@ const tableDefinitions = [
         AttributeDefinitions: [
             { AttributeName: 'Id', AttributeType: 'S' },
             { AttributeName: 'DoctorId', AttributeType: 'S' },
+            { AttributeName: 'Date', AttributeType: 'S' },
         ],
         ProvisionedThroughput: {
             ReadCapacityUnits: 5,
@@ -84,9 +111,10 @@ const tableDefinitions = [
         },
         GlobalSecondaryIndexes: [
             {
-                IndexName: 'DoctorIdIndex',
+                IndexName: 'DoctorIdAndDateIndex',
                 KeySchema: [
-                    { AttributeName: 'DoctorId', KeyType: 'HASH' }, // GSI key
+                    { AttributeName: 'DoctorId', KeyType: 'HASH' }, 
+                    { AttributeName: 'Date', KeyType: 'RANGE' }
                 ],
                 Projection: { ProjectionType: 'ALL' },
                 ProvisionedThroughput: {
@@ -95,6 +123,23 @@ const tableDefinitions = [
                 },
             },
         ]
+    },
+    {
+        TableName: 'DistributedLocks',
+        KeySchema: [
+            { AttributeName: 'Id', KeyType: 'HASH' }, 
+        ],
+        AttributeDefinitions: [
+            { AttributeName: 'Id', AttributeType: 'S' },
+        ],
+        ProvisionedThroughput: {
+            ReadCapacityUnits: 5,
+            WriteCapacityUnits: 5,
+        },
+        TimeToLiveSpecification: {
+            AttributeName: 'ExpiredAt',
+            Enabled: true,
+        },
     }
 ];
 

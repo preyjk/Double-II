@@ -1,9 +1,8 @@
 <template>
-  <div class="avatar-container" @click="toggleDropdown">
+  <div class="avatar-container" @click.stop="toggleDropdown">
     <img :src="avatarSrc" alt="User Avatar" class="avatar" />
-    <div v-if="dropdownVisible" class="dropdown-menu">
+    <div v-if="dropdownVisible" class="dropdown-menu" ref="dropdownMenu">
       <ul>
-        <!-- <li @click="goToProfile">Profile</li> -->
         <li @click="viewBookings">My Bookings</li>
         <li @click="logout">Logout</li>
       </ul>
@@ -21,9 +20,27 @@ export default {
       avatarSrc: avatarSrc,
     };
   },
+  mounted() {
+    document.addEventListener("click", this.handleOutsideClick);
+  },
+  beforeDestroy() {
+    document.removeEventListener("click", this.handleOutsideClick);
+  },
   methods: {
     toggleDropdown() {
       this.dropdownVisible = !this.dropdownVisible;
+    },
+    handleOutsideClick(event) {
+      if (this.dropdownVisible) {
+        const dropdownMenu = this.$refs.dropdownMenu;
+        if (
+          dropdownMenu &&
+          !dropdownMenu.contains(event.target) &&
+          !event.target.closest(".avatar-container")
+        ) {
+          this.dropdownVisible = false;
+        }
+      }
     },
     goToProfile() {
       this.$router.push({ name: "PersonalProfile" });
@@ -37,6 +54,7 @@ export default {
       localStorage.removeItem("authToken");
       this.$emit("logout");
       this.$router.push({ name: "Home" });
+      this.dropdownVisible = false;
     },
   },
 };
@@ -53,7 +71,7 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid #ccc;
+  border: 2px solid #64b1e8;
   transition: border 0.3s;
 }
 
@@ -66,11 +84,12 @@ export default {
   position: absolute;
   top: 50px;
   right: 0;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 150px;
+  background-color: #f0f4f8;
+  border: 1px solid #64b1e8;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  width: 160px;
+  color: #333;
 }
 
 .dropdown-menu ul {
@@ -80,14 +99,14 @@ export default {
 }
 
 .dropdown-menu li {
-  padding: 10px;
+  padding: 12px;
   cursor: pointer;
   text-align: center;
-  font-weight: bold;
+  font-weight: 500;
   transition: background-color 0.3s;
 }
 
 .dropdown-menu li:hover {
-  background-color: #f5f5f5;
+  background-color: #e2e8f0;
 }
 </style>

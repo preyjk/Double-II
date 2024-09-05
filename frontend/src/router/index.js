@@ -8,14 +8,36 @@ import AboutPage from "@/pages/patients/AboutPage.vue";
 import OnlineBookingPage from "@/pages/patients/OnlineBookingPage.vue";
 import ConfirmationPage from "@/pages/patients/ConfirmationPage.vue";
 import MyBooking from "@/pages/patients/MyBooking.vue";
-import VerifEmailComponent from "@/pages/patients/VerifEmailComponent.vue";
+import VerifyEmailPage from "@/pages/patients/VerifyEmailPage.vue";
 
 const routes = [
+  /*
+    user routers
+  */
   {
     path: "/",
     name: "Home",
     component: HomePage,
   },
+
+  {
+    path: "/about",
+    name: "about",
+    component: AboutPage,
+  },
+
+  {
+    path: "/profile",
+    name: "PersonalProfile",
+    component: PersonalProfilePage,
+  },
+
+  {
+    path: "/my-booking",
+    name: "MyBooking",
+    component: MyBooking,
+  },
+
   {
     path: "/online-booking",
     name: "OnlineBooking",
@@ -24,10 +46,11 @@ const routes = [
   },
 
   {
-    path: "/profile",
-    name: "PersonalProfile",
-    component: PersonalProfilePage,
+    path: "/confirmation",
+    name: "ConfirmationPage",
+    component: ConfirmationPage,
   },
+
   {
     path: "/chatbot",
     name: "Chatbot",
@@ -42,7 +65,7 @@ const routes = [
   {
     path: "/verify-email",
     name: "VerifyEmail",
-    component: VerifEmailComponent,
+    component: VerifyEmailPage,
   },
   
   /*
@@ -57,16 +80,6 @@ const routes = [
     path: "/dashboard",
     name: "dashboard",
     component: DashboardPage,
-  },
-  {
-    path: "/about",
-    name: "about",
-    component: AboutPage,
-  },
-  {
-    path: "/confirmation",
-    name: "ConfirmationPage",
-    component: ConfirmationPage,
   },
 ];
 

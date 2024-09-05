@@ -1,0 +1,134 @@
+openapi: 3.0.0
+info:
+  title: GP Appointment Management API
+  version: 1.0.0
+  description: API to manage appointments with General Practitioners (GPs)
+
+paths:
+  #
+  # doctor info api
+  #
+  /doctors:
+    get:
+      summary: get doctor id by first name and last name
+      operationId: getDoctorId
+      description: Get doctor id by first name and last name
+      parameters:
+        - name: firstname
+          in: query
+          description: First name of the doctor
+          required: true
+          schema:
+            type: string
+        - name: lastname
+          in: query
+          description: Last name of the doctor
+          required: true
+          schema:
+            type: string 
+      responses:
+        '200':
+          description: A list of doctors
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    DoctorId:
+                      type: string
+                      description: Unique identifier for the doctor. DoctorId. s_doctorId.
+                    DocotrEmail:
+                      type: string
+                      description: Email address of the Doctor. DoctorEmail.
+                    DoctorWorkplace:
+                      type: string
+                      description: Workplace. DoctorWorkplace.
+  /doctor/available-dates:
+    get:
+      summary: Get a list of available dates of a doctor
+      operationId: listDoctorAvailableDates
+      description: Get a list of available dates of a doctor by doctor id, start date and end date
+      parameters:
+        - in: query
+          name: s_doctorId
+          schema:
+            type: string
+          required: true
+          description: ID of the doctor to filter schedules.
+        - in: query
+          name: startDate
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Start date to filter schedules.
+        - in: query
+          name: endDate
+          required: true
+          schema:
+            type: string
+            format: date
+          description: End date to filter schedules.
+      responses:
+        '200':
+          description: A list of working schedules.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: date
+        '500':
+          description: Server errors
+
+  /doctor/schedules:
+    get:
+      summary: Get a list of available timeslots of a doctor
+      operationId: listDoctorAvailableTimeslots
+      description: Get a list of available timeslots of a doctor
+      parameters:
+        - in: query
+          name: s_doctorId
+          schema:
+            type: string
+          required: true
+          description: ID of the doctor to filter schedules.
+        - in: query
+          name: date
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Date to filter schedules.
+      responses:
+        '200':
+          description: A list of working schedules.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Id:
+                      type: string
+                      description: it is ScheduleId
+                    StartTime:
+                      type: string
+                      format: time
+                      description: timeslot start time
+                    EndTime:
+                      type: string
+                      format: time
+                      description: timeslot end time
+                    Status:
+                      type: string
+                      description: status of this timeslot. you cannot book occupied timeslot
+                      enum:
+                        - available
+                        - occupied
+        '500':
+          description: Server errors
