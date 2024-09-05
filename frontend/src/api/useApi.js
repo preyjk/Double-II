@@ -1,7 +1,7 @@
 import { ref, watch, onMounted } from 'vue';
 import axios from 'axios';
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = import.meta.env.VITE_API_ENDPOINT;
 
 export function useGet(url, dependencies = []) {
   const data = ref(null);
