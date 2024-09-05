@@ -149,7 +149,7 @@ export default {
     const fetchClinics = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_ENDPOINT}/clinics`
+          `${import.meta.env.VITE_API_ENDPOINT}/public/clinics`
         );
         const data = await response.json();
 

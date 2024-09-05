@@ -56,7 +56,18 @@ const routes = [
     name: "Chatbot",
     component: ChatbotPage,
   },
+  {
+    path: "/my-booking",
+    name: "MyBooking",
+    component: MyBooking,
+  },
 
+  {
+    path: "/verify-email",
+    name: "VerifyEmail",
+    component: VerifyEmailPage,
+  },
+  
   /*
     admin routers
   */
@@ -70,11 +81,6 @@ const routes = [
     name: "dashboard",
     component: DashboardPage,
   },
-  {
-    path: "/verify-email",
-    name: "verify-email",
-    component: VerifyEmailPage,
-  }
 ];
 
 const router = createRouter({

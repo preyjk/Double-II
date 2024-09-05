@@ -1,4 +1,3 @@
-```vue
 <template>
   <HeaderComponent />
   <div class="container_body">
