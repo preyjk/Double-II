@@ -65,6 +65,14 @@ class EmailService {
         `;
         return EmailService.sendEmail({ to, subject, body });
     }
+
+    static async sendInitialPasswordEmail({ to, password }) {
+        const subject = "Initial password";
+        const body = `
+            <p>Your inital password is: ${password}. Please change it.</p>
+        `;
+        return EmailService.sendEmail({ to, subject, body });
+    }
 }
 
 export default EmailService;

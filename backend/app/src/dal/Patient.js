@@ -16,7 +16,7 @@ class PatientTable extends DynamoTable {
   findByUserId(userId) {
     const params = {
       TableName: this.tableName,
-      IndexName: 'UserIdIndex', // Assumes there's a GSI on username
+      IndexName: 'UserIdIndex', 
       KeyConditionExpression: '#UserId = :UserId',
       ExpressionAttributeNames: {
         '#UserId': 'UserId',

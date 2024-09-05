@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import User, { UserIndex } from '../dal/User.js';
+import Doctor from '../dal/Doctor.js';
 import EmailService from './EmailService.js';
 import { dynamo, TransactionBuilder } from '../dal/DynamoDB.js';
 
@@ -10,6 +11,16 @@ const ACTION_VERIFY_EMAIL = 'verify email';
 const ACTION_RESET_PASSWORD = 'reset password';
 
 class AuthService {
+
+  static generateRandomPassword(length = 8) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let password = '';
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      password += characters[randomIndex];
+    }
+    return password;
+  }
 
   static verifyToken(token) {
     try {
@@ -37,7 +48,6 @@ class AuthService {
         return res.status(401).json(verificationResult);
       }
 
-      // Attach username to the request object for further use in your routes
       req.auth = verificationResult.data;
       next();
     } catch (error) {
@@ -93,7 +103,25 @@ class AuthService {
     return { success: true, message: 'Email verified' };
   }
 
-  static async signup({ email, password, roles, active }) {
+  static async signupDoctor(doctorId) {
+    const getDoctorResult = await dynamo.send(Doctor.findById(doctorId));
+    if (!getDoctorResult.Item) {
+      return { success: false, message: 'Doctor not found' };
+    }
+    const doctor = getDoctorResult.Item;
+    const password = AuthService.generateRandomPassword();
+    await AuthService.signup({
+      id: doctorId,
+      email: doctor.Email,
+      password,
+      roles: ['doctor'],
+      active: true
+    });
+    await EmailService.sendInitialPasswordEmail({ to: doctor.Email, password });
+    return { success: true, message: 'User created' };
+  }
+
+  static async signup({ id, email, password, roles, active }) {
     try {
       const hashedPassword = AuthService.hashPassword(password);
       const createUserCommand = User.create({
@@ -102,6 +130,7 @@ class AuthService {
         Roles: roles || [],
         Active: active || false
       });
+      id && (createUserCommand.input.Item.Id = id);
       const createUserIndexCommand = UserIndex.create({
         Provider: 'email',
         ProviderId: email,

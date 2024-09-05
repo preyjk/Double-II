@@ -735,9 +735,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "username": {
+                  "email": {
                     "type": "string",
-                    "description": "username"
+                    "description": "email"
                   },
                   "password": {
                     "type": "string",
@@ -758,6 +758,41 @@
         "responses": {
           "200": {
             "description": "User signed up successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        }
+      }
+    },
+    "/admin/users/doctor": {
+      "post": {
+        "summary": "Sign up a new doctor",
+        "description": "Sign up a new doctor",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "doctorId": {
+                    "type": "string",
+                    "description": "doctorId"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Doctor signed up successfully"
           },
           "400": {
             "description": "Bad request"

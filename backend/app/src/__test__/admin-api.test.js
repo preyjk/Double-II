@@ -2,6 +2,7 @@ import request from 'supertest';
 import express from 'express';
 import router from '../routes/routes'; // Adjust the path as necessary
 import AuthService from '../service/AuthService';
+import EmailService from '../service/EmailService';
 
 const app = express();
 app.use(express.json());
@@ -16,6 +17,8 @@ describe('Admin API End-to-End Tests', () => {
   const email = 'abc';
   const password = 'abc';
   const role = 'abc';
+
+  jest.mock('../service/EmailService'); 
   
   beforeAll(async () => {
     const res = await request(app)
@@ -24,6 +27,10 @@ describe('Admin API End-to-End Tests', () => {
       .expect('Content-Type', /json/)
       .expect(200);
     token = res.body.token;
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
   test('should create a new user', async () => {
@@ -58,6 +65,35 @@ describe('Admin API End-to-End Tests', () => {
     
     expect(Array.isArray(res.body)).toBe(true);
     expect(res.body.find(user => user.Id === userId)).toBeTruthy();
+  });
+
+  test('should signup a doctor', async () => {
+    const doctorRes = await request(app)
+      .get('/admin/doctors')
+      .set('Authorization', `Bearer ${token}`)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    const {Id: doctorId, Email: email}  = doctorRes.body[0];
+
+    const sendInitialPasswordEmailSpy = jest.spyOn(EmailService, 'sendInitialPasswordEmail');
+    await request(app)
+      .post('/admin/users/doctor')
+      .set('Authorization', `Bearer ${token}`) 
+      .send({ doctorId })
+      .expect(200);
+
+    expect(sendInitialPasswordEmailSpy).toHaveBeenCalled();
+    const [[{ password: interceptedPassword }]] = sendInitialPasswordEmailSpy.mock.calls;
+    
+    await request(app)
+      .post('/public/auth/login')
+      .send({ email, password: interceptedPassword })
+      .expect(200);
+
+    await request(app)
+      .delete(`/admin/users/${doctorId}`)
+      .set('Authorization', `Bearer ${token}`) 
+      .expect(204);
   });
 
   test('should delete a user', async () => {
