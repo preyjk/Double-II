@@ -48,7 +48,7 @@ class EmailService {
 
     static async sendVerificationEmail({ to, token }) {
         const subject = "Verify your email address";
-        const link = `${WEB_BASE_URL}/verify-email?token=${token}/`;
+        const link = `${WEB_BASE_URL}/verify-email?token=${token}`;
         const body = `
             <p>Click the link below to verify your email address:</p>
             <a href="${link}">${link}</a>
@@ -58,10 +58,18 @@ class EmailService {
 
     static async sendResetPasswordEmail({ to, token }) {
         const subject = "Reset your password";
-        const link = `${WEB_BASE_URL}/reset-password?token=${token}/`;
+        const link = `${WEB_BASE_URL}/reset-password?token=${token}`;
         const body = `
             <p>Click the link below to reset your password:</p>
             <a href="${link}">${link}</a>
+        `;
+        return EmailService.sendEmail({ to, subject, body });
+    }
+
+    static async sendInitialPasswordEmail({ to, password }) {
+        const subject = "Initial password";
+        const body = `
+            <p>Your inital password is: ${password}. Please change it.</p>
         `;
         return EmailService.sendEmail({ to, subject, body });
     }
