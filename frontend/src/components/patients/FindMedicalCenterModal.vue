@@ -94,7 +94,13 @@ export default {
 
     const fetchClinics = async () => {
       try {
+<<<<<<< Updated upstream
         const response = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/clinics`);
+=======
+        const response = await fetch(
+          `${import.meta.env.VITE_API_ENDPOINT}/public/clinics`
+        );
+>>>>>>> Stashed changes
         const data = await response.json();
 
         clinics.value = await Promise.all(
