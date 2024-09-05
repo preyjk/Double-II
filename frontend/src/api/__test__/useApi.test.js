@@ -26,7 +26,7 @@ describe('API Hooks', () => {
       const wrapper = mount(mockComponent('https://api.example.com/items'));
 
       await flushPromises();
-      
+
       const { data, loading } = wrapper.vm;
 
       expect(loading).toBe(false);
@@ -38,30 +38,48 @@ describe('API Hooks', () => {
       axios.get.mockRejectedValueOnce(mockError);
 
       const wrapper = mount(mockComponent('https://api.example.com/items'));
-      
+
       await flushPromises();
-      
+
       const { error, loading } = wrapper.vm;
 
       expect(loading).toBe(false);
       expect(error).toEqual(mockError);
     });
 
-    it('should refetch data when dependency changes', async () => {
-      const mockData = { data: 'new data' };
-      const dependency = ref('initial');
+    it('should refetch data when dependencies change', async () => {
+      const mockData1 = { data: 'initial data' };
+      const mockData2 = { data: 'updated data' };
+      const mockData3 = { data: 'final data' };
+      axios.get.mockResolvedValueOnce({ data: mockData1 });
 
-      axios.get.mockResolvedValueOnce({ data: mockData });
+      const dependency1 = ref(1);
+      const dependency2 = ref('a');
+      const wrapper = mount(mockComponent('https://api.example.com/items', [dependency1, dependency2]));
+
+      await flushPromises();
       
-      const wrapper = mount(mockComponent('https://api.example.com/items', dependency));
+      let { data, loading } = wrapper.vm;
+      expect(loading).toBe(false);
+      expect(data).toEqual(mockData1);
+
+      axios.get.mockResolvedValueOnce({ data: mockData2 });
+      dependency1.value = 2;
 
       await flushPromises();
-      expect(wrapper.vm.data).toEqual(mockData);
+      
+      ({ data, loading } = wrapper.vm);
+      expect(loading).toBe(false);
+      expect(data).toEqual(mockData2);
 
-      axios.get.mockResolvedValueOnce({ data: 'updated data' });
-      dependency.value = 'updated';
+      axios.get.mockResolvedValueOnce({ data: mockData3 });
+      dependency2.value = 'b';
+
       await flushPromises();
-      expect(wrapper.vm.data).toEqual('updated data');
+      
+      ({ data, loading } = wrapper.vm);
+      expect(loading).toBe(false);
+      expect(data).toEqual(mockData3);
     });
   });
 
@@ -73,7 +91,7 @@ describe('API Hooks', () => {
 
       const { data, postData } = usePost('https://api.example.com/items');
       postData({ name: 'New Item' });
-      
+
       await flushPromises();
       expect(data.value).toEqual(mockResponse);
     });
@@ -98,7 +116,7 @@ describe('API Hooks', () => {
 
       const { data, deleteData } = useDelete('https://api.example.com/items/1');
       deleteData();
-      
+
       await flushPromises();
       expect(data.value).toEqual(mockResponse);
     });
@@ -123,7 +141,7 @@ describe('API Hooks', () => {
 
       const { data, putData } = usePut('https://api.example.com/items/1');
       putData({ name: 'Updated Item' });
-      
+
       await flushPromises();
       expect(data.value).toEqual(mockResponse);
     });

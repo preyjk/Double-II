@@ -8,6 +8,7 @@ import AboutPage from "@/pages/patients/AboutPage.vue";
 import OnlineBookingPage from "@/pages/patients/OnlineBookingPage.vue";
 import ConfirmationPage from "@/pages/patients/ConfirmationPage.vue";
 import MyBooking from "@/pages/patients/MyBooking.vue";
+import VerifyEmailPage from "@/pages/patients/VerifyEmailPage.vue";
 
 const routes = [
   /*
@@ -55,7 +56,18 @@ const routes = [
     name: "Chatbot",
     component: ChatbotPage,
   },
+  {
+    path: "/my-booking",
+    name: "MyBooking",
+    component: MyBooking,
+  },
 
+  {
+    path: "/verify-email",
+    name: "VerifyEmail",
+    component: VerifyEmailPage,
+  },
+  
   /*
     admin routers
   */

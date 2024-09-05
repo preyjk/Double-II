@@ -46,9 +46,9 @@ router.get('/', asyncHandler(async (req, res) => {
  *           schema:
  *             type: object
  *             properties:
- *               username:
+ *               email:
  *                 type: string
- *                 description: username
+ *                 description: email
  *               password:
  *                 type: string
  *                 description: password
@@ -64,7 +64,41 @@ router.get('/', asyncHandler(async (req, res) => {
  *         description: Bad request
  */
 router.post('/', asyncHandler(async (req, res) => {
-    const result = await AuthService.signup({...req.body, active: true});
+    const result = await AuthService.signup({ ...req.body, active: true });
+    if (result.success) {
+        return res.status(200).json(result.message);
+    } else {
+        return res.status(400).json(result.message);
+    }
+}));
+
+/**
+ * @openapi
+ * /admin/users/doctor:
+ *   post:
+ *     summary: Sign up a new doctor
+ *     description: Sign up a new doctor
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               doctorId:
+ *                 type: string
+ *                 description: doctorId
+ *     responses:
+ *       200:
+ *         description: Doctor signed up successfully
+ *       400:
+ *         description: Bad request
+ */
+router.post('/doctor', asyncHandler(async (req, res) => {
+    const doctorId = req.body.doctorId;
+    const result = await AuthService.signupDoctor(doctorId);
     if (result.success) {
         return res.status(200).json(result.message);
     } else {

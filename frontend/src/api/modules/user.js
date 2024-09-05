@@ -1,10 +1,10 @@
 import request from "@/api/axios";
 
-export const login = async function (username, password) {
+export const login = async function (email, password) {
   const config = {
     url: "/public/auth/login",
     method: "post",
-    data: { username, password },
+    data: { email, password },
   };
   try {
     const res = await request(config);
@@ -17,11 +17,11 @@ export const login = async function (username, password) {
   }
 };
 
-export const register = async function (username, password) {
+export const register = async function (email, password) {
   const config = {
     url: "/public/auth/signup",
     method: "post",
-    data: { username, password },
+    data: { email, password },
   };
 
   try {
@@ -30,6 +30,22 @@ export const register = async function (username, password) {
     return res.data;
   } catch (err) {
     console.error("Error during registration:", err);
+    throw err;
+  }
+};
+export const verifyEmail = async function (token) {
+  const config = {
+    url: "/public/auth/verify-email",
+    method: "post",
+    data: { token },
+  };
+
+  try {
+    const res = await request(config);
+    console.log("Correct Token:", res.token);
+    return res.token;
+  } catch (err) {
+    console.error("Token verification failed:", err.response?.data || err.message);
     throw err;
   }
 };
