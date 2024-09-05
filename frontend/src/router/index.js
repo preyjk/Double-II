@@ -1,15 +1,4 @@
 import { createRouter, createWebHistory } from "vue-router";
-<<<<<<< Updated upstream
-import HomePage from "../views/patients/HomePage.vue";
-import PersonalProfilePage from "../views/patients/PersonalProfilePage.vue";
-import ChatbotPage from "@/views/patients/ChatbotPage.vue";
-import AdminPage from "../views/admin/AdminPage.vue";
-import DashboardPage from "@/views/admin/DashboardPage.vue";
-import AboutPage from "@/views/patients/AboutPage.vue";
-import OnlineBookingPage from "@/views/patients/OnlineBookingPage.vue";
-import ConfirmationPage from "@/views/patients/ConfirmationPage.vue";
-import MyBooking from "@/views/patients/MyBooking.vue";
-=======
 import HomePage from "@/pages/patients/HomePage.vue";
 import PersonalProfilePage from "@/pages/patients/PersonalProfilePage.vue";
 import ChatbotPage from "@/pages/patients/ChatbotPage.vue";
@@ -20,7 +9,6 @@ import OnlineBookingPage from "@/pages/patients/OnlineBookingPage.vue";
 import ConfirmationPage from "@/pages/patients/ConfirmationPage.vue";
 import MyBooking from "@/pages/patients/MyBooking.vue";
 import VerifEmailComponent from "@/pages/patients/VerifEmailComponent.vue";
->>>>>>> Stashed changes
 
 const routes = [
   {
@@ -45,13 +33,11 @@ const routes = [
     name: "Chatbot",
     component: ChatbotPage,
   },
-<<<<<<< Updated upstream
   {
     path: "/my-booking",
     name: "MyBooking",
     component: MyBooking,
   },
-=======
 
   {
     path: "/verify-email",
@@ -62,7 +48,6 @@ const routes = [
   /*
     admin routers
   */
->>>>>>> Stashed changes
   {
     path: "/admin",
     name: "Admin",
