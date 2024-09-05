@@ -149,6 +149,7 @@
             </el-col>
           </el-row>
         </el-header>
+
         <el-main class="dashboard-main">
           <el-row>
             <el-col :span="4">
@@ -163,6 +164,9 @@
               <div class="grid-content ep-bg-purple"></div>
             </el-col>
           </el-row>
+          <el-row>
+            <ReservationCalendar></ReservationCalendar>
+          </el-row>
         </el-main>
       </el-container>
     </el-container>
@@ -171,7 +175,12 @@
 
 <script>
 import logoSrc from "@/assets/logo.png";
+import ReservationCalendar from "@/components/admin/ReservationCalendar.vue";
+
 export default {
+  components: {
+    ReservationCalendar,
+  },
   data() {
     return {
       isCollapse: false,
