@@ -49,3 +49,43 @@ export const verifyEmail = async function (token) {
     throw err;
   }
 };
+export const forgetPassword = async function (email) {
+  try {
+    const res = await request({
+      url: "/public/auth/forgot-password",
+      method: "post",
+      data: { email },
+    });
+    
+    console.log("Password reset token sent successfully:", res.data?.token);
+    return res.data?.token;
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || error.message || "Token request failed";
+    console.error("Error while requesting password reset:", {
+      message: errorMessage,
+      error: error,  
+    });
+    throw new Error(errorMessage);
+  }
+};
+export const resetPassword = async (token, newPassword) => {
+  try {
+    const res = await request({
+      url: "/public/auth/reset-password",  
+      method: "post",
+      data: { token, newPassword },  
+    });
+    
+    console.log("Password reset successfully.");
+    return res.data;
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || error.message || "Password reset failed";
+    console.error("Error while resetting password:", {
+      message: errorMessage,
+      error: error,  
+    });
+    throw new Error(errorMessage);
+  }
+};
+
+
