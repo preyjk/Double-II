@@ -31,10 +31,23 @@
             >
               Cancel
             </button>
+
+            <!-- New Button (e.g., Help button) -->
+            <button
+              type="button"
+              @click="showHelp"
+              class="help-button"
+            >
+              Help
+            </button>
+
           </div>
           <p class="toggle-text">
             Don't have an account?
             <a href="#" @click.prevent="switchToRegister">Register here</a>
+          </p>
+          <p class="toggle-text">
+            <a href="#" @click.prevent="switchToForgetPassword">Forgot Password?</a>
           </p>
         </form>
       </div>
@@ -47,13 +60,22 @@
         @close="showRegisterModal = false"
       />
     </transition>
+
+    <!-- Forget Password Component -->
+    <transition name="fade" mode="out-in">
+      <ForgetPasswordComponent
+        v-if="showForgetPasswordModal"
+        @close="showForgetPasswordModal = false"
+      />
+    </transition>
   </div>
 </template>
 
 <script>
 import RegisterComponent from "@/components/patients/RegisterComponent.vue";
 import AvatarComponent from "@/components/patients/AvatarComponent.vue";
-import {login} from "@/api/modules/user.js";
+import ForgetPasswordComponent from "@/components/patients/ForgetPasswordComponent.vue"; 
+import { login } from "@/api/modules/user.js";
 
 export default {
   data() {
@@ -62,6 +84,7 @@ export default {
       showSign: true,
       showAvatar: false,
       showRegisterModal: false,
+      showForgetPasswordModal: false, 
       email: "",
       password: "",
       token: "",
@@ -71,6 +94,7 @@ export default {
   components: {
     AvatarComponent,
     RegisterComponent,
+    ForgetPasswordComponent, 
   },
   created() {
     const savedToken = localStorage.getItem("authToken");
@@ -108,11 +132,18 @@ export default {
       this.showModal = false;
       this.showRegisterModal = true;
     },
+    switchToForgetPassword() {
+      this.showModal = false;
+      this.showForgetPasswordModal = true; 
+    },
     handleLogout() {
       localStorage.setItem("authToken", "");
       this.showAvatar = false;
       this.showSign = true;
     },
+    showHelp() {
+      alert("Please contact support for assistance.");
+    }
   },
 };
 </script>
