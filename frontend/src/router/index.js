@@ -9,6 +9,7 @@ import OnlineBookingPage from "@/pages/patients/OnlineBookingPage.vue";
 import ConfirmationPage from "@/pages/patients/ConfirmationPage.vue";
 import MyBooking from "@/pages/patients/MyBooking.vue";
 import VerifyEmailPage from "@/pages/patients/VerifyEmailPage.vue";
+import RestPasswordPage from "@/pages/patients/RestPasswordPage.vue";
 
 const routes = [
   /*
@@ -66,6 +67,11 @@ const routes = [
     path: "/verify-email",
     name: "VerifyEmail",
     component: VerifyEmailPage,
+  },
+  {
+    path: "/rest-password",
+    name: "RestPassword",
+    component : RestPasswordPage,
   },
   
   /*
