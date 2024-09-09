@@ -20,18 +20,10 @@
     </div>
 
     <div v-if="!loading && !error && groupedSchedules">
-      <div
-        v-for="(schedules, hour) in groupedSchedules"
-        :key="hour"
-        class="hour-group"
-      >
+      <div v-for="(schedules, hour) in groupedSchedules" :key="hour" class="hour-group">
         <h3>{{ hour }}:00</h3>
         <ul class="schedule-list">
-          <li
-            v-for="schedule in schedules"
-            :key="schedule.Id"
-            class="schedule-item"
-          >
+          <li v-for="schedule in schedules" :key="schedule.Id" class="schedule-item">
             <span>Time: {{ schedule.StartTime }} - {{ schedule.EndTime }}</span>
             <button @click="selectTimeSlot(schedule)" class="select-button">
               Book
@@ -48,7 +40,7 @@
 </template>
 
 <script>
-import { getSchedules } from "@/api/modules/appointment.js";
+import { getSchedules_public } from "@/api/modules/appointment.js";
 
 export default {
   props: {
@@ -115,7 +107,7 @@ export default {
       this.loading = true;
       this.error = false;
 
-      getSchedules(this.doctorId, startDate, endDate)
+      getSchedules_public(this.doctorId, startDate, endDate)
         .then((data) => {
           this.schedules = data.sort((a, b) => {
             const timeA = new Date(`${a.Date}T${a.StartTime}`);
