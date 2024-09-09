@@ -56,6 +56,7 @@ export const forgetPassword = async function (email) {
       method: "post",
       data: { email },
     });
+    console.log("xxxxxxxxxxxxxxxxx:",res);
     
     console.log("Password reset token sent successfully:", res.data?.token);
     return res.data?.token;
