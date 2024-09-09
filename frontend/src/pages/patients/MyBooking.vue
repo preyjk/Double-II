@@ -46,7 +46,7 @@
 <script>
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
-import { getAppointments, cancelAppointment } from "@/api/modules/appointment.js";
+import { getAppointments_user, cancelAppointment_user } from "@/api/modules/appointment.js";
 
 export default {
   components: { HeaderComponent, FooterComponent },
@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     fetchAppointments() {
-      getAppointments()
+      getAppointments_user()
         .then((data) => {
           this.bookings = data;
         })
@@ -72,7 +72,7 @@ export default {
     cancelBooking(index) {
       const appointmentId = this.bookings[index].Id;
 
-      cancelAppointment(appointmentId)
+      cancelAppointment_user(appointmentId)
         .then(() => {
           this.bookings[index].Status = "cancelled";
           console.log("Appointment canceled successfully");

@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { getAppointments } from "@/api/modules/appointment.js";
+import { getAppointments_user } from "@/api/modules/appointment.js";
 export default {
   name: "ConfirmationPage",
   data() {
@@ -52,7 +52,7 @@ export default {
   methods: {
     async fetchBookingDetails() {
       try {
-        const appointments = await getAppointments();
+        const appointments = await getAppointments_user();
         if (appointments && appointments.length > 0) {
           this.booking = appointments[appointments.length - 1];
         } else {

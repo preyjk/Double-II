@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { makeAppointment, getAppointments } from "@/api/modules/appointment.js";
+import { getAppointments_user, createAppointment_user } from "@/api/modules/appointment.js";
 
 export default createStore({
   state: {
@@ -52,7 +52,7 @@ export default createStore({
           Location: booking.Location,
         };
 
-        const response = await makeAppointment(formData, token);
+        const response = await createAppointment_user(formData, token);
 
         commit("ADD_BOOKING", response);
 
@@ -64,7 +64,7 @@ export default createStore({
 
     async getBookings({ commit }) {
       try {
-        const bookings = await getAppointments();
+        const bookings = await getAppointments_user();
         commit("SET_BOOKINGS", bookings);
       } catch (err) {
         console.error("Error fetching bookings:", err);

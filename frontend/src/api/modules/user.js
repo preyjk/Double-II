@@ -1,5 +1,8 @@
 import request from "@/api/axios";
 
+/*
+  user
+*/
 export const login = async function (email, password) {
   const config = {
     url: "/public/auth/login",
@@ -107,3 +110,31 @@ export const changePassword = async (email, oldPassword, newPassword) => {
     throw new Error(errorMessage);
   }
 };
+
+/*
+  admin
+*/
+export const addUser_admin = async function (formData, token) {
+  const config = {
+    url: "/admin/users",
+    method: "post",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data: {
+      email: formData.email,
+      password: formData.password,
+      roles: formData.roles,
+    },
+  };
+
+  try {
+    const res = await request(config);
+    console.log("User added successfully:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("Error adding user:", err);
+    throw err;
+  }
+};
+
