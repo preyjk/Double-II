@@ -69,7 +69,7 @@ describe('Admin API End-to-End Tests', () => {
 
   test('should signup a doctor', async () => {
     const doctorRes = await request(app)
-      .get('/admin/doctors')
+      .get('/public/doctors')
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200);
