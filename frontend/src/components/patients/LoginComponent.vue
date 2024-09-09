@@ -115,9 +115,10 @@ export default {
             localStorage.setItem("authToken", token);
             this.showModal = false;
             this.showSign = false;
+            this.showAvatar = true;
+            this.$store.commit('SET_EMAIL', this.email);
             this.email = "";
             this.password = "";
-            this.showAvatar = true;
           })
           .catch((error) => {
             console.error("Login failed:", error);

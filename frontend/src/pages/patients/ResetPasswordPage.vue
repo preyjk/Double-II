@@ -24,7 +24,7 @@
   import { useRoute } from 'vue-router';
   import HeaderComponent from "@/components/patients/HeaderComponent.vue";
   import FooterComponent from "@/components/patients/FooterComponent.vue";
-  import { resetPassword } from "@/api/modules/userApi.js"; 
+  import { resetPassword } from "@/api/modules/user.js"; 
   
   export default {
     components: {
