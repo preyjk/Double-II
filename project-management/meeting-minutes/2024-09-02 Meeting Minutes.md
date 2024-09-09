@@ -1,6 +1,6 @@
 # Meeting Minutes
 
-**Date:** 2024-08-26  
+**Date:** 2024-09-02  
 **Time:** 11:00 - 12:00  
 **Location:** 303s-599  
 **Attendees:** 
