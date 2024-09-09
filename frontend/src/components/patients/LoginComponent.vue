@@ -33,21 +33,11 @@
             </button>
 
             <!-- New Button (e.g., Help button) -->
-            <button
-              type="button"
-              @click="showHelp"
-              class="help-button"
-            >
-              Help
-            </button>
 
           </div>
           <p class="toggle-text">
-            Don't have an account?
-            <a href="#" @click.prevent="switchToRegister">Register here</a>
-          </p>
-          <p class="toggle-text">
             <a href="#" @click.prevent="switchToForgetPassword">Forgot Password?</a>
+            <a href="#" @click.prevent="switchToRegister">Register here</a>
           </p>
         </form>
       </div>
@@ -267,7 +257,9 @@ export default {
 
 .toggle-text {
   margin-top: 15px;
-  text-align: center;
+  display: flex;
+  justify-content: space-between; /* Moves links to the edges */
+  align-items: center;
 }
 
 .toggle-text a {
@@ -278,8 +270,10 @@ export default {
 
 .toggle-text a:hover {
   text-decoration: underline;
-  text-decoration-color:#accfd8;
+  text-decoration-color: #accfd8;
 }
+
+
 
 .loading-spinner {
   border: 6px solid #f3f3f3;

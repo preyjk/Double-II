@@ -1,5 +1,5 @@
 <template>
-  <div class="container_body">
+  <div :class="['container_body', { dark: isDarkMode, care: isCareMode }]">
     <!-- Left Icons Column -->
     <div class="left-icons">
       <div class="icon" @click="backHome">
@@ -46,10 +46,18 @@
           </div>
         </el-dropdown>
 
-        <!-- Settings Icon Separate -->
-        <div class="settings">
-          <el-icon><Setting /></el-icon>
-        </div>
+        <!-- Settings Dropdown for Dark and Care Mode -->
+        <el-dropdown @command="handleSettingsCommand">
+          <template v-slot:dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item command="Dark Mode">Dark Mode</el-dropdown-item>
+              <el-dropdown-item command="Care Mode">Care Mode</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+          <div class="settings">
+            <el-icon><Setting /></el-icon>
+          </div>
+        </el-dropdown>
       </div>
 
       <!-- + New Chat Button -->
@@ -103,6 +111,13 @@ export default {
     handleCommand(command) {
       this.selectedWorkspace = command;
     },
+    handleSettingsCommand(command) {
+      if (command === "Dark Mode") {
+        this.$emit('toggle-dark-mode');
+      } else if (command === "Care Mode") {
+        this.$emit('toggle-care-mode');
+      }
+    },
     backHome() {
       this.$router.push("/");
     },
@@ -111,11 +126,33 @@ export default {
 </script>
 
 <style scoped>
+/* Common styles */
 .container_body {
   display: flex;
   height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease, font-size 0.3s ease;
 }
 
+/* Dark Mode styles */
+.container_body.dark {
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+}
+
+.left-icons.dark {
+  background-color: #333;
+}
+
+.icon.dark {
+  color: #f5f5f5;
+}
+
+/* Care Mode styles */
+.container_body.care {
+  font-size: 18px;
+}
+
+/* Left icons styles */
 .left-icons {
   width: 50px;
   background-color: #547a8a;
@@ -135,12 +172,18 @@ export default {
   flex-grow: 1;
 }
 
+/* Main content styles */
 .main-content {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   padding: 10px;
   background-color: #6999ab;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.container_body.dark .main-content {
+  background-color: #2c2c2c;
 }
 
 .top-bar {
@@ -161,6 +204,11 @@ export default {
   outline: none;
 }
 
+.container_body.dark .home {
+  background-color: #333;
+  color: #f5f5f5;
+}
+
 .home el-icon {
   margin-right: 12px;
 }
@@ -177,6 +225,7 @@ export default {
 .settings el-icon {
   color: white;
 }
+
 .new-chat {
   margin-bottom: 20px;
 }
@@ -222,5 +271,9 @@ export default {
   border-radius: 5px;
   cursor: pointer;
   color: white;
+}
+
+.container_body.dark .chats-list li {
+  background-color: #444;
 }
 </style>
