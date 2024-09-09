@@ -29,7 +29,7 @@ describe('Doctor API End-to-End Tests', () => {
 
   test('should list all doctors', async () => {
     const res = await request(app)
-      .get('/admin/doctors')
+      .get('/public/doctors')
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200);
@@ -79,7 +79,7 @@ describe('Doctor API End-to-End Tests', () => {
 
   test('should list doctors by workplace', async () => {
     const res = await request(app)
-      .get(`/admin/doctors?workplace=${Workplace}`)
+      .get(`/public/doctors?workplace=${Workplace}`)
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200);
@@ -91,7 +91,7 @@ describe('Doctor API End-to-End Tests', () => {
   // New test case for listing doctors by firstname and lastname
   test('should list doctors by firstname and lastname', async () => {
     const res = await request(app)
-      .get(`/admin/doctors?firstname=${Firstname}&lastname=${Lastname}`)
+      .get(`/public/doctors?firstname=${Firstname}&lastname=${Lastname}`)
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200);
