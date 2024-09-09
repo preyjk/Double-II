@@ -88,5 +88,22 @@ export const resetPassword = async (token, newPassword) => {
     throw new Error(errorMessage);
   }
 };
-
-
+export const changePassword = async (email, oldPassword, newPassword) => {
+  try {
+    const res = await request({
+      url: "/public/auth/change-password",  
+      method: "post",
+      data: { email, oldPassword, newPassword },  
+    });
+    
+    console.log("Password changed successfully.");
+    return res.data;
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || error.message || "Password reset failed";
+    console.error("Error while changing password:", {
+      message: errorMessage,
+      error: error,  
+    });
+    throw new Error(errorMessage);
+  }
+};

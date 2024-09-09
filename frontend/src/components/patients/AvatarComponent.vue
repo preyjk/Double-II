@@ -3,6 +3,7 @@
     <img :src="avatarSrc" alt="User Avatar" class="avatar" />
     <div v-if="dropdownVisible" class="dropdown-menu" ref="dropdownMenu">
       <ul>
+        <li @click="goToProfile">My Profile</li>
         <li @click="viewBookings">My Bookings</li>
         <li @click="logout">Logout</li>
       </ul>

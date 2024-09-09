@@ -1,10 +1,11 @@
 import { createStore } from "vuex";
-import { makeAppointment,getAppointments } from "@/api/modules/appointment.js";
+import { makeAppointment, getAppointments } from "@/api/modules/appointment.js";
 
 export default createStore({
   state: {
     bookings: [],
-    tempBooking:{}
+    tempBooking: {},
+    email: localStorage.getItem("email") || "", 
   },
   mutations: {
     ADD_BOOKING(state, booking) {
@@ -21,6 +22,10 @@ export default createStore({
     },
     set_tempBooking(state, tempBooking) {
       state.tempBooking = tempBooking;
+    },
+    SET_EMAIL(state, email) {
+      state.email = email;
+      localStorage.setItem("email", email); 
     },
   },
   actions: {
@@ -46,7 +51,7 @@ export default createStore({
           Phone: booking.phone,
           Location: booking.Location,
         };
-        
+
         const response = await makeAppointment(formData, token);
 
         commit("ADD_BOOKING", response);
@@ -59,7 +64,7 @@ export default createStore({
 
     async getBookings({ commit }) {
       try {
-        const bookings = await getAppointments(); 
+        const bookings = await getAppointments();
         commit("SET_BOOKINGS", bookings);
       } catch (err) {
         console.error("Error fetching bookings:", err);
@@ -75,5 +80,4 @@ export default createStore({
       commit("CLEAR_BOOKINGS");
     },
   },
-  
 });
