@@ -9,7 +9,11 @@
         @click="selectDoctor(doctor)"
         class="doctor-card"
       >
-        <img src="/src/assets/doctor.png" alt="Doctor Image" class="doctor-image">
+        <img
+          src="/src/assets/doctor.png"
+          alt="Doctor Image"
+          class="doctor-image"
+        />
         <div class="doctor-info">
           <div class="doctor-name">{{ doctor.LastName }}</div>
           <div class="doctor-specialty">{{ doctor.Speciality }}</div>
@@ -19,12 +23,9 @@
   </div>
 </template>
 
-
-
-
 <script>
-import { ref } from "vue";
-import { useGet } from "@/api/useApi";
+import { ref, onMounted } from "vue";
+import { filterDoctors_public } from "@/api/modules/doctor.js";
 
 export default {
   name: "GPSelectForm",
@@ -34,25 +35,31 @@ export default {
       type: String,
       required: true,
     },
-    clinicId: {
-      type: String,
-      required: true,
-    },
   },
   emits: ["doctorSelected"],
   setup(props, { emit }) {
     const selectedDoctor = ref(null);
-    const { data: filteredDoctors } = useGet(
-      `${import.meta.env.VITE_API_ENDPOINT}/doctors?workplace=${
-        props.clinicName
-      }`
-    );
+    const filteredDoctors = ref([]);
 
     const selectDoctor = (doctor) => {
       selectedDoctor.value = doctor;
-      // console.log("xx:", doctor.Id);
       emit("doctorSelected", doctor);
     };
+
+    const fetchDoctors = async () => {
+      try {
+        const doctors = await filterDoctors_public({
+          workplace: props.clinicName,
+        });
+        filteredDoctors.value = doctors;
+      } catch (error) {
+        console.error("Error fetching doctors:", error);
+      }
+    };
+
+    onMounted(() => {
+      fetchDoctors();
+    });
 
     return {
       filteredDoctors,
@@ -62,7 +69,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .gp-select-form {
@@ -76,14 +82,14 @@ export default {
 .doctor-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start; /* 最后一行的卡片向左对齐 */
-  gap: 20px; /* 设置卡片之间的间隔 */
+  justify-content: flex-start;
+  gap: 20px;
 }
 
 .doctor-card {
   display: flex;
   align-items: center;
-  width: calc(33% - 20px); /* 默认为一行三张卡 */
+  width: calc(33% - 20px);
   height: 250px;
   background-color: #e6e6e6;
   border-radius: 5px;
@@ -94,19 +100,19 @@ export default {
 
 @media (max-width: 800px) {
   .doctor-card {
-    width: calc(50% - 20px); /* 当屏幕较小时，一行两张卡 */
+    width: calc(50% - 20px);
   }
 }
 
 @media (max-width: 500px) {
   .doctor-card {
-    width: calc(100% - 20px); /* 当屏幕更小时，一行一张卡 */
+    width: calc(100% - 20px);
   }
 }
 
 .doctor-card:hover {
   transform: scale(1.03);
-  box-shadow: 0 6px 12px rgba(0,77,102,0.15);
+  box-shadow: 0 6px 12px rgba(0, 77, 102, 0.15);
 }
 
 .doctor-image {
@@ -126,12 +132,14 @@ export default {
   justify-content: center;
 }
 
-.doctor-name, .doctor-specialty {
+.doctor-name,
+.doctor-specialty {
   margin-bottom: 5px;
   font-weight: bold;
 }
 
-h1, p {
+h1,
+p {
   color: #004d66;
   margin-bottom: 10px;
 }

@@ -1,10 +1,13 @@
 <template>
   <div>
-    <!-- 表格的横轴是医生，纵轴是时间段 -->
-    <el-table :data="timeSlots" style="width: 100%">
-      <!-- 表头: 医生 -->
-      <el-table-column prop="time" label="Time" width="120">
-        <template slot-scope="scope">
+    <el-table :data="timeSlots" style="width: 100%" border>
+      <el-table-column
+        prop="time"
+        label="Time"
+        width="80"
+        class-name="custom-column"
+      >
+        <template v-slot="scope">
           {{ scope.row.time }}
         </template>
       </el-table-column>
@@ -13,21 +16,26 @@
         v-for="doctor in doctors"
         :key="doctor.id"
         :label="doctor.name"
+        width="320"
       >
-        <template slot-scope="scope">
-          <el-card
-            class="appointment-cell"
-            @click="openDialog(scope.row.time, doctor)"
-          >
-            <p>
-              {{ getAppointment(scope.row.time, doctor.id) || "Available" }}
-            </p>
-          </el-card>
+        <template v-slot="scope">
+          <div class="appointment-cell-container">
+            <el-card
+              v-for="(interval, index) in scope.row.intervals"
+              :key="index"
+              class="appointment-cell"
+              @click="openDialog(interval, doctor)"
+            >
+              <p>
+                {{ getAppointment(interval, doctor.id) || "Available" }}
+              </p>
+            </el-card>
+          </div>
         </template>
       </el-table-column>
     </el-table>
 
-    <!-- 弹出框：添加预约 -->
+    <!-- Dialog: Add Appointment -->
     <el-dialog
       title="Add Appointment"
       :visible.sync="dialogVisible"
@@ -67,26 +75,27 @@ export default {
       ],
       appointments: [],
       timeSlots: [
-        { time: "09:00 AM" },
-        { time: "10:00 AM" },
-        { time: "11:00 AM" },
-        { time: "12:00 PM" },
-        { time: "01:00 PM" },
-        { time: "02:00 PM" },
-        { time: "03:00 PM" },
-        { time: "04:00 PM" },
-        { time: "05:00 PM" },
+        { time: "8am", intervals: ["8:00", "8:15", "8:30", "8:45"] },
+        { time: "9am", intervals: ["9:00", "9:15", "9:30", "9:45"] },
+        { time: "10am", intervals: ["10:00", "10:15", "10:30", "10:45"] },
+        { time: "11am", intervals: ["11:00", "11:15", "11:30", "11:45"] },
+        { time: "12pm", intervals: ["12:00", "12:15", "12:30", "12:45"] },
+        { time: "1pm", intervals: ["1:00", "1:15", "1:30", "1:45"] },
+        { time: "2pm", intervals: ["2:00", "2:15", "2:30", "2:45"] },
+        { time: "3pm", intervals: ["3:00", "3:15", "3:30", "3:45"] },
+        { time: "4pm", intervals: ["4:00", "4:15", "4:30", "4:45"] },
+        { time: "5pm", intervals: ["5:00", "5:15", "5:30", "5:45"] },
       ],
     };
   },
   methods: {
-    // 打开预约对话框
-    openDialog(time, doctor) {
-      this.selectedTime = time;
+    // Open appointment dialog
+    openDialog(interval, doctor) {
+      this.selectedTime = interval;
       this.selectedDoctor = doctor;
       this.dialogVisible = true;
     },
-    // 提交预约信息
+    // Submit appointment
     submitAppointment() {
       this.appointments.push({
         doctorId: this.selectedDoctor.id,
@@ -97,7 +106,7 @@ export default {
       this.dialogVisible = false;
       this.clearForm();
     },
-    // 获取预约信息
+    // Get appointment details
     getAppointment(time, doctorId) {
       const appointment = this.appointments.find(
         (a) => a.time === time && a.doctorId === doctorId
@@ -106,7 +115,7 @@ export default {
         ? `${appointment.patientName} - ${appointment.reason}`
         : null;
     },
-    // 清空表单
+    // Clear form
     clearForm() {
       this.appointmentForm.patientName = "";
       this.appointmentForm.reason = "";
@@ -122,6 +131,7 @@ export default {
   text-align: center;
   border: 1px solid #ebeef5;
 }
+
 .appointment-cell:hover {
   background-color: #f0f9eb;
 }
