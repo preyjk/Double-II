@@ -315,13 +315,14 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #4285f4;
+  background-color: #598fe4;
   color: #fff;
   font-weight: bold;
   border-radius: 10px;
   width: 100%;
   padding: 5px;
   margin-top: 10px;
+  border: none;
 }
 
 .google-login-button:hover {

@@ -6,15 +6,11 @@
       :submitButtonStyles="submitButtonStyles"
       :style="chatStyles" 
       :textToSpeech="textToSpeechOptions" 
-      :speechToText="speechToTextOptions"
+      :speechToText="speechToTextOptions" 
       demo="true"
       id="chat-element" 
       :connect="chatConnect" 
-      style="border-radius: 8px"
-      audio='{"button": {"position": "dropup-menu"}}' 
-      camera='{"button": {"position": "dropup-menu"}}'
-      mixedFiles='{"button": {"position": "inside-left"}}'
-      microphone='{"button": {"position": "outside-right"}}'>
+      style="border-radius: 8px">
     </deep-chat>
 
     <div class="animation-container">
@@ -22,14 +18,14 @@
         :animationData="animationData" 
         :loop="true" 
         :autoplay="true" 
-        v-show="isRobotAnimationShow" 
+        v-show="isRobotAnimationShow"
         class="robot-animation" />
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import { usePost } from "@/api/useApi";
 import LottieAnimation from "@/components/patients/animation/LottieAnimation.vue";
 import animationData from "@/assets/animation-robot.json";
 
@@ -49,8 +45,9 @@ export default {
       sessionId: null,
       animationData,
       isRobotAnimationShow: true,
+      responses: [], // 用于存储每条 AI 回复
       textInput: {
-        value: "", // Added this to store the input text
+        value: "",
         styles: {
           text: { color: "black" },
           container: {
@@ -97,7 +94,7 @@ export default {
         },
       },
       speechToTextOptions: {
-        webSpeech: true, 
+        webSpeech: true,
         button: {
           position: "outside-right",
         },
@@ -122,49 +119,29 @@ export default {
           try {
             let headers = {};
             const token = localStorage.getItem("authToken");
-            this.isRobotAnimationShow = false;
+            if (this.sessionId)
+              headers = { "x-chatbot-session": this.sessionId, ...headers };
+            if (token) headers = { "x-access-token": token, ...headers };
+            const prompt = body.messages[0]?.text || "";
+            const { data, postData } = usePost("/public/chatbot/");
+            await postData({ prompt }, headers);
+            this.sessionId = data.value.sessionId;
 
-            if (!Array.isArray(body.messages) || !body.messages.length || !body.messages[0]?.text) {
-              throw new Error("Invalid message input. No text found.");
-            }
-
-            const prompt = body.messages[0].text;
-
-            if (this.sessionId) {
-              headers["x-chatbot-session"] = this.sessionId;
-            }
-            if (token) {
-              headers["x-access-token"] = token;
-            }
-
-            const response = await axios.post(
-              process.env.VUE_APP_CHATBOT_API || "https://api.gpbooking.icu/public/chatbot/",
-              { prompt },
-              { headers }
-            );
-
-            this.sessionId = response.data.value.sessionId;
-            if (this.speechToTextOptions.webSpeech) {
-              this.textToSpeechOptions.enabled = true;
-            } else {
-              this.textToSpeechOptions.enabled = false;
-            }
-
+            // 发送回复并添加反馈按钮
+            const responseWithFeedback = this.generateResponseWithFeedback(data.value.response);
             signals.onResponse({
-              text: response.data.value.response,
+              html: responseWithFeedback,
             });
-            
-            this.addFeedbackToResponse();
 
           } catch (error) {
-            console.error("Error response from server:", error.response || error.message);
+            console.error("Error during API request:", error);
             signals.onResponse({
-              error: "Error communicating with the server. Please try again later.",
+              error: "Error communicating with the server",
             });
           }
         },
-      },
-    };
+      }
+    }
   },
   methods: {
     handleTranscriptionComplete(transcribedText) {
@@ -180,22 +157,48 @@ export default {
         }
       );
     },
-    addFeedbackToResponse() {
-      const feedbackHtml = `<div class="feedback">
-        <div class="feedback-text">How do you rate the response?</div>
-        <img class="feedback-icon feedback-icon-positive" src="path-to-svg.svg" @click="handlePositiveFeedback" />
-        <img class="feedback-icon feedback-icon-negative" src="path-to-svg.svg" @click="handleNegativeFeedback" />
-      </div>`;
-      
-      document.querySelector('#chat-element').insertAdjacentHTML('beforeend', feedbackHtml);
+
+    // 生成带反馈按钮的响应 HTML
+    generateResponseWithFeedback(responseText) {
+      return `
+        <div class="response-container">
+          <p>${responseText}</p>
+          <div class="feedback-buttons">
+            <button class="feedback-icon" @click="playText('${responseText}')">🔊</button>
+            <button class="feedback-icon" @click="copyText('${responseText}')">📋</button>
+            <button class="feedback-icon" @click="handlePositiveFeedback()">👍</button>
+            <button class="feedback-icon" @click="handleNegativeFeedback()">👎</button>
+          </div>
+        </div>`;
     },
+
+    // 播放文字
+    playText(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.volume = this.textToSpeechOptions.volume;
+      window.speechSynthesis.speak(utterance);
+    },
+
+    // 复制文字
+    copyText(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Text copied to clipboard");
+      }).catch(err => {
+        console.error('Error copying text: ', err);
+      });
+    },
+
+    // 处理正面反馈
     handlePositiveFeedback() {
-      console.log("positive response");
+      console.log("User liked the response.");
     },
+
+    // 处理负面反馈
     handleNegativeFeedback() {
-      console.log("negative response");
-    }
+      console.log("User disliked the response.");
+    },
   },
+
   computed: {
     chatStyles() {
       return {
@@ -216,7 +219,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .container_body {
@@ -265,5 +267,26 @@ export default {
 
 .feedback-icon:hover {
   background-color: #d1d1d1;
+}
+
+.response-container {
+  margin-top: 10px;
+}
+
+.feedback-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.feedback-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.feedback-icon:hover {
+  color: #007bff;
 }
 </style>
