@@ -1,18 +1,18 @@
 <template>
   <div :class="['container_body', { dark: isDarkMode, care: isCareMode }]">
     <!-- Left Icons Column -->
-    <div class="left-icons">
+    <div :class="['left-icons', { dark: isDarkMode }]">
       <div class="icon" @click="backHome">
         <el-icon><ArrowLeft /></el-icon>
       </div>
       <div class="spacer"></div>
-      <div class="icon">
+      <div :class="['icon', { dark: isDarkMode }]">
         <el-icon><User /></el-icon>
       </div>
     </div>
 
     <!-- Top Bar with Home Dropdown and Settings -->
-    <div class="main-content">
+    <div :class="['main-content', { dark: isDarkMode }]">
       <div class="top-bar">
         <el-dropdown @command="handleCommand">
           <template v-slot:dropdown>
@@ -95,6 +95,8 @@ export default {
       searchQuery: "",
       chats: [],
       selectedWorkspace: "Home",
+      isDarkMode: false,
+      isCareMode: false,
     };
   },
   computed: {
@@ -112,11 +114,21 @@ export default {
       this.selectedWorkspace = command;
     },
     handleSettingsCommand(command) {
+      this.notiyDarkModeChange();
       if (command === "Dark Mode") {
-        this.$emit('toggle-dark-mode');
+        this.isDarkMode = !this.isDarkMode;
+        if (this.isDarkMode) {
+          this.isCareMode = false;
+        }
       } else if (command === "Care Mode") {
-        this.$emit('toggle-care-mode');
+        this.isCareMode = !this.isCareMode;
+        if (this.isCareMode) {
+          this.isDarkMode = false;
+        }
       }
+    },
+    notiyDarkModeChange(){
+      this.$emit("changeDarkMode");
     },
     backHome() {
       this.$router.push("/");
@@ -126,16 +138,16 @@ export default {
 </script>
 
 <style scoped>
-/* Common styles */
+
 .container_body {
   display: flex;
   height: 100vh;
   transition: background-color 0.3s ease, color 0.3s ease, font-size 0.3s ease;
 }
 
-/* Dark Mode styles */
+
 .container_body.dark {
-  background-color: #1e1e1e;
+  background-color: #333;
   color: #f5f5f5;
 }
 
@@ -147,12 +159,11 @@ export default {
   color: #f5f5f5;
 }
 
-/* Care Mode styles */
+
 .container_body.care {
   font-size: 18px;
 }
 
-/* Left icons styles */
 .left-icons {
   width: 50px;
   background-color: #547a8a;
@@ -172,7 +183,6 @@ export default {
   flex-grow: 1;
 }
 
-/* Main content styles */
 .main-content {
   flex-grow: 1;
   display: flex;

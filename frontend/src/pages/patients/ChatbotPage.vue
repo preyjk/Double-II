@@ -2,10 +2,10 @@
   <div class="container_body">
     <el-container>
       <el-aside class="container_right">
-        <chat-sidebar></chat-sidebar>
+        <chat-sidebar @changeDarkMode="changeDarkMode()"></chat-sidebar>
       </el-aside>
       <el-main class="container_main">
-        <chat-panel></chat-panel>
+        <chat-panel :isDarkMode="isDarkMode"></chat-panel>
       </el-main>
     </el-container>
   </div>
@@ -21,9 +21,15 @@ export default {
     ChatSidebar,
   },
   data() {
-    return {};
+    return {
+      isDarkMode: false,
+    };
   },
-  methods: {},
+  methods: {
+    changeDarkMode() {
+      this.isDarkMode = !this.isDarkMode;
+    }
+  },
 };
 </script>
 
@@ -31,6 +37,7 @@ export default {
 .container_body {
   width: 100%;
 }
+
 .container_main {
   padding: 0;
 }
