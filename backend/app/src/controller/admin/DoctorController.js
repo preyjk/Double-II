@@ -7,48 +7,6 @@ const router = express.Router();
 /**
  * @openapi
  * /admin/doctors:
- *   get:
- *     summary: List doctors
- *     description: List doctors
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: firstname
- *         schema:
- *           type: string
- *         description: Filter by doctor's first name
- *       - in: query
- *         name: lastname
- *         schema:
- *           type: string
- *         description: Filter by doctor's last name
- *       - in: query
- *         name: workplace
- *         schema:
- *           type: string
- *         description: Filter by doctor's workplace
- *     responses:
- *       200:
- *         description: A list of doctors
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/DoctorDTO'
- *       500:
- *         description: Internal server error
- */
-router.get('/', asyncHandler(async (req, res) => {
-  const { firstname, lastname, workplace } = req.query;
-  const result = await DoctorService.listDoctors({ firstname, lastname, workplace });
-  return res.status(200).json(result.data);
-}));
-
-/**
- * @openapi
- * /admin/doctors:
  *   post:
  *     summary: Create a new doctor
  *     description: Create a new doctor

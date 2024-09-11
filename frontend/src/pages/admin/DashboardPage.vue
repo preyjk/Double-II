@@ -243,7 +243,6 @@ export default {
 }
 
 .dashboard-main {
-  background-color: aqua;
   padding: 0;
 }
 
