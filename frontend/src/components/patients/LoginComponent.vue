@@ -1,8 +1,6 @@
 <template>
   <div>
-    <span v-if="showSign" @click="showModal = true" class="sign-in-button"
-      >Sign In</span
-    >
+    <span v-if="showSign" @click="showModal = true" class="sign-in-button">Sign In</span>
     <AvatarComponent v-if="showAvatar" @logout="handleLogout" />
     <div v-if="showModal" class="modal-overlay">
       <div class="modal">
@@ -14,21 +12,12 @@
           </div>
           <div class="form-group">
             <label for="password">Password:</label>
-            <input
-              type="password"
-              id="password"
-              v-model="password"
-              required
-            />
+            <input type="password" id="password" v-model="password" required />
           </div>
           <div class="form-actions">
             <button type="submit" class="submit-button">Submit</button>
             <span v-if="isLoading" class="loading-spinner"></span>
-            <button
-              type="button"
-              @click="showModal = false"
-              class="cancel-button"
-            >
+            <button type="button" @click="showModal = false" class="cancel-button">
               Cancel
             </button>
 
@@ -40,23 +29,22 @@
             <a href="#" @click.prevent="switchToRegister">Register here</a>
           </p>
         </form>
+        <!-- login with google -->
+        <button class="google-login-button" @click="loginWithGoogle">
+          <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" class="google-logo" />
+          Login with Google
+        </button>
       </div>
     </div>
 
     <!-- Register Component -->
     <transition name="fade" mode="out-in">
-      <RegisterComponent
-        v-if="showRegisterModal"
-        @close="showRegisterModal = false"
-      />
+      <RegisterComponent v-if="showRegisterModal" @close="showRegisterModal = false" />
     </transition>
 
     <!-- Forget Password Component -->
     <transition name="fade" mode="out-in">
-      <ForgetPasswordComponent
-        v-if="showForgetPasswordModal"
-        @close="showForgetPasswordModal = false"
-      />
+      <ForgetPasswordComponent v-if="showForgetPasswordModal" @close="showForgetPasswordModal = false" />
     </transition>
   </div>
 </template>
@@ -64,7 +52,7 @@
 <script>
 import RegisterComponent from "@/components/patients/RegisterComponent.vue";
 import AvatarComponent from "@/components/patients/AvatarComponent.vue";
-import ForgetPasswordComponent from "@/components/patients/ForgetPasswordComponent.vue"; 
+import ForgetPasswordComponent from "@/components/patients/ForgetPasswordComponent.vue";
 import { login } from "@/api/modules/user.js";
 
 export default {
@@ -74,7 +62,7 @@ export default {
       showSign: true,
       showAvatar: false,
       showRegisterModal: false,
-      showForgetPasswordModal: false, 
+      showForgetPasswordModal: false,
       email: "",
       password: "",
       token: "",
@@ -84,7 +72,7 @@ export default {
   components: {
     AvatarComponent,
     RegisterComponent,
-    ForgetPasswordComponent, 
+    ForgetPasswordComponent,
   },
   created() {
     const savedToken = localStorage.getItem("authToken");
@@ -125,7 +113,7 @@ export default {
     },
     switchToForgetPassword() {
       this.showModal = false;
-      this.showForgetPasswordModal = true; 
+      this.showForgetPasswordModal = true;
     },
     handleLogout() {
       localStorage.setItem("authToken", "");
@@ -134,7 +122,10 @@ export default {
     },
     showHelp() {
       alert("Please contact support for assistance.");
-    }
+    },
+    loginWithGoogle() {
+      window.location.href = `${import.meta.env.VITE_API_ENDPOINT}/public/auth/google/login`;
+    },
   },
 };
 </script>
@@ -162,7 +153,7 @@ export default {
   position: relative;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 4px solid transparent; 
+  border: 4px solid transparent;
   overflow: hidden;
 }
 
@@ -175,15 +166,13 @@ export default {
   bottom: 0;
   border-radius: 15px;
   background: none;
-  border: 5px solid transparent; 
-  border-image: repeating-conic-gradient(
-    from var(--a),
-    #accfd8 0%,
-    #accfd8 10%,
-    transparent 10%,
-    transparent 80%,
-    #accfd8 100%
-  ) 1;
+  border: 5px solid transparent;
+  border-image: repeating-conic-gradient(from var(--a),
+      #accfd8 0%,
+      #accfd8 10%,
+      transparent 10%,
+      transparent 80%,
+      #accfd8 100%) 1;
   animation: animate 2.5s linear infinite;
   pointer-events: none;
 }
@@ -198,10 +187,12 @@ export default {
   0% {
     --a: 0deg;
   }
+
   100% {
     --a: 360deg;
   }
 }
+
 .sign-in-button {
   cursor: pointer;
 }
@@ -228,7 +219,7 @@ export default {
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px); 
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .form-actions {
@@ -258,7 +249,8 @@ export default {
 .toggle-text {
   margin-top: 15px;
   display: flex;
-  justify-content: space-between; /* Moves links to the edges */
+  justify-content: space-between;
+  /* Moves links to the edges */
   align-items: center;
 }
 
@@ -288,20 +280,24 @@ export default {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
 
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s ease;
 }
 
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 
-.slide-fade-enter-active, .slide-fade-leave-active {
+.slide-fade-enter-active,
+.slide-fade-leave-active {
   transition: all 0.5s ease;
 }
 
@@ -313,5 +309,28 @@ export default {
 .slide-fade-leave-to {
   opacity: 0;
   transform: translateX(100%);
+}
+
+.google-login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4285f4;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 10px;
+  width: 100%;
+  padding: 5px;
+  margin-top: 10px;
+}
+
+.google-login-button:hover {
+  background-color: #357ae8;
+}
+
+.google-logo {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
 }
 </style>

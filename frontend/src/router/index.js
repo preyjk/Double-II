@@ -10,6 +10,7 @@ import ConfirmationPage from "@/pages/patients/ConfirmationPage.vue";
 import MyBooking from "@/pages/patients/MyBooking.vue";
 import VerifyEmailPage from "@/pages/patients/VerifyEmailPage.vue";
 import ResetPasswordPage from "@/pages/patients/ResetPasswordPage.vue";
+import GoogleLoginPage from "../pages/patients/GoogleLoginPage.vue";
 
 const routes = [
   /*
@@ -72,6 +73,11 @@ const routes = [
     path: "/reset-password",
     name: "ResetPasswordPage",
     component : ResetPasswordPage,
+  },
+  {
+    path: "/login/google/callback",
+    name: "GoogleLogin",
+    component: GoogleLoginPage,
   },
   
   /*

@@ -231,6 +231,51 @@ class AuthService {
     }, '1d');
     return EmailService.sendResetPasswordEmail({ to: emailAddress, token });
   }
+
+
+  static getGoogleAuthUrl() {
+    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${process.env.GOOGLE_REDIRECT_URI}&response_type=code&scope=openid%20email%20profile`;
+    return googleAuthUrl;
+  }
+
+  static async googleLogin(code) {
+    const response = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `code=${code}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=${process.env.GOOGLE_REDIRECT_URI}&grant_type=authorization_code`
+    });
+    const data = await response.json();
+    const googleUser = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${data.access_token}`);
+    const userData = await googleUser.json();
+    const openid = userData.id;
+    const indexResult = await dynamo.send(UserIndex.findById(
+      UserIndex.generateId({ Provider: 'google', ProviderId: openid })
+    ));
+    let index = indexResult.Item;
+    if (!index) {
+      index = await AuthService.signupWithGoogle({ openid });
+    }
+    const token = AuthService.generateToken({ id: index.UserId });
+    return { success: true, token }; 
+  }
+
+  static async signupWithGoogle({ openid }) {
+    const createUserCommand = User.create({
+      Providers: [{ Provider: 'google', ProviderId: openid }],
+      Roles: ['user'],
+      Active: true
+    });
+    const createUserIndexCommand = UserIndex.create({
+      Provider: 'google',
+      ProviderId: openid,
+      UserId: createUserCommand.input.Item.Id
+    });
+    await new TransactionBuilder()
+      .add(createUserIndexCommand)
+      .add(createUserCommand)
+      .execute();
+    return createUserCommand.input.Item;
+  }
 }
 
 export default AuthService;
