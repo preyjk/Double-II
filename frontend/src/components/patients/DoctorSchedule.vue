@@ -2,9 +2,9 @@
   <div class="schedule-container">
     <el-calendar @input="handleDatePick">
       <template #date-cell="{ data }">
-        <p :class="data.isSelected ? 'is-selected' : ''">
+        <p :class="isAvailableDate(data.day) ? 'is-selected' : ''">
           {{ data.day.split("-").slice(1).join("-") }}
-          {{ data.isSelected ? "✔️" : "" }}
+          {{ isAvailableDate(data.day) ? "✔️" : "" }}
         </p>
       </template>
     </el-calendar>
@@ -33,14 +33,14 @@
       </div>
     </div>
 
-    <div v-if="!loading && !error && !filteredSchedules.length">
+    <div v-if="!loading && !error && !groupedSchedules.length">
       No available time slots for the selected date.
     </div>
   </div>
 </template>
 
 <script>
-import { getSchedules_public } from "@/api/modules/appointment.js";
+import { getAvailableDates_public, getAvailableTimeslots_public } from "@/api/modules/appointment.js";
 
 export default {
   props: {
@@ -56,24 +56,19 @@ export default {
   data() {
     return {
       schedules: [],
+      availableDates: [],
       loading: false,
       error: false,
       selectedDate: this.getTodayDate(),
     };
   },
   computed: {
-    filteredSchedules() {
-      return this.schedules.filter(
-        (schedule) => schedule.Date === this.selectedDate
-      );
-    },
     groupedSchedules() {
       const groups = {};
-
-      this.filteredSchedules
+      this.schedules
         .sort((a, b) => {
-          const timeA = new Date(`${a.Date}T${a.StartTime}`);
-          const timeB = new Date(`${b.Date}T${b.StartTime}`);
+          const timeA = new Date(`${this.selectedDate}T${a.StartTime}`);
+          const timeB = new Date(`${this.selectedDate}T${b.StartTime}`);
           return timeA - timeB;
         })
         .forEach((schedule) => {
@@ -83,57 +78,70 @@ export default {
           }
           groups[hour].push(schedule);
         });
-
-      const sortedGroups = Object.keys(groups)
-        .sort((a, b) => a - b)
-        .reduce((acc, key) => {
-          acc[key] = groups[key];
-          return acc;
-        }, {});
-
-      return sortedGroups;
+      return groups;
     },
     formattedDate() {
       const options = { year: "numeric", month: "long", day: "numeric" };
       return new Date(this.selectedDate).toLocaleDateString(undefined, options);
     },
   },
-
   methods: {
-    fetchSchedules() {
+    fetchAvailableDates() {
       const startDate = this.getTodayDate();
       const endDate = this.getEndDate();
 
       this.loading = true;
       this.error = false;
 
-      getSchedules_public(this.doctorId, startDate, endDate)
+      getAvailableDates_public(this.doctorId, startDate, endDate)
         .then((data) => {
-          this.schedules = data.sort((a, b) => {
-            const timeA = new Date(`${a.Date}T${a.StartTime}`);
-            const timeB = new Date(`${b.Date}T${b.StartTime}`);
-            return timeA - timeB;
-          });
+          this.availableDates = data;
           this.loading = false;
         })
         .catch((error) => {
-          console.error("Failed to fetch schedules:", error);
+          console.error("Failed to fetch available dates:", error);
           this.error = true;
           this.loading = false;
         });
     },
+
+    fetchAvailableTimeslots(date) {
+      this.loading = true;
+      this.error = false;
+
+      getAvailableTimeslots_public(this.doctorId, date)
+        .then((data) => {
+          this.schedules = data;
+          this.loading = false;
+        })
+        .catch((error) => {
+          console.error("Failed to fetch available timeslots:", error);
+          this.error = true;
+          this.loading = false;
+        });
+    },
+
     getTodayDate() {
       const today = new Date();
       return today.toISOString().split("T")[0];
     },
+
     getEndDate() {
       const today = new Date();
       today.setDate(today.getDate() + 28);
       return today.toISOString().split("T")[0];
     },
+
     handleDatePick(date) {
-      this.selectedDate = date.toISOString().split("T")[0];
+      const selectedDate = date.toISOString().split("T")[0];
+      this.selectedDate = selectedDate;
+      this.fetchAvailableTimeslots(selectedDate);
     },
+
+    isAvailableDate(date) {
+      return this.availableDates.includes(date);
+    },
+
     selectTimeSlot(schedule) {
       const selectedSchedule = {
         ...schedule,
@@ -142,8 +150,10 @@ export default {
       this.$emit("scheduleSelected", selectedSchedule);
     },
   },
+
   mounted() {
-    this.fetchSchedules();
+    this.fetchAvailableDates();
+    this.fetchAvailableTimeslots(this.selectedDate);
   },
 };
 </script>

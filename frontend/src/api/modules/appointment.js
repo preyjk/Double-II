@@ -71,22 +71,43 @@ export const cancelAppointment_public = async function (formData) {
   }
 };
 
-export const getSchedules_public = async function (doctorId, startDate, endDate) {
+export const getAvailableDates_public = async function (doctorId, startDate, endDate) {
   const config = {
-    url: "/admin/schedules",
+    url: "/public/schedules/available-dates",
     method: "get",
     params: {
-      doctorId,
-      startDate,
-      endDate,
+      doctorId: doctorId,
+      startDate: startDate,
+      endDate: endDate,
     },
   };
 
   try {
     const res = await request(config);
+    console.log("Available dates fetched successfully:", res.data);
     return res.data;
   } catch (err) {
-    console.error("Error fetching schedules:", err);
+    console.error("Error fetching available dates:", err);
+    throw err;
+  }
+};
+
+export const getAvailableTimeslots_public = async function (doctorId, date) {
+  const config = {
+    url: "/public/schedules/available-timeslots",
+    method: "get",
+    params: {
+      doctorId: doctorId,
+      date: date,
+    },
+  };
+
+  try {
+    const res = await request(config);
+    console.log("Available timeslots fetched successfully:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("Error fetching available timeslots:", err);
     throw err;
   }
 };
