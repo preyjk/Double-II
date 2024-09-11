@@ -16,6 +16,8 @@ app.use((err, req, res, next) => {
 describe('User Authentication API', () => {
   let email = `testuser_${Math.floor(Math.random() * 10000)}`;
   let password = 'testpassword';
+  const firstName = 'Test';
+  const lastName = 'User';
   let newPassword = 'newpassword';
   let resetPassword = 'resetedpassword';
   let userId;
@@ -31,18 +33,24 @@ describe('User Authentication API', () => {
     const sendVerificationEmailSpy = jest.spyOn(EmailService, 'sendVerificationEmail');
     const response = await request(app)
       .post('/public/auth/signup')
-      .send({ email, password })
+      .send({ email, password, firstName, lastName })
       .expect(200);
 
     expect(response.text).toBe('"Signup successful"');
     expect(sendVerificationEmailSpy).toHaveBeenCalled();
     emailVerificationToken = sendVerificationEmailSpy.mock.calls[0][0].token;
+
+    const userList = (await UserService.listUsers()).data;
+    const user = userList.find((user) => user.Providers[0].ProviderId === email);
+    expect(user).not.toBeUndefined();
+    expect(user).toHaveProperty('FirstName', firstName);
+    expect(user).toHaveProperty('LastName', lastName);
   });
 
   it('should not sign up an existing user', async () => {
     const response = await request(app)
       .post('/public/auth/signup')
-      .send({ email, password })
+      .send({ email, password, firstName, lastName })
       .expect(400);
 
     expect(response.text).toBe('"User already exists"');

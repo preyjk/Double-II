@@ -73,7 +73,7 @@ describe('Admin API End-to-End Tests', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect('Content-Type', /json/)
       .expect(200);
-    const {Id: doctorId, Email: email}  = doctorRes.body[0];
+    const {Id: doctorId, Email: email, FirstName, LastName}  = doctorRes.body[0];
 
     const sendInitialPasswordEmailSpy = jest.spyOn(EmailService, 'sendInitialPasswordEmail');
     await request(app)
@@ -84,6 +84,15 @@ describe('Admin API End-to-End Tests', () => {
 
     expect(sendInitialPasswordEmailSpy).toHaveBeenCalled();
     const [[{ password: interceptedPassword }]] = sendInitialPasswordEmailSpy.mock.calls;
+    
+    const userList = (await request(app)
+      .get('/admin/users')
+      .set('Authorization', `Bearer ${token}`)
+      .expect('Content-Type', /json/)
+      .expect(200)).body;
+    const user = userList.find(user => user.Id === doctorId);
+    expect(user).toHaveProperty('FirstName', FirstName);
+    expect(user).toHaveProperty('LastName', LastName);
     
     await request(app)
       .post('/public/auth/login')

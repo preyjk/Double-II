@@ -234,6 +234,12 @@
  *         Id:
  *           type: string
  *           description: The ID of the user
+ *         FirstName:
+ *           type: string
+ *           description: The first name of the user
+ *         LastName:
+ *           type: string
+ *           description: The last name of the user
  *         Roles:
  *           type: array
  *           description: The roles of the user
