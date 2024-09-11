@@ -46,41 +46,19 @@
 <script>
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
-import { getAppointments_user, cancelAppointment_user } from "@/api/modules/appointment.js";
+import { mapActions, mapState } from "vuex";
 
 export default {
   components: { HeaderComponent, FooterComponent },
   name: "AppointmentList",
-  data() {
-    return {
-      bookings: [],
-    };
+  computed: {
+    ...mapState(['bookings']),
   },
   created() {
-    this.fetchAppointments();
+    this.getBookings();
   },
   methods: {
-    fetchAppointments() {
-      getAppointments_user()
-        .then((data) => {
-          this.bookings = data;
-        })
-        .catch((error) => {
-          console.error("Error fetching appointments:", error);
-        });
-    },
-    cancelBooking(index) {
-      const appointmentId = this.bookings[index].Id;
-
-      cancelAppointment_user(appointmentId)
-        .then(() => {
-          this.bookings[index].Status = "cancelled";
-          console.log("Appointment canceled successfully");
-        })
-        .catch((error) => {
-          console.error("Error canceling appointment:", error);
-        });
-    },
+    ...mapActions(['getBookings', 'cancelBooking']),
   },
 };
 </script>

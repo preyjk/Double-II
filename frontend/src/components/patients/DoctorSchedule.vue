@@ -111,7 +111,7 @@ export default {
 
       getAvailableTimeslots_public(this.doctorId, date)
         .then((data) => {
-          this.schedules = data;
+          this.schedules = data.filter(schedule => schedule.Status === 'available');
           this.loading = false;
         })
         .catch((error) => {
