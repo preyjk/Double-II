@@ -28,6 +28,15 @@ Parameters:
   WebBaseUrl:
     Type: String
     Description: "Base URL of the web app"
+  GoogleClientId:
+    Type: String
+    Description: "Google Client ID"
+  GoogleClientSecret:
+    Type: String
+    Description: "Google Client Secret"
+  GoogleRedirectUri:
+    Type: String
+    Description: "Google Redirect URI"
 
 Globals:
   Function:
@@ -209,6 +218,9 @@ Resources:
           SES_ARN: !Ref SesArn
           WEB_BASE_URL: !Ref WebBaseUrl
           DISTRIBUTED_LOCK_TABLE_NAME: !Ref DistributedLockTable
+          GOOGLE_CLIENT_ID: !Ref GoogleClientId
+          GOOGLE_CLIENT_SECRET: !Ref GoogleClientSecret
+          GOOGLE_REDIRECT_URI: !Ref GoogleRedirectUri
       Events:
         Root:
           Type: HttpApi

@@ -17,6 +17,9 @@
  *         Specialty:
  *           type: string
  *           description: The specialty of the doctor
+ *         Detail:
+ *           type: string
+ *           description: The detail of the doctor
  *         Phone:
  *           type: string
  *           description: The phone number of the doctor
