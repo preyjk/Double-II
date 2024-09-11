@@ -1051,7 +1051,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateAppointmentDTO"
+                "$ref": "#/components/schemas/CreateAppointmentDTO"
               }
             }
           }
@@ -2045,7 +2045,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateAppointmentDTO"
+                "$ref": "#/components/schemas/CreateAppointmentDTO"
               }
             }
           }
