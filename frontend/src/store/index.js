@@ -1,11 +1,11 @@
 import { createStore } from "vuex";
-import { getAppointments_user, createAppointment_user } from "@/api/modules/appointment.js";
+import { getAppointments_user, createAppointment_user, cancelAppointment_user } from "@/api/modules/appointment.js";
 
 export default createStore({
   state: {
     bookings: [],
     tempBooking: {},
-    email: localStorage.getItem("email") || "", 
+    email: localStorage.getItem("email") || "",
   },
   mutations: {
     ADD_BOOKING(state, booking) {
@@ -25,8 +25,11 @@ export default createStore({
     },
     SET_EMAIL(state, email) {
       state.email = email;
-      localStorage.setItem("email", email); 
+      localStorage.setItem("email", email);
     },
+    CANCEL_BOOKING(state, index) {
+      state.bookings[index].Status = "cancelled";
+    }
   },
   actions: {
     async addBooking({ commit }, booking) {
@@ -34,7 +37,6 @@ export default createStore({
         const token = localStorage.getItem("authToken");
 
         const formData = {
-          Id: "string",
           FirstName: booking.firstName,
           LastName: booking.lastName,
           DateOfBirth: booking.dob,
@@ -49,8 +51,10 @@ export default createStore({
           Status: "pending",
           Email: booking.email,
           Phone: booking.phone,
-          Location: booking.Location,
+          Address: booking.Location,
         };
+        console.log("token", token);
+        console.log("formData", formData);
 
         const response = await createAppointment_user(formData, token);
 
@@ -68,6 +72,20 @@ export default createStore({
         commit("SET_BOOKINGS", bookings);
       } catch (err) {
         console.error("Error fetching bookings:", err);
+        throw err;
+      }
+    },
+
+    async cancelBooking({ commit, state }, index) {
+      try {
+        const appointmentId = state.bookings[index].Id;
+
+        await cancelAppointment_user(appointmentId);
+
+        commit("CANCEL_BOOKING", index);
+        console.log("Appointment canceled successfully");
+      } catch (err) {
+        console.error("Error canceling appointment:", err);
         throw err;
       }
     },

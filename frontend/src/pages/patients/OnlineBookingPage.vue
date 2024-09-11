@@ -17,7 +17,6 @@
       <div class="main_content">
         <GPSelectForm
           v-if="!isSelectedDoctor & !isScheduleChosen"
-          :clinicId="clinicId"
           :clinicName="clinicName"
           @doctorSelected="handleDoctorSelected"
         />
@@ -62,7 +61,6 @@ export default {
       isShowGPS: true,
       isShowGPSResponse: false,
       isShowBookingForm: false,
-      clinicId: "",
       clinicName: "",
       isSelectedDoctor: false,
       selectedDoctor: {},
@@ -101,7 +99,7 @@ export default {
       this.selectedDoctor.scheduleId = schedule.Id;
     },
     handleSubmitForm(booking) {
-      this.$store.commit('set_tempBooking', booking);
+      this.$store.commit("set_tempBooking", booking);
       this.addBooking(booking)
         .then(() => {
           this.$router.push({
