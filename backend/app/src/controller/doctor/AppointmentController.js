@@ -102,7 +102,7 @@ router.get('/:appointmentId', asyncHandler(async (req, res) => {
  *       content:
  *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/UpdateAppointmentDTO'
+ *             $ref: '#/components/schemas/CreateAppointmentDTO'
  *     responses:
  *       '200':
  *          description: return the updated appointment

@@ -1,6 +1,7 @@
 import json
 import urllib.parse
 import urllib.request
+import re
 
 BASE_URL = "https://api.gpbooking.icu"
 
@@ -19,7 +20,10 @@ def lambda_handler(event, context):
     # Extract request body properties into a dictionary
     requestBody_dict = {prop['name'][2:] if prop['name'].startswith('s_') else prop['name']: prop['value'] for prop in requestBodyContent}
 
-    url = f"{BASE_URL}{apiPath}"
+    # Replace placeholders in apiPath with values from params_dict
+    converted_apiPath = re.sub(r'\{(\w+)\}', lambda match: params_dict.get(match.group(1), match.group(0)), apiPath)
+
+    url = f"{BASE_URL}{converted_apiPath}"
     
     headers = {'Content-Type': 'application/json'}
     
@@ -58,7 +62,6 @@ def lambda_handler(event, context):
     
     if response_data:
         body = json.loads(response_data)
-        body = convert_response_data(apiPath, body)
     responseBody = {
         "application/json": {
             "body": body if response_data else "No Content"
@@ -77,15 +80,3 @@ def lambda_handler(event, context):
     print("Response: {}".format(api_response))
 
     return api_response
-
-
-
-def convert_response_data(apiPath, data):
-    response_data = data
-    if apiPath == "/doctors":
-        transformed_data = []
-        for item in data:
-            transformed_item = {f"Doctor{key}": value for key, value in item.items()}
-            transformed_data.append(transformed_item)
-        response_data = transformed_data
-    return response_data

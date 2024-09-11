@@ -112,7 +112,7 @@ router.post('/', asyncHandler(async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Appointment'
+ *               $ref: '#/components/schemas/AppointmentDTO'
  *       '400':
  *         description: The appointment is linked to a user, please login to reschedule
  *       '500':
@@ -171,7 +171,7 @@ router.post('/reschedule', asyncHandler(async (req, res) => {
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/Appointment'
+ *               $ref: '#/components/schemas/AppointmentDTO'
  *       '400':
  *         description: Bad request
  *       '500':
