@@ -15,11 +15,7 @@
         </div>
         <div class="chat-body">
           <!-- Deep Chat Component with Intro Panel -->
-          <deep-chat
-            style="border: none; width: 330px; height: 420px"
-            id="chat-element"
-            :connect="chatConnect"
-          >
+          <deep-chat style="border: none; width: 330px; height: 420px" id="chat-element" :connect="chatConnect">
             <div style="display: none">
               <div class="custom-button">
                 <div class="custom-button-text">"I want to book a doctor"</div>
@@ -57,7 +53,7 @@ export default {
             if (token) headers = { "x-access-token": token, ...headers };
             const prompt = body.messages[0]?.text || "";
             const { data, postData } = usePost(
-              "https://api.gpbooking.icu/public/chatbot/"
+              "/public/chatbot/"
             );
             await postData({ prompt }, headers);
             console.log("chat widget session id:", data.value.sessionId);
@@ -81,9 +77,7 @@ export default {
         events: {
           click: (event) => {
             const text = event.target.children[0].innerText;
-            chatElementRef.submitUserMessage(
-              text.substring(1, text.length - 1)
-            );
+            chatElementRef.submitUserMessage({ text: text.substring(1, text.length - 1) });
           },
         },
         styles: {
@@ -186,6 +180,7 @@ export default {
 }
 
 @keyframes bounce {
+
   0%,
   100% {
     transform: translateY(0);
