@@ -157,7 +157,6 @@ Resources:
   DistributedLockTable:
     Type: AWS::DynamoDB::Table
     Properties:
-      TableName: DistributedLock
       AttributeDefinitions:
         - AttributeName: Id
           AttributeType: S

@@ -1,0 +1,885 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "GP Appointment API",
+    "version": "1.0.0",
+    "description": "API to manage appointments with doctors"
+  },
+  "servers": [
+    {
+      "url": "https://api.gpbooking.icu"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "CreateDoctorDTO": {
+        "type": "object",
+        "properties": {
+          "FirstName": {
+            "type": "string",
+            "description": "The first name of the doctor"
+          },
+          "LastName": {
+            "type": "string",
+            "description": "The last name of the doctor"
+          },
+          "Workplace": {
+            "type": "string",
+            "description": "The workplace of the doctor"
+          },
+          "Specialty": {
+            "type": "string",
+            "description": "The specialty of the doctor"
+          },
+          "Phone": {
+            "type": "string",
+            "description": "The phone number of the doctor"
+          },
+          "Email": {
+            "type": "string",
+            "description": "The email of the doctor"
+          },
+          "Address": {
+            "type": "string",
+            "description": "The address where the doctor works"
+          }
+        }
+      },
+      "DoctorProperties": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreateDoctorDTO"
+          }
+        ]
+      },
+      "UpdateDoctorDTO": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DoctorProperties"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "Version": {
+                "type": "integer",
+                "description": "The version of the record"
+              }
+            }
+          }
+        ]
+      },
+      "DoctorDTO": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DoctorProperties"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string",
+                "description": "The ID of the doctor"
+              },
+              "Version": {
+                "type": "integer",
+                "description": "The version of the record"
+              }
+            }
+          }
+        ]
+      },
+      "CreateScheduleDTO": {
+        "type": "object",
+        "properties": {
+          "DoctorId": {
+            "type": "string",
+            "description": "The ID of the doctor"
+          },
+          "DoctorName": {
+            "type": "string",
+            "description": "The name of the doctor"
+          },
+          "Date": {
+            "type": "string",
+            "format": "date",
+            "description": "The date of the schedule"
+          },
+          "StartTime": {
+            "type": "string",
+            "format": "time",
+            "description": "The start time of the schedule"
+          },
+          "EndTime": {
+            "type": "string",
+            "format": "time",
+            "description": "The end time of the schedule"
+          }
+        }
+      },
+      "ScheduleProperties": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreateScheduleDTO"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "Status": {
+                "type": "string",
+                "description": "The status of the schedule",
+                "enum": [
+                  "available",
+                  "occupied"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "UpdateScheduleDTO": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ScheduleProperties"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "Version": {
+                "type": "integer",
+                "description": "The version of the record"
+              }
+            }
+          }
+        ]
+      },
+      "ScheduleDTO": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ScheduleProperties"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string",
+                "description": "The ID of the schedule"
+              },
+              "Version": {
+                "type": "integer",
+                "description": "The version of the record"
+              }
+            }
+          }
+        ]
+      },
+      "CreatePatientDTO": {
+        "type": "object",
+        "properties": {
+          "Name": {
+            "type": "string",
+            "description": "Name of the patient"
+          },
+          "Gender": {
+            "type": "string",
+            "description": "Gender of the patient"
+          },
+          "Age": {
+            "type": "integer",
+            "description": "Age of the patient"
+          },
+          "Phone": {
+            "type": "string",
+            "description": "Contact phone number of the patient"
+          },
+          "Email": {
+            "type": "string",
+            "description": "Email address of the patient"
+          },
+          "Address": {
+            "type": "string",
+            "description": "Address of the patient"
+          }
+        }
+      },
+      "PatientProperties": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreatePatientDTO"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "UserId": {
+                "type": "string",
+                "description": "The ID of the user"
+              }
+            }
+          }
+        ]
+      },
+      "UpdatePatientDTO": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PatientProperties"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "Version": {
+                "type": "integer",
+                "description": "The version of the record"
+              }
+            }
+          }
+        ]
+      },
+      "PatientDTO": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PatientProperties"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string",
+                "description": "The ID of the patient"
+              },
+              "Version": {
+                "type": "integer",
+                "description": "The version of the record"
+              }
+            }
+          }
+        ]
+      },
+      "CreateAppointmentDTO": {
+        "type": "object",
+        "properties": {
+          "ScheduleId": {
+            "type": "string",
+            "description": "The ID of the schedule"
+          },
+          "FirstName": {
+            "type": "string",
+            "description": "The first name of the patient"
+          },
+          "LastName": {
+            "type": "string",
+            "description": "The last name of the patient"
+          },
+          "DateOfBirth": {
+            "type": "string",
+            "format": "date",
+            "description": "The date of birth of the patient"
+          },
+          "Phone": {
+            "type": "string",
+            "description": "The phone number of the patient"
+          },
+          "Email": {
+            "type": "string",
+            "description": "The email of the patient"
+          },
+          "Address": {
+            "type": "string",
+            "description": "The address of the patient"
+          }
+        }
+      },
+      "AppointmentProperties": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/CreateAppointmentDTO"
+          },
+          {
+            "$ref": "#/components/schemas/CreateScheduleDTO"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "BookingReference": {
+                "type": "string",
+                "description": "The booking reference of the appointment"
+              },
+              "Status": {
+                "type": "string",
+                "description": "The status of the appointment",
+                "enum": [
+                  "active",
+                  "cancelled",
+                  "completed"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "AppointmentDTO": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AppointmentProperties"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "Id": {
+                "type": "string",
+                "description": "The ID of the appointment"
+              },
+              "Version": {
+                "type": "integer",
+                "description": "The version of the record"
+              }
+            }
+          }
+        ]
+      },
+      "UserDTO": {
+        "type": "object",
+        "properties": {
+          "Id": {
+            "type": "string",
+            "description": "The ID of the user"
+          },
+          "Roles": {
+            "type": "array",
+            "description": "The roles of the user",
+            "items": {
+              "type": "string"
+            }
+          },
+          "Providers": {
+            "type": "array",
+            "description": "The providers of the user",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Provider": {
+                  "type": "string"
+                },
+                "ProviderId": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "Version": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/user/appointments": {
+      "get": {
+        "summary": "List appointments",
+        "description": "List appointments",
+        "operationId": "listAppointments",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "doctorId",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "The doctor ID"
+          },
+          {
+            "in": "query",
+            "name": "startDate",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "The start date of the appointment"
+          },
+          {
+            "in": "query",
+            "name": "endDate",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "The end date of the appointment"
+          },
+          {
+            "name": "x_access_token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Access token for authentication"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return a list of appointments based on the query"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new appointment",
+        "description": "Create a new appointment",
+        "operationId": "createAppointment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAppointmentDTO",
+                "required": [
+                  "ScheduleId",
+                  "LastName",
+                  "DateOfBirth",
+                  "Email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "return the created appointment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          }
+        },
+        "parameters": [
+          {
+            "name": "x_access_token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Access token for authentication"
+          }
+        ]
+      }
+    },
+    "/user/appointments/{appointmentId}": {
+      "get": {
+        "summary": "Get an appointment by ID",
+        "description": "Get an appointment by ID",
+        "operationId": "getAppointmentById",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appointmentId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The appointment ID"
+          },
+          {
+            "name": "x_access_token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Access token for authentication"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return the appointment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an appointment",
+        "description": "Update an appointment",
+        "operationId": "updateAppointment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appointmentId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The appointment ID"
+          },
+          {
+            "name": "x_access_token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Access token for authentication"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAppointmentDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "return the updated appointment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/appointments/{appointmentId}/reschedule": {
+      "post": {
+        "summary": "Reschedule an appointment",
+        "description": "Reschedule an appointment",
+        "operationId": "rescheduleAppointment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appointmentId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The appointment ID"
+          },
+          {
+            "name": "x_access_token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Access token for authentication"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "ScheduleId"
+                ],
+                "properties": {
+                  "ScheduleId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Appointment rescheduled successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentDTO"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The appointment is linked to a user, please login to reschedule"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/user/appointments/{appointmentId}/cancel": {
+      "post": {
+        "summary": "Cancel an appointment",
+        "description": "Cancel an appointment",
+        "operationId": "cancelAppointment",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "appointmentId",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The appointment ID"
+          },
+          {
+            "name": "x_access_token",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Access token for authentication"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "return the cancelled appointment",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AppointmentDTO"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/public/doctors": {
+      "get": {
+        "summary": "List doctors",
+        "description": "List doctors",
+        "operationId": "listDoctors",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "firstname",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by doctor's first name"
+          },
+          {
+            "in": "query",
+            "name": "lastname",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by doctor's last name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of doctors",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DoctorDTO"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/public/schedules/available-dates": {
+      "get": {
+        "summary": "Get available dates for a doctor",
+        "description": "Get available dates for a doctor",
+        "operationId": "getAvailableDates",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "doctorId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the doctor"
+          },
+          {
+            "in": "query",
+            "name": "startDate",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "The start date to filter available dates"
+          },
+          {
+            "in": "query",
+            "name": "endDate",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "The end date to filter available dates"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of available dates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/public/schedules/available-timeslots": {
+      "get": {
+        "summary": "Get available timeslots for a doctor on a specific date",
+        "description": "Get available timeslots for a doctor on a specific date",
+        "operationId": "getAvailableTimeslots",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "doctorId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the doctor"
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "The date to filter available timeslots"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A list of available timeslots",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Id": {
+                        "type": "string"
+                      },
+                      "StartTime": {
+                        "type": "string",
+                        "format": "time"
+                      },
+                      "EndTime": {
+                        "type": "string",
+                        "format": "time"
+                      },
+                      "Status": {
+                        "type": "string",
+                        "enum": [
+                          "available",
+                          "occupied"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}

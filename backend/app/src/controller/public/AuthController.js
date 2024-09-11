@@ -231,4 +231,53 @@ router.post('/forgot-password', asyncHandler(async (req, res) => {
   }
 }));
 
+/**
+ * @openapi
+ * /public/auth/google/login:
+ *   get:
+ *     summary: Google login
+ *     description: Google login
+ *     responses:
+ *       '200':
+ *         description: Redirect to Google login page
+ */
+router.get('/google/login', asyncHandler(async (req, res) => {
+  res.redirect(AuthService.getGoogleAuthUrl());
+}));
+
+/**
+ * @openapi
+ * /public/auth/google/token:
+ *   get:
+ *     summary: Google token
+ *     description: Google token
+ *     parameters:
+ *       - in: query
+ *         name: code
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       '200':
+ *         description: Google login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       '401':
+ *         description: Google login failed
+ */
+router.get('/google/token', asyncHandler(async (req, res) => {
+  const { code } = req.query;
+  const result = await AuthService.googleLogin(code);
+  if (result.success) {
+    res.status(200).json({ token: result.token });
+  } else {
+    res.status(401).json(result.message);
+  }
+}));
+
 export default router;
