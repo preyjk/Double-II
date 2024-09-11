@@ -34,7 +34,6 @@ export default createStore({
         const token = localStorage.getItem("authToken");
 
         const formData = {
-          Id: "string",
           FirstName: booking.firstName,
           LastName: booking.lastName,
           DateOfBirth: booking.dob,
@@ -49,9 +48,11 @@ export default createStore({
           Status: "pending",
           Email: booking.email,
           Phone: booking.phone,
-          Location: booking.Location,
+          Address: booking.Location,
         };
-
+        console.log("token",token);
+        console.log("formData",formData);
+        
         const response = await createAppointment_user(formData, token);
 
         commit("ADD_BOOKING", response);
