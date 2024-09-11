@@ -1,344 +1,420 @@
 export const doctors = [
-    {
-      "FirstName": "Alice",
-      "LastName": "Johnson",
-      "Workplace": "FRW Quaymed Wynyard",
-      "Speciality": "Family Medicine",
-      "Email": "alice.johnson@example.com",
-      "Phone": "+64 980 123 4567",
-      "Address": "58 Gaunt Street Auckland Central Auckland 1010"
-    },
-    {
-      "FirstName": "Bob",
-      "LastName": "Martin",
-      "Workplace": "FRW Quaymed Wynyard",
-      "Speciality": "Pediatrics",
-      "Email": "bob.martin@example.com",
-      "Phone": "+64 980 123 4568",
-      "Address": "58 Gaunt Street Auckland Central Auckland 1010"
-    },
-    {
-      "FirstName": "Tiffany",
-      "LastName": "Lopez",
-      "Workplace": "FRW Quaymed Wynyard",
-      "Speciality": "Production designer, theatre/television/film",
-      "Email": "uking@garcia.com",
-      "Phone": "+64 980 123 4568",
-      "Address": "58 Gaunt Street Auckland Central Auckland 1010"
-    },
-    {
-      "FirstName": "John",
-      "LastName": "Villarreal",
-      "Workplace": "FRW Quaymed Wynyard",
-      "Speciality": "TEFL teacher",
-      "Email": "ktorres@simpson.com",
-      "Phone": "+64 980 123 4568",
-      "Address": "58 Gaunt Street Auckland Central Auckland 1010"
-    },
-    {
-      "FirstName": "Derek",
-      "LastName": "Martin",
-      "Workplace": "FRW Quaymed Wynyard",
-      "Speciality": "Lecturer, higher education",
-      "Email": "carlos80@parker.com",
-      "Phone": "+64 980 123 4568",
-      "Address": "58 Gaunt Street Auckland Central Auckland 1010"
-    },
-    {
-      "FirstName": "Rachel",
-      "LastName": "Daniels",
-      "Workplace": "FRW Quaymed Britomart",
-      "Speciality": "Doctor, hospital",
-      "Email": "katherine02@cook-schneider.info",
-      "Phone": "+64 99192555",
-      "Address": "68 Beach Road Auckland Central Auckland 1010"
-    },
-    {
-      "FirstName": "Ariel",
-      "LastName": "Mcdaniel",
-      "Workplace": "FRW Quaymed Britomart",
-      "Speciality": "Engineer, biomedical",
-      "Email": "alexander26@williams.info",
-      "Phone": "+64 99192555",
-      "Address": "68 Beach Road Auckland Central Auckland 1010"
-    },
-    {
-      "FirstName": "Emily",
-      "LastName": "Clarke",
-      "Workplace": "FRW Quaymed Britomart",
-      "Speciality": "Civil engineer",
-      "Email": "emily.clarke@example.com",
-      "Phone": "+64 99192555",
-      "Address": "68 Beach Road Auckland Central Auckland 1010"
-    },
-    {
-      "FirstName": "Michael",
-      "LastName": "Reynolds",
-      "Workplace": "FRW Quaymed Britomart",
-      "Speciality": "Cardiologist",
-      "Email": "michael.reynolds@example.com",
-      "Phone": "+64 99192555",
-      "Address": "68 Beach Road Auckland Central Auckland 1010"
-    },
-    {
-      "FirstName": "Laura",
-      "LastName": "Hayes",
-      "Workplace": "FRW Quaymed Britomart",
-      "Speciality": "Dermatologist",
-      "Email": "laura.hayes@example.com",
-      "Phone": "+64 99192555",
-      "Address": "68 Beach Road Auckland Central Auckland 1010"
-    },
-    {
-      "FirstName": "Oliver",
-      "LastName": "Thompson",
-      "Workplace": "FRW Birkenhead",
-      "Speciality": "Neurologist",
-      "Email": "oliver.thompson@example.com",
-      "Phone": "+64 990 654 3213",
-      "Address": "121 Birkenhead Avenue Birkenhead Auckland 0626"
-    },
-    {
-      "FirstName": "Sophia",
-      "LastName": "Gonzalez",
-      "Workplace": "FRW Birkenhead",
-      "Speciality": "Psychiatrist",
-      "Email": "sophia.gonzalez@example.com",
-      "Phone": "+64 990 654 3213",
-      "Address": "121 Birkenhead Avenue Birkenhead Auckland 0626"
-    },
-    {
-      "FirstName": "Ethan",
-      "LastName": "Wright",
-      "Workplace": "FRW Birkenhead",
-      "Speciality": "Pediatrician",
-      "Email": "ethan.wright@example.com",
-      "Phone": "+64 990 654 3213",
-      "Address": "121 Birkenhead Avenue Birkenhead Auckland 0626"
-    },
-    {
-      "FirstName": "Chloe",
-      "LastName": "Scott",
-      "Workplace": "FRW Birkenhead",
-      "Speciality": "Orthopedist",
-      "Email": "chloe.scott@example.com",
-      "Phone": "+64 990 654 3213",
-      "Address": "121 Birkenhead Avenue Birkenhead Auckland 0626"
-    },
-    {
-      "FirstName": "Daniel",
-      "LastName": "Lee",
-      "Workplace": "FRW Birkenhead",
-      "Speciality": "Endocrinologist",
-      "Email": "daniel.lee@example.com",
-      "Phone": "+64 990 654 3213",
-      "Address": "121 Birkenhead Avenue Birkenhead Auckland 0626"
-    },
-    {
+  {
+      "Phone": "+64 96267750",
+      "Address": "464 Richardson Road Mt Roskill Auckland 1041",
+      "Workplace": "FRW Mt Roskill",
       "FirstName": "Grace",
+      "Id": "f2ffc0e5-aba3-430d-97ec-2111dca32561",
+      "Speciality": "Emergency Medicine in GP",
+      "Detail": "Grace provides rapid diagnosis and treatment of acute illnesses such as minor trauma, infections or respiratory illnesses.",
       "LastName": "Carter",
-      "Workplace": "FRW Mt Roskill",
-      "Speciality": "Gastroenterologist",
-      "Email": "grace.carter@example.com",
+      "Email": "grace.carter@example.com"
+  },
+  {
       "Phone": "+64 96267750",
-      "Address": "464 Richardson Road Mt Roskill Auckland 1041"
-    },
-    {
-      "FirstName": "Jack",
-      "LastName": "Martin",
+      "Address": "464 Richardson Road Mt Roskill Auckland 1041",
       "Workplace": "FRW Mt Roskill",
-      "Speciality": "Ophthalmologist",
-      "Email": "jack.martin@example.com",
-      "Phone": "+64 96267750",
-      "Address": "464 Richardson Road Mt Roskill Auckland 1041"
-    },
-    {
       "FirstName": "Mia",
+      "Id": "b4273ad2-cf32-4b06-b436-ba64a318e89a",
+      "Speciality": "Sports Medicine",
+      "Detail": "Mia specialise in the prevention, diagnosis and treatment of sports-related injuries, helping athletes and general patients with post-injury recovery and health maintenance.",
       "LastName": "Young",
-      "Workplace": "FRW Mt Roskill",
-      "Speciality": "Obstetrician",
-      "Email": "mia.young@example.com",
-      "Phone": "+64 96267750",
-      "Address": "464 Richardson Road Mt Roskill Auckland 1041"
-    },
-    {
-      "FirstName": "Alexander",
-      "LastName": "King",
-      "Workplace": "FRW Mt Roskill",
-      "Speciality": "Oncologist",
-      "Email": "alexander.king@example.com",
-      "Phone": "+64 96267750",
-      "Address": "464 Richardson Road Mt Roskill Auckland 1041"
-    },
-    {
-      "FirstName": "Ava",
-      "LastName": "Hill",
-      "Workplace": "FRW Mt Roskill",
-      "Speciality": "Rheumatologist",
-      "Email": "ava.hill@example.com",
-      "Phone": "+64 96267750",
-      "Address": "464 Richardson Road Mt Roskill Auckland 1041"
-    },
-    {
-      "FirstName": "Noah",
-      "LastName": "Ramirez",
-      "Workplace": "FRW Greenlane",
-      "Speciality": "Urologist",
-      "Email": "noah.ramirez@example.com",
-      "Phone": "+64 9610667",
-      "Address": "205 Great South Road Greenlane Auckland 1051"
-    },
-    {
-      "FirstName": "Isabella",
-      "LastName": "Lewis",
-      "Workplace": "FRW Greenlane",
-      "Speciality": "Anesthesiologist",
-      "Email": "isabella.lewis@example.com",
-      "Phone": "+64 9610667",
-      "Address": "205 Great South Road Greenlane Auckland 1051"
-    },
-    {
-      "FirstName": "William",
-      "LastName": "Moore",
-      "Workplace": "FRW Greenlane",
-      "Speciality": "Orthodontist",
-      "Email": "william.moore@example.com",
-      "Phone": "+64 9610667",
-      "Address": "205 Great South Road Greenlane Auckland 1051"
-    },
-    {
-      "FirstName": "Emma",
-      "LastName": "Taylor",
-      "Workplace": "FRW Greenlane",
-      "Speciality": "Neurosurgeon",
-      "Email": "emma.taylor@example.com",
-      "Phone": "+64 9610667",
-      "Address": "205 Great South Road Greenlane Auckland 1051"
-    },
-    {
-      "FirstName": "James",
-      "LastName": "Brown",
-      "Workplace": "FRW Greenlane",
-      "Speciality": "Allergist",
-      "Email": "james.brown@example.com",
-      "Phone": "+64 9610667",
-      "Address": "205 Great South Road Greenlane Auckland 1051"
-    },
-    {
-      "FirstName": "Olivia",
-      "LastName": "Jones",
-      "Workplace": "FRW Medplus Devonport",
-      "Speciality": "Cardiothoracic Surgeon",
-      "Email": "olivia.jones@example.com",
+      "Email": "mia.young@example.com"
+  },
+  {
       "Phone": "+64 94892011",
-      "Address": "29 Anne Street Devonport Auckland 0624"
-    },
-    {
+      "Address": "29 Anne Street Devonport Auckland 0624",
+      "Workplace": "FRW Medplus Devonport",
       "FirstName": "Lucas",
+      "Id": "b993a1e3-a943-47a8-8075-c371096600cf",
+      "Speciality": "Mental Health",
+      "Detail": "Lucas are responsible for identifying and treating common mental health problems such as depression and anxiety, providing psychological counselling, medication and referring patients to specialists when necessary.",
       "LastName": "Garcia",
-      "Workplace": "FRW Medplus Devonport",
-      "Speciality": "Pediatric Surgeon",
-      "Email": "lucas.garcia@example.com",
-      "Phone": "+64 94892011",
-      "Address": "29 Anne Street Devonport Auckland 0624"
-    },
-    {
-      "FirstName": "Charlotte",
-      "LastName": "Davis",
-      "Workplace": "FRW Medplus Devonport",
-      "Speciality": "Dentist",
-      "Email": "charlotte.davis@example.com",
-      "Phone": "+64 94892011",
-      "Address": "29 Anne Street Devonport Auckland 0624"
-    },
-    {
-      "FirstName": "Benjamin",
-      "LastName": "Martinez",
-      "Workplace": "FRW Medplus Devonport",
-      "Speciality": "Veterinarian",
-      "Email": "benjamin.martinez@example.com",
-      "Phone": "+64 94892011",
-      "Address": "29 Anne Street Devonport Auckland 0624"
-    },
-    {
-      "FirstName": "Sophia",
-      "LastName": "Anderson",
-      "Workplace": "FRW Medplus Devonport",
-      "Speciality": "General Surgeon",
-      "Email": "sophia.anderson@example.com",
-      "Phone": "+64 94892011",
-      "Address": "29 Anne Street Devonport Auckland 0624"
-    },
-    {
+      "Email": "lucas.garcia@example.com"
+  },
+  {
+      "Phone": "+64 94892012",
+      "Address": "327 Lake Road Takapuna Auckland 0622",
+      "Workplace": "FRW Medplus Takapuna",
       "FirstName": "Elijah",
+      "Id": "82f5acf1-eaa5-4824-a247-33657ffa7eef",
+      "Speciality": "Occupational Health",
+      "Detail": "Elijah provide work-related medical care, diagnosis, treatment and rehabilitation of work-related injuries and illnesses.",
       "LastName": "Wilson",
-      "Workplace": "FRW Medplus Takapuna",
-      "Speciality": "Orthopedic Surgeon",
-      "Email": "elijah.wilson@example.com",
-      "Phone": "+64 94892012",
-      "Address": "327 Lake Road Takapuna Auckland 0622"
-    },
-    {
-      "FirstName": "Amelia",
-      "LastName": "Thomas",
-      "Workplace": "FRW Medplus Takapuna",
-      "Speciality": "Plastic Surgeon",
-      "Email": "amelia.thomas@example.com",
-      "Phone": "+64 94892012",
-      "Address": "327 Lake Road Takapuna Auckland 0622"
-    },
-    {
-      "FirstName": "Henry",
-      "LastName": "Jackson",
-      "Workplace": "FRW Medplus Takapuna",
-      "Speciality": "Dermatologist",
-      "Email": "henry.jackson@example.com",
-      "Phone": "+64 94892012",
-      "Address": "327 Lake Road Takapuna Auckland 0622"
-    },
-    {
-      "FirstName": "Evelyn",
-      "LastName": "White",
-      "Workplace": "FRW Medplus Takapuna",
-      "Speciality": "Pathologist",
-      "Email": "evelyn.white@example.com",
-      "Phone": "+64 94892012",
-      "Address": "327 Lake Road Takapuna Auckland 0622"
-    },
-    {
-      "FirstName": "Sebastian",
-      "LastName": "Harris",
-      "Workplace": "FRW Medplus Takapuna",
-      "Speciality": "Endocrinologist",
-      "Email": "sebastian.harris@example.com",
-      "Phone": "+64 94892012",
-      "Address": "327 Lake Road Takapuna Auckland 0622"
-    },
-    {
-      "FirstName": "Zoey",
-      "LastName": "Clark",
-      "Workplace": "FRW Motueka",
-      "Speciality": "Neurologist",
-      "Email": "zoey.clark@example.com",
-      "Phone": "+64 35288358",
-      "Address": "27 Wallace Street Motueka 7120"
-    },
-    {
-      "FirstName": "Alexander",
-      "LastName": "Lewis",
-      "Workplace": "FRW Motueka",
-      "Speciality": "Cardiologist",
-      "Email": "alexander.lewis@example.com",
-      "Phone": "+64 35288358",
-      "Address": "27 Wallace Street Motueka 7120"
-    },
-    {
-      "FirstName": "Madison",
+      "Email": "elijah.wilson@example.com"
+  },
+  {
+      "Phone": "+64 99192555",
+      "Address": "68 Beach Road Auckland Central Auckland 1010",
+      "Workplace": "FRW Quaymed Britomart",
+      "FirstName": "Emily",
+      "Id": "ec91f550-d888-41ea-a838-2236373f89b6",
+      "Speciality": "Reproductive health",
+      "Detail": "Emily deal with issues related to family planning, contraception, sexual health education and early pregnancy care to ensure patients' reproductive health.",
+      "LastName": "Clarke",
+      "Email": "emily.clarke@example.com"
+  },
+  {
+      "Phone": "+64 99192555",
+      "Address": "68 Beach Road Auckland Central Auckland 1010",
+      "Workplace": "FRW Quaymed Britomart",
+      "FirstName": "Ariel",
+      "Id": "2fe4cc86-748c-45a9-9782-60da25803dc7",
+      "Speciality": "Dermatology",
+      "Detail": "Ariel diagnose and treat common skin conditions such as eczema and infections, and refer complex cases to dermatologists.",
+      "LastName": "Mcdaniel",
+      "Email": "alexander26@williams.info"
+  },
+  {
+      "Phone": "+64 94892011",
+      "Address": "29 Anne Street Devonport Auckland 0624",
+      "Workplace": "FRW Medplus Devonport",
+      "FirstName": "Benjamin",
+      "Id": "21521491-eaf0-43ef-b04b-196031c4754a",
+      "Speciality": "Sexual Health",
+      "Detail": "Benjamin are responsible for STI testing, treatment, contraceptive advice and sexual health education to promote healthy sexual behaviour.",
       "LastName": "Martinez",
-      "Workplace": "FRW Motueka",
-      "Speciality": "Gastroenterologist",
-      "Email": "madison.martinez@example.com",
+      "Email": "benjamin.martinez@example.com"
+  },
+  {
+      "Phone": "+64 94892011",
+      "Address": "29 Anne Street Devonport Auckland 0624",
+      "Workplace": "FRW Medplus Devonport",
+      "FirstName": "Sophia",
+      "Id": "f098218f-9459-4ac3-9b48-9cecbfdc19b8",
+      "Speciality": "Chronic Pain Management",
+      "Detail": "Sophia help patients manage long-term pain through a multidisciplinary approach of medication, therapy and psychological support.",
+      "LastName": "Anderson",
+      "Email": "sophia.anderson@example.com"
+  },
+  {
+      "Phone": "+64 94892011",
+      "Address": "29 Anne Street Devonport Auckland 0624",
+      "Workplace": "FRW Medplus Devonport",
+      "FirstName": "Olivia",
+      "Id": "4c3d9bbe-f40d-4800-b9c1-35a3c75d9c3a",
+      "Speciality": "Addiction Medicine",
+      "Detail": "Olivia help patients overcome tobacco, alcohol and drug addiction through behavioural therapy, medication and psychological counselling.",
+      "LastName": "Jones",
+      "Email": "olivia.jones@example.com"
+  },
+  {
+      "Phone": "+64 96267750",
+      "Address": "464 Richardson Road Mt Roskill Auckland 1041",
+      "Workplace": "FRW Mt Roskill",
+      "FirstName": "Jack",
+      "Id": "487912d3-fc88-4ec6-84f1-9a38c9d6b1b0",
+      "Speciality": "Travel Medicine",
+      "Detail": "Jack provide advice on preventative care, vaccinations and health risks for individuals travelling abroad.",
+      "LastName": "Martin",
+      "Email": "jack.martin@example.com"
+  },
+  {
+      "Phone": "+64 96267750",
+      "Address": "464 Richardson Road Mt Roskill Auckland 1041",
+      "Workplace": "FRW Mt Roskill",
+      "FirstName": "Ava",
+      "Id": "37079654-a1fd-4fc2-84fa-72e108eb6c87",
+      "Speciality": "Travel Medicine",
+      "Detail": "Ava provide advice on preventative care, vaccinations and health risks for individuals travelling abroad.",
+      "LastName": "Hill",
+      "Email": "ava.hill@example.com"
+  },
+  {
+      "Phone": "+64 990 654 3213",
+      "Address": "121 Birkenhead Avenue Birkenhead Auckland 0626",
+      "Workplace": "FRW Birkenhead",
+      "FirstName": "Daniel",
+      "Id": "ab0f5e6c-a505-4f29-81a6-02805275fb96",
+      "Speciality": "Antenatal and postnatal care",
+      "Detail": "Daniel provide early pregnancy care, health checks and postnatal recovery support for mothers and babies.",
+      "LastName": "Lee",
+      "Email": "daniel.lee@example.com"
+  },
+  {
+      "Phone": "+64 980 123 4568",
+      "Address": "58 Gaunt Street Auckland Central Auckland 1010",
+      "Workplace": "FRW Quaymed Wynyard",
+      "FirstName": "Bob",
+      "Id": "c0f83885-7243-4a7b-9efe-ea3a5a86bba3",
+      "Speciality": "Adolescent health",
+      "Detail": "Bob address adolescent health issues such as growing up, mental health and sexual health, guiding them through puberty.",
+      "LastName": "Martin",
+      "Email": "bob.martin@example.com"
+  },
+  {
+      "Phone": "+64 990 654 3213",
+      "Address": "121 Birkenhead Avenue Birkenhead Auckland 0626",
+      "Workplace": "FRW Birkenhead",
+      "FirstName": "Chloe",
+      "Id": "e8f0a7e8-1e14-47e1-9fa9-565f9725cbd5",
+      "Speciality": "Weight management and nutrition",
+      "Detail": "Chloe provide advice on diet and lifestyle changes to help patients manage their weight and prevent related health problems.",
+      "LastName": "Scott",
+      "Email": "chloe.scott@example.com"
+  },
+  {
+      "Phone": "+64 99192555",
+      "Address": "68 Beach Road Auckland Central Auckland 1010",
+      "Workplace": "FRW Quaymed Britomart",
+      "FirstName": "Rachel",
+      "Id": "eab6f342-c6eb-4e82-9de1-bce596db8f1e",
+      "Speciality": "Doctor, hospital",
+      "Detail": "Rachel perform minor operations and deal with routine surgical problems, referring complex cases to specialists when necessary.",
+      "LastName": "Daniels",
+      "Email": "katherine02@cook-schneider.info"
+  },
+  {
       "Phone": "+64 35288358",
-      "Address": "27 Wallace Street Motueka 7120"
-    }
+      "Address": "27 Wallace Street Motueka 7120",
+      "Workplace": "FRW Motueka",
+      "FirstName": "Madison",
+      "Id": "2a28fdc9-442d-44c2-94ef-2c4ca7998f75",
+      "Speciality": "Geriatrics",
+      "Detail": "Madison specialise in caring for older people, managing chronic illnesses, cognitive problems and improving the quality of life for older patients.",
+      "LastName": "Martinez",
+      "Email": "madison.martinez@example.com"
+  },
+  {
+      "Phone": "+64 94892012",
+      "Address": "327 Lake Road Takapuna Auckland 0622",
+      "Workplace": "FRW Medplus Takapuna",
+      "FirstName": "Amelia",
+      "Id": "a7030e58-794d-458e-be49-e43ec33cc394",
+      "Speciality": "Orthopaedics",
+      "Detail": "Amelia assess and treat bone, joint and muscle problems, provide initial care and refer patients to specialists when necessary.",
+      "LastName": "Thomas",
+      "Email": "amelia.thomas@example.com"
+  },
+  {
+      "Phone": "+64 990 654 3213",
+      "Address": "121 Birkenhead Avenue Birkenhead Auckland 0626",
+      "Workplace": "FRW Birkenhead",
+      "FirstName": "Ethan",
+      "Id": "5081abd1-e47c-4539-8109-65853d97f4e2",
+      "Speciality": "General Practitioners",
+      "Detail": "Ethan provide comprehensive primary care for patients of all ages, manage acute and chronic conditions and coordinate specialist care.",
+      "LastName": "Wright",
+      "Email": "ethan.wright@example.com"
+  },
+  {
+      "Phone": "+64 990 654 3213",
+      "Address": "121 Birkenhead Avenue Birkenhead Auckland 0626",
+      "Workplace": "FRW Birkenhead",
+      "FirstName": "Sophia",
+      "Id": "f70000a3-de44-4764-b96a-af84126aabcb",
+      "Speciality": "Community Mental Health",
+      "Detail": "Sophia provide support for mental health at a community level, treating common psychological problems and promoting mental health through education and counselling.",
+      "LastName": "Gonzalez",
+      "Email": "sophia.gonzalez@example.com"
+  },
+  {
+      "Phone": "+64 980 123 4568",
+      "Address": "58 Gaunt Street Auckland Central Auckland 1010",
+      "Workplace": "FRW Quaymed Wynyard",
+      "FirstName": "John",
+      "Id": "b0d44d71-d9ef-438c-843b-69398700797f",
+      "Speciality": "Emergency Medicine",
+      "Detail" : " John provides rapid diagnosis and treatment of acute illnesses such as minor trauma, infections or respiratory illnesses. They provide emergency care and refer patients to specialists when necessary.",
+      "LastName": "Villarreal",
+      "Email": "ktorres@simpson.com"
+  },
+  {
+      "Phone": "+64 9610667",
+      "Address": "205 Great South Road Greenlane Auckland 1051",
+      "Workplace": "FRW Greenlane",
+      "FirstName": "James",
+      "Id": "900356eb-2650-4fd6-9991-2c4b63cbb9b6",
+      "Speciality": "Sports Medicine",
+      "Detail" : "James specialises in the prevention, diagnosis and treatment of sports-related injuries, helping athletes and general patients with post-injury recovery and health maintenance.",
+      "LastName": "Brown",
+      "Email": "james.brown@example.com"
+  },
+  {
+      "Phone": "+64 980 123 4567",
+      "Address": "58 Gaunt Street Auckland Central Auckland 1010",
+      "Workplace": "FRW Quaymed Wynyard",
+      "FirstName": "Alice",
+      "Id": "f752a32a-6e6e-4363-b3d9-055341b78ade",
+      "Speciality": "Occupational Health",
+      "Detail": "Alice provide work-related medical care, diagnosis, treatment and rehabilitation of work-related injuries and illnesses.",
+      "LastName": "Johnson",
+      "Email": "alice.johnson@example.com"
+  },
+  {
+      "Phone": "+64 9610667",
+      "Address": "205 Great South Road Greenlane Auckland 1051",
+      "Workplace": "FRW Greenlane",
+      "FirstName": "Isabella",
+      "Id": "3f3ba272-f36f-4e75-be85-0aea0b52e72b",
+      "Speciality": "Reproductive health",
+      "Detail": "Isabella deal with issues related to family planning, contraception, sexual health education and early pregnancy care to ensure patients' reproductive health.",
+      "LastName": "Lewis",
+      "Email": "isabella.lewis@example.com"
+  },
+  {
+      "Phone": "+64 94892012",
+      "Address": "327 Lake Road Takapuna Auckland 0622",
+      "Workplace": "FRW Medplus Takapuna",
+      "FirstName": "Sebastian",
+      "Id": "6a84085e-9625-488a-b7ed-84ca56596fb2",
+      "Speciality": "Dermatology",
+      "Detail": "Sebastian diagnose and treat common skin conditions such as eczema and infections, and refer complex cases to dermatologists.",
+      "LastName": "Harris",
+      "Email": "sebastian.harris@example.com"
+  },
+  {
+      "Phone": "+64 35288358",
+      "Address": "27 Wallace Street Motueka 7120",
+      "Workplace": "FRW Motueka",
+      "FirstName": "Zoey",
+      "Id": "1ad5c03a-642e-4339-8bd9-123646b65a0d",
+      "Speciality": "Sexual Health",
+      "Detail": "Zoey are responsible for STI testing, treatment, contraceptive advice and sexual health education to promote healthy sexual behaviour.",
+      "LastName": "Clark",
+      "Email": "zoey.clark@example.com"
+  },
+  {
+      "Phone": "+64 94892011",
+      "Address": "29 Anne Street Devonport Auckland 0624",
+      "Workplace": "FRW Medplus Devonport",
+      "FirstName": "Charlotte",
+      "Id": "f73a4c53-6df0-41e0-9b5a-85aa2b2b4232",
+      "Speciality": "Chronic Pain Management",
+      "Detail": "Charlotte help patients manage long-term pain through a multidisciplinary approach of medication, therapy and psychological support.",
+      "LastName": "Davis",
+      "Email": "charlotte.davis@example.com"
+  },
+  {
+      "Phone": "+64 9610667",
+      "Address": "205 Great South Road Greenlane Auckland 1051",
+      "Workplace": "FRW Greenlane",
+      "FirstName": "William",
+      "Id": "b315ac56-2bae-45af-91fa-e489ac644b4c",
+      "Speciality": "Migrant Health",
+      "Detail": "William provide healthcare for migrants and refugees, with a focus on disease prevention, vaccinations and mental health support.",
+      "LastName": "Moore",
+      "Email": "william.moore@example.com"
+  },
+  {
+      "Phone": "+64 9610667",
+      "Address": "205 Great South Road Greenlane Auckland 1051",
+      "Workplace": "FRW Greenlane",
+      "FirstName": "Noah",
+      "Id": "79deed39-4881-4bf0-a5d7-c32124b17882",
+      "Speciality": "Addiction Medicine",
+      "Detail": "Noah help patients overcome tobacco, alcohol and drug addiction through behavioural therapy, medication and psychological counselling.",
+      "LastName": "Ramirez",
+      "Email": "noah.ramirez@example.com"
+  },
+  {
+      "Phone": "+64 980 123 4568",
+      "Address": "58 Gaunt Street Auckland Central Auckland 1010",
+      "Workplace": "FRW Quaymed Wynyard",
+      "FirstName": "Tiffany",
+      "Id": "4b5f6533-7abe-45ed-accc-53461fda68f9",
+      "Speciality": "Travel Medicine",
+      "Detail": "Tiffany provide advice on preventative care, vaccinations and health risks for individuals travelling abroad.",
+      "LastName": "Lopez",
+      "Email": "uking@garcia.com"
+  },
+  {
+      "Phone": "+64 35288358",
+      "Address": "27 Wallace Street Motueka 7120",
+      "Workplace": "FRW Motueka",
+      "FirstName": "Alexander",
+      "Id": "7a09d179-d98a-4672-b612-b5d34a25e212",
+      "Speciality": "Antenatal and postnatal care",
+      "Detail": "Alexander provide early pregnancy care, health checks and postnatal recovery support for mothers and babies.",
+      "LastName": "Lewis",
+      "Email": "alexander.lewis@example.com"
+  },
+  {
+      "Phone": "+64 99192555",
+      "Address": "68 Beach Road Auckland Central Auckland 1010",
+      "Workplace": "FRW Quaymed Britomart",
+      "FirstName": "Laura",
+      "Id": "a1a4777f-c5da-4bda-8279-4eb062f5c09d",
+      "Speciality": "Adolescent health",
+      "Detail": "Laura address adolescent health issues such as growing up, mental health and sexual health, guiding them through puberty.",
+      "LastName": "Hayes",
+      "Email": "laura.hayes@example.com"
+  },
+  {
+      "Phone": "+64 94892012",
+      "Address": "327 Lake Road Takapuna Auckland 0622",
+      "Workplace": "FRW Medplus Takapuna",
+      "FirstName": "Henry",
+      "Id": "a120dc38-263e-4c60-b02a-3d20b3968da1",
+      "Speciality": "Weight management and nutrition",
+      "Detail": "Henry provide advice on diet and lifestyle changes to help patients manage their weight and prevent related health problems.",
+      "LastName": "Jackson",
+      "Email": "henry.jackson@example.com"
+  },
+  {
+      "Phone": "+64 9610667",
+      "Address": "205 Great South Road Greenlane Auckland 1051",
+      "Workplace": "FRW Greenlane",
+      "FirstName": "Emma",
+      "Id": "7cbcfebf-3324-4232-9764-69388962df42",
+      "Speciality": "General Surgery",
+      "Detail": "Emma perform minor operations and deal with routine surgical problems, referring complex cases to specialists when necessary.",
+      "LastName": "Taylor",
+      "Email": "emma.taylor@example.com"
+  },
+  {
+      "Phone": "+64 94892012",
+      "Address": "327 Lake Road Takapuna Auckland 0622",
+      "Workplace": "FRW Medplus Takapuna",
+      "FirstName": "Evelyn",
+      "Id": "9aacd77b-d487-45be-9b45-edf6d31e83ae",
+      "Speciality": "Geriatrics",
+      "Detail": "Evelyn specialise in caring for older people, managing chronic illnesses, cognitive problems and improving the quality of life for older patients.",
+      "LastName": "White",
+      "Email": "evelyn.white@example.com"
+  },
+  {
+      "Phone": "+64 990 654 3213",
+      "Address": "121 Birkenhead Avenue Birkenhead Auckland 0626",
+      "Workplace": "FRW Birkenhead",
+      "FirstName": "Oliver",
+      "Id": "7b0946ea-7f99-4250-9094-2ffa1c699fd4",
+      "Speciality": "Orthopaedics",
+      "Detail": "Oliver assess and treat bone, joint and muscle problems, provide initial care and refer patients to specialists when necessary.",
+      "LastName": "Thompson",
+      "Email": "oliver.thompson@example.com"
+  },
+  {
+      "Phone": "+64 99192555",
+      "Address": "68 Beach Road Auckland Central Auckland 1010",
+      "Workplace": "FRW Quaymed Britomart",
+      "FirstName": "Michael",
+      "Id": "e2cda1a5-3580-42ad-b274-57a90b2f99bc",
+      "Speciality": "General Practitioners",
+      "Detail": "Michael provide comprehensive primary care for patients of all ages, manage acute and chronic conditions and coordinate specialist care.",
+      "LastName": "Reynolds",
+      "Email": "michael.reynolds@example.com"
+  },
+  {
+      "Phone": "+64 96267750",
+      "Address": "464 Richardson Road Mt Roskill Auckland 1041",
+      "Workplace": "FRW Mt Roskill",
+      "FirstName": "Alexander",
+      "Id": "11f5949b-025f-4fea-971e-67d860814769",
+      "Speciality": "Community Mental Health",
+      "Detail": "Alexander provide support for mental health at a community level, treating common psychological problems and promoting mental health through education and counselling.",
+      "LastName": "King",
+      "Email": "alexander.king@example.com"
+  },
+  {
+      "Phone": "+64 980 123 4568",
+      "Address": "58 Gaunt Street Auckland Central Auckland 1010",
+      "Workplace": "FRW Quaymed Wynyard",
+      "FirstName": "Derek",
+      "Id": "0186116d-a0e3-4214-b86c-f18fea1a2eb8",
+      "Speciality": "Pediatrics in GP",
+      "Detail": "Derek provide healthcare for children, managing common illnesses, vaccinations, and monitoring growth. They offer preventive care, address developmental issues, and guide parents on childhood health. ",
+      "LastName": "Martin",
+      "Email": "carlos80@parker.com"
+  }
 ]

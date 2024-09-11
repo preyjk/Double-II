@@ -4,17 +4,62 @@ import { doctors } from "./data/doctor.js";
 // Function to introduce a delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
-const postDoctorData = (hostname, doctor) => {
+const getToken = (hostname) => {
+    return new Promise((resolve, reject) => {
+        const data = JSON.stringify({
+            email: 'admin',
+            password: 'admin'
+        });
+
+        const options = {
+            hostname: hostname,
+            port: 443,
+            path: '/public/auth/login',
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': data.length
+            }
+        };
+
+        const req = https.request(options, (res) => {
+            let responseData = '';
+
+            res.on('data', (chunk) => {
+                responseData += chunk;
+            });
+
+            res.on('end', () => {
+                if (res.statusCode === 200) {
+                    const responseJson = JSON.parse(responseData);
+                    resolve(responseJson.token);
+                } else {
+                    reject(new Error('Failed to get token'));
+                }
+            });
+        });
+
+        req.on('error', (e) => {
+            reject(e);
+        });
+
+        req.write(data);
+        req.end();
+    });
+};
+
+const postDoctorData = (hostname, doctor, token) => {
     return new Promise((resolve, reject) => {
         const data = JSON.stringify(doctor);
 
         const options = {
             hostname: hostname,
             port: 443,
-            path: '/doctors',
+            path: '/admin/doctors',
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
                 'Content-Length': data.length
             }
         };
@@ -60,4 +105,13 @@ if (!hostname) {
     process.exit(1);
 }
 
-postAllDoctors(hostname);
+getToken(hostname)
+    .then(token => {
+        doctors.forEach(async (doctor) => {
+            await delay(1000); // Introduce delay if needed
+            await postDoctorData(hostname, doctor, token);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
