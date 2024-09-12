@@ -135,6 +135,7 @@ export default {
 
 .el-menu-vertical {
   width: 100%;
+  background-color: #fafbfd;
 }
 
 .el-menu-vertical:not(.el-menu--collapse) {

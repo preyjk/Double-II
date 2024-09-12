@@ -62,6 +62,15 @@
               <p>
                 {{ getAppointment(interval, doctor.id) || "Available" }}
               </p>
+              <p v-if="getAppointment(interval, doctor.id)">
+                {{ formatTimeRange(interval) }}
+              </p>
+              <p v-if="getAppointment(interval, doctor.id)">
+                {{ getReasonAbbreviation(getAppointmentReason(interval, doctor.id)) }}
+              </p>
+              <p v-if="isAppointmentCompleted(interval, doctor.id)">
+                <span class="finish-badge">Finish</span>
+              </p>
             </el-card>
           </div>
         </template>
@@ -108,7 +117,22 @@ export default {
         { id: 2, name: "Dr. Cipeng" },
         { id: 3, name: "Dr. Putri Larasati" },
       ],
-      appointments: [],
+      appointments: [
+        {
+          doctorId: 1,
+          time: "8:00",
+          patientName: "John Doe",
+          reason: "Flu Symptoms",
+          completed: true,
+        },
+        {
+          doctorId: 2,
+          time: "9:00",
+          patientName: "Jane Smith",
+          reason: "Routine Check",
+          completed: false,
+        },
+      ],
       timeSlots: [
         { time: "8am", intervals: ["8:00", "8:15", "8:30", "8:45"] },
         { time: "9am", intervals: ["9:00", "9:15", "9:30", "9:45"] },
@@ -124,7 +148,6 @@ export default {
     };
   },
   computed: {
-    // Filtered doctors based on the selected filter
     filteredDoctors() {
       if (this.selectedDoctorFilter === "all") {
         return this.doctors;
@@ -133,47 +156,59 @@ export default {
         (doctor) => doctor.id === this.selectedDoctorFilter
       );
     },
-    // Apply date filter to time slots (assuming your timeSlots might change with the date in future)
     filteredTimeSlots() {
       return this.timeSlots;
     },
   },
   methods: {
-    // Open appointment dialog
     openDialog(interval, doctor) {
       this.selectedTime = interval;
       this.selectedDoctor = doctor;
       this.dialogVisible = true;
     },
-    // Submit appointment
     submitAppointment() {
       this.appointments.push({
         doctorId: this.selectedDoctor.id,
         time: this.selectedTime,
         patientName: this.appointmentForm.patientName,
         reason: this.appointmentForm.reason,
+        completed: false,
       });
       this.dialogVisible = false;
       this.clearForm();
     },
-    // Get appointment details
     getAppointment(time, doctorId) {
       const appointment = this.appointments.find(
         (a) => a.time === time && a.doctorId === doctorId
       );
-      return appointment
-        ? `${appointment.patientName} - ${appointment.reason}`
-        : null;
+      return appointment ? `${appointment.patientName}` : null;
     },
-    // Clear form
+    getAppointmentReason(time, doctorId) {
+      const appointment = this.appointments.find(
+        (a) => a.time === time && a.doctorId === doctorId
+      );
+      return appointment ? appointment.reason : null;
+    },
+    getReasonAbbreviation(reason) {
+      return reason ? reason.split(" ").map((word) => word[0]).join("").toUpperCase() : "";
+    },
+    isAppointmentCompleted(time, doctorId) {
+      const appointment = this.appointments.find(
+        (a) => a.time === time && a.doctorId === doctorId
+      );
+      return appointment ? appointment.completed : false;
+    },
+    formatTimeRange(time) {
+      const hour = time.split(":")[0];
+      const nextHour = parseInt(hour) + 2;
+      return `${hour}:00am~${nextHour}:00am`;
+    },
     clearForm() {
       this.appointmentForm.patientName = "";
       this.appointmentForm.reason = "";
     },
-    // Filter appointments (future functionality, you can extend it)
     filterAppointments() {
       console.log("Filter applied");
-      // Filtering logic will go here if necessary
     },
   },
 };
@@ -207,5 +242,10 @@ export default {
 
 .appointment-cell:hover {
   background-color: #f0f9eb;
+}
+
+.finish-badge {
+  color: green;
+  font-weight: bold;
 }
 </style>

@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { getAppointments_user, createAppointment_user, cancelAppointment_user, rescheduleAppointment_user } from "@/api/modules/appointment.js";
+import { getAppointments_user, createAppointment, cancelAppointment_user, rescheduleAppointment_user } from "@/api/modules/appointment.js";
 
 export default createStore({
   state: {
@@ -82,7 +82,7 @@ export default createStore({
         console.log("token", token);
         console.log("formData", formData);
 
-        const response = await createAppointment_user(formData, token);
+        const response = await createAppointment(formData);
 
         commit("ADD_BOOKING", response);
       } catch (err) {
