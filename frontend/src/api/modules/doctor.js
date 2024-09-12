@@ -13,6 +13,7 @@ export const filterDoctors_public = async function (filters = {}) {
       firstname: firstname || undefined,
       lastname: lastname || undefined,
       workplace: workplace || undefined,
+      
     },
   };
 
@@ -67,6 +68,7 @@ export const addDoctor_admin = async function (formData, token) {
       LastName: formData.LastName,
       Workplace: formData.Workplace,
       Specialty: formData.Specialty,
+      Detail: formData.Detail,
       Phone: formData.Phone,
       Email: formData.Email,
       Address: formData.Address,

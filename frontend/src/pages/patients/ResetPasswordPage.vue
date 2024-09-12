@@ -4,14 +4,18 @@
     <div class="content">
       <h2 class="fade-in">Reset Password</h2>
       <form @submit.prevent="handleSubmit" class="form-container fade-in">
-        <div class="input-group">
-          <label>Reset Token:</label>
-          <input v-model="token" type="text" required />
-        </div>
+        <input v-model="token" type="hidden" required /> <!-- Hidden token field -->
+
         <div class="input-group">
           <label>New Password:</label>
           <input v-model="newPassword" type="password" required />
         </div>
+
+        <div class="input-group">
+          <label>Confirm Password:</label>
+          <input v-model="confirmPassword" type="password" required />
+        </div>
+
         <button type="submit" class="submit-btn">Reset Password</button>
       </form>
       <p v-if="errorMessage" class="error-msg fade-in">{{ errorMessage }}</p>
@@ -26,7 +30,7 @@ import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
-import { resetPassword } from "@/api/modules/user.js"; 
+import { resetPassword } from "@/api/modules/user.js";
 
 export default {
   components: {
@@ -37,12 +41,13 @@ export default {
     return {
       token: '',
       newPassword: '',
+      confirmPassword: '',
       errorMessage: '',
       successMessage: '',
     };
   },
   setup() {
-    const route = useRoute(); 
+    const route = useRoute();
     return { route };
   },
   mounted() {
@@ -53,16 +58,28 @@ export default {
   },
   methods: {
     async handleSubmit() {
+      // Check if passwords match
+      if (this.newPassword !== this.confirmPassword) {
+        this.errorMessage = "Passwords do not match. Please ensure both passwords are identical.";
+        this.successMessage = '';
+        return;
+      }
+
+      // Proceed with the password reset process
       try {
         const response = await resetPassword(this.token, this.newPassword);
         this.successMessage = 'Password reset successfully';
         this.errorMessage = '';
+
+        // Automatically redirect to the homepage after a successful reset
+        this.$router.push('/'); // Assuming '/' is the homepage route
       } catch (error) {
         this.errorMessage = error.response?.data?.message || error.message || "Error occurred while resetting the password";
         this.successMessage = '';
       }
     },
   },
+
 };
 </script>
 
@@ -70,8 +87,8 @@ export default {
 .reset-container {
   display: flex;
   flex-direction: column;
-  height: 100vh; 
-  justify-content: space-between; 
+  height: 100vh;
+  justify-content: space-between;
   background-color: #f9f9f9;
   padding: 0 20px;
 }
@@ -81,7 +98,7 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  flex-grow: 1; 
+  flex-grow: 1;
   padding: 20px;
   animation: slideIn 1s ease-in-out;
 }
@@ -92,7 +109,7 @@ h2 {
   font-size: 32px;
   font-weight: bold;
   letter-spacing: 1px;
-  text-transform: uppercase; 
+  text-transform: uppercase;
   border-bottom: 2px solid #007bff;
   padding-bottom: 10px;
 }
@@ -101,7 +118,7 @@ h2 {
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 400px; 
+  max-width: 400px;
   margin: 0 auto;
   background-color: #ffffff;
   padding: 30px;
@@ -111,7 +128,7 @@ h2 {
 }
 
 .form-container:hover {
-  transform: scale(1.02); 
+  transform: scale(1.02);
 }
 
 .input-group {
@@ -135,7 +152,7 @@ input[type="password"] {
 input[type="text"]:focus,
 input[type="password"]:focus {
   border-color: #007bff;
-  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3); 
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
 }
 
 .submit-btn {
@@ -150,7 +167,7 @@ input[type="password"]:focus {
 
 .submit-btn:hover {
   background-color: #0056b3;
-  transform: translateY(-3px); 
+  transform: translateY(-3px);
 }
 
 .error-msg {
@@ -177,6 +194,7 @@ input[type="password"]:focus {
   0% {
     opacity: 0;
   }
+
   100% {
     opacity: 1;
   }
@@ -187,6 +205,7 @@ input[type="password"]:focus {
     transform: translateY(30px);
     opacity: 0;
   }
+
   100% {
     transform: translateY(0);
     opacity: 1;
@@ -195,13 +214,13 @@ input[type="password"]:focus {
 
 @media (max-width: 768px) {
   h2 {
-    font-size: 24px; 
+    font-size: 24px;
   }
 
   input[type="text"],
   input[type="password"],
   .submit-btn {
-    padding: 12px; 
+    padding: 12px;
   }
 
   .form-container {
@@ -209,4 +228,3 @@ input[type="password"]:focus {
   }
 }
 </style>
-
