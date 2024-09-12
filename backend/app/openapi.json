@@ -41,6 +41,10 @@
             "type": "string",
             "description": "The specialty of the doctor"
           },
+          "Detail": {
+            "type": "string",
+            "description": "The detail of the doctor"
+          },
           "Phone": {
             "type": "string",
             "description": "The phone number of the doctor"
@@ -351,6 +355,14 @@
           "Id": {
             "type": "string",
             "description": "The ID of the user"
+          },
+          "FirstName": {
+            "type": "string",
+            "description": "The first name of the user"
+          },
+          "LastName": {
+            "type": "string",
+            "description": "The last name of the user"
           },
           "Roles": {
             "type": "array",
@@ -1619,6 +1631,53 @@
           },
           "500": {
             "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/public/auth/google/login": {
+      "get": {
+        "summary": "Google login",
+        "description": "Google login",
+        "responses": {
+          "200": {
+            "description": "Redirect to Google login page"
+          }
+        }
+      }
+    },
+    "/public/auth/google/token": {
+      "get": {
+        "summary": "Google token",
+        "description": "Google token",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "code",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Google login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Google login failed"
           }
         }
       }

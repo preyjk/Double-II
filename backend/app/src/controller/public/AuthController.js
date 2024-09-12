@@ -19,10 +19,16 @@ const router = express.Router();
  *             required:
  *               - email
  *               - password
+ *               - firstName
+ *               - lastName
  *             properties:
  *               email:
  *                 type: string
  *               password:
+ *                 type: string
+ *               firstName:
+ *                 type: string
+ *               lastName:
  *                 type: string
  *     responses:
  *       '200':
@@ -31,9 +37,9 @@ const router = express.Router();
  *         description: Sign up failed
  */
 router.post('/signup', asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, firstName, lastName } = req.body;
 
-  const result = await AuthService.signup({ email, password });
+  const result = await AuthService.signup({ email, password, firstName, lastName });
   if (result.success) {
     await AuthService.sendVerificationEmail(email);
     res.status(200).json(result.message);

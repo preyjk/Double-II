@@ -17,6 +17,9 @@
  *         Specialty:
  *           type: string
  *           description: The specialty of the doctor
+ *         Detail:
+ *           type: string
+ *           description: The detail of the doctor
  *         Phone:
  *           type: string
  *           description: The phone number of the doctor
@@ -231,6 +234,12 @@
  *         Id:
  *           type: string
  *           description: The ID of the user
+ *         FirstName:
+ *           type: string
+ *           description: The first name of the user
+ *         LastName:
+ *           type: string
+ *           description: The last name of the user
  *         Roles:
  *           type: array
  *           description: The roles of the user
