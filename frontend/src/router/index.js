@@ -10,6 +10,7 @@ import ConfirmationPage from "@/pages/patients/ConfirmationPage.vue";
 import MyBooking from "@/pages/patients/MyBooking.vue";
 import VerifyEmailPage from "@/pages/patients/VerifyEmailPage.vue";
 import ResetPasswordPage from "@/pages/patients/ResetPasswordPage.vue";
+import PatientRegisterPage from "@/pages/patients/PatientRegisterPage.vue";
 import GoogleLoginPage from "../pages/patients/GoogleLoginPage.vue";
 import BasePage from "../pages/admin/BasePage.vue";
 import WorkingSchedule from "../components/admin/WorkingSchedule.vue";
@@ -29,6 +30,12 @@ const routes = [
     path: "/about",
     name: "about",
     component: AboutPage,
+  },
+
+  {
+    path: "/Patient",
+    name: "PatientRegister",
+    component: PatientRegisterPage,
   },
 
   {

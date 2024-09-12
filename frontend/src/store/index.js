@@ -8,8 +8,6 @@ export default createStore({
     email: localStorage.getItem("email") || "",
     firstName: localStorage.getItem("firstName") || "",
     lastName: localStorage.getItem("lastName") || "",
-    isPaused: false, // New state to track if the process is paused
-    pausedBookingsQueue: [], // Queue for paused bookings
   },
   mutations: {
     ADD_BOOKING(state, booking) {
@@ -56,7 +54,6 @@ export default createStore({
   actions: {
     async addBooking({ commit, state }, booking) {
       if (state.isPaused) {
-        // If paused, add the booking to the queue instead of processing it
         commit("QUEUE_BOOKING", booking);
         console.log("Booking added to the queue due to pause:", booking);
         return;

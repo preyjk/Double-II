@@ -1,9 +1,7 @@
 <template>
-  <div>
+  <div class="doctor-list-container">
     <h2>Doctor Information</h2>
-    <el-button type="primary" @click="uploadDoctor"
-      >upload doctor information</el-button
-    >
+    <el-button type="primary" @click="uploadDoctor">upload doctor information</el-button>
     <el-table :data="doctors" style="width: 100%">
       <el-table-column prop="name" label="name" width="180" />
       <el-table-column prop="specialty" label="professionals" width="180" />
@@ -42,3 +40,26 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.doctor-list-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+.el-table {
+  width: 100%;
+  max-width: 1200px; /* You can adjust this max-width */
+}
+
+h2 {
+  text-align: center;
+  width: 100%;
+}
+</style>
