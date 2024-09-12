@@ -13,7 +13,11 @@
 
       <!-- User Information -->
       <div class="profile-info">
-        <p><strong>Name:</strong> {{ profileForm.name }}</p>
+        <p><strong>FirstName:</strong> {{ profileForm.firstName }}</p>
+        <p><strong>Gender:</strong> {{ profileForm.Gender }}</p>
+        <p><strong>Age:</strong> {{ profileForm.Age }}</p>
+        <p><strong>Address:</strong> {{ profileForm.Address }}</p>
+        <p><strong>LastName:</strong> {{ profileForm.lastName }}</p>
         <p><strong>Email:</strong> {{ profileForm.email }}</p>
         <p><strong>Phone:</strong> {{ profileForm.phone }}</p>
       </div>
