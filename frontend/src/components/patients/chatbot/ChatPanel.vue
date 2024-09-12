@@ -1,24 +1,12 @@
 <template>
   <div class="container_body" :style="isDarkMode ? darkModeStyles : lightModeStyles">
-    <deep-chat 
-      :textInput="textInput" 
-      :inputAreaStyle="inputAreaStyle" 
-      :submitButtonStyles="submitButtonStyles"
-      :style="chatStyles" 
-      :textToSpeech="textToSpeechOptions" 
-      :speechToText="speechToTextOptions" 
-      demo="true"
-      id="chat-element" 
-      :connect="chatConnect" 
-      style="border-radius: 8px">
+    <deep-chat :textInput="textInput" :submitButtonStyles="submitButtonStyles" :style="chatStyles"
+      :textToSpeech="textToSpeechOptions" :speechToText="speechToTextOptions" demo="true" id="chat-element"
+      :connect="chatConnect" style="border-radius: 8px">
     </deep-chat>
 
     <div class="animation-container">
-      <LottieAnimation 
-        :animationData="animationData" 
-        :loop="true" 
-        :autoplay="true" 
-        v-show="isRobotAnimationShow"
+      <LottieAnimation :animationData="animationData" :loop="true" :autoplay="true" v-show="isRobotAnimationShow"
         class="robot-animation" />
     </div>
   </div>
@@ -45,7 +33,7 @@ export default {
       sessionId: null,
       animationData,
       isRobotAnimationShow: true,
-      responses: [], 
+      responses: [],
       textInput: {
         value: "",
         styles: {
@@ -93,14 +81,76 @@ export default {
           },
         },
       },
+      // speech to text setting
       speechToTextOptions: {
         webSpeech: true,
         button: {
           position: "outside-right",
+          default: {
+            container: {
+              default: {
+                cursor: "pointer",
+                transform: "translateY(-5px)",
+                width: "36px",
+                height: "36px"
+              },
+            },
+            svg: {
+              styles: {
+                default: {
+                  filter:
+                    "brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(100%) hue-rotate(90deg) brightness(100%) contrast(100%)",
+                  width: "24px",
+                  height: "24px",
+                },
+              },
+            },
+          },
+          active: {
+            container: {
+              default: {
+                cursor: "pointer",
+                transform: "translateY(-5px)",
+                width: "36px",
+                height: "36px",
+              },
+            },
+            svg: {
+              styles: {
+                default: {
+                  filter:
+                    "brightness(0) saturate(100%) invert(10%) sepia(97%) saturate(7495%) hue-rotate(0deg) brightness(101%) contrast(107%)",
+                  width: "24px",
+                  height: "24px",
+                },
+              },
+            },
+          },
+          commandMode: {
+            container: {
+              default: {
+                cursor: "pointer",
+                transform: "translateY(-5px)",
+                width: "36px",
+                height: "36px",
+              },
+            },
+            svg: {
+              styles: {
+                default: {
+                  filter:
+                    "brightness(0) saturate(100%) invert(70%) sepia(70%) saturate(4438%) hue-rotate(170deg) brightness(92%) contrast(98%)",
+                  width: "24px",
+                  height: "24px",
+                }
+              }
+            }
+          }
         },
+
         translations: {
-          hello: "goodbye",
-          Hello: "Goodbye",
+          hello: "hello",
+          Hello: "Hello",
         },
         commands: {
           resume: "resume",
@@ -110,13 +160,16 @@ export default {
         },
         onTranscriptionComplete: this.handleTranscriptionComplete,
       },
+      // text to speech setting
       textToSpeechOptions: {
         volume: 0.9,
         enabled: false,
       },
+      // chat setting
       chatConnect: {
         handler: async (body, signals) => {
           try {
+            this.isRobotAnimationShow = false;
             let headers = {};
             const token = localStorage.getItem("authToken");
             if (this.sessionId)
@@ -127,7 +180,7 @@ export default {
             await postData({ prompt }, headers);
             this.sessionId = data.value.sessionId;
 
-      
+
             const responseWithFeedback = this.generateResponseWithFeedback(data.value.response);
             signals.onResponse({
               html: responseWithFeedback,
