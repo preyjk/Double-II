@@ -2,7 +2,7 @@
   <div class="container_body" :style="isDarkMode ? darkModeStyles : lightModeStyles">
     <deep-chat :textInput="textInput" :submitButtonStyles="submitButtonStyles" :style="chatStyles"
       :textToSpeech="textToSpeechOptions" :speechToText="speechToTextOptions" demo="true" id="chat-element"
-      :connect="chatConnect" style="border-radius: 8px">
+      :connect="chatConnect" style="border-radius: 8px" :responseInterceptor="bindButtons">
     </deep-chat>
 
     <div class="animation-container">
@@ -57,8 +57,9 @@ export default {
             paddingLeft: "20px",
           },
         },
-        characterLimit: 100,
+        characterLimit: 1000,
       },
+
       submitButtonStyles: {
         submit: {
           container: {
@@ -81,6 +82,7 @@ export default {
           },
         },
       },
+
       // speech to text setting
       speechToTextOptions: {
         webSpeech: true,
@@ -160,11 +162,13 @@ export default {
         },
         onTranscriptionComplete: this.handleTranscriptionComplete,
       },
+
       // text to speech setting
       textToSpeechOptions: {
         volume: 0.9,
-        enabled: false,
+        enabled: true,
       },
+
       // chat setting
       chatConnect: {
         handler: async (body, signals) => {
@@ -182,9 +186,9 @@ export default {
 
 
             const responseWithFeedback = this.generateResponseWithFeedback(data.value.response);
-            signals.onResponse({
-              html: responseWithFeedback,
-            });
+
+            signals.onResponse({ text: data.value.response, html: responseWithFeedback });
+
 
           } catch (error) {
             console.error("Error during API request:", error);
@@ -196,6 +200,7 @@ export default {
       }
     }
   },
+
   methods: {
     handleTranscriptionComplete(transcribedText) {
       console.log("Transcribed text:", transcribedText);
@@ -212,20 +217,22 @@ export default {
     },
 
     generateResponseWithFeedback(responseText) {
+      this.htmlResponse = responseText;
+
       return `
         <div class="response-container">
-          <p>${responseText}</p>
           <div class="feedback-buttons">
-            <button class="feedback-icon" @click="playText('${responseText}')">🔊</button>
-            <button class="feedback-icon" @click="copyText('${responseText}')">📋</button>
-            <button class="feedback-icon" @click="handlePositiveFeedback()">👍</button>
-            <button class="feedback-icon" @click="handleNegativeFeedback()">👎</button>
+            <button id="playText" class="feedback-icon" style="border:none; cursor:pointer">🔊</button>
+            <button id="copyText" class="feedback-icon" style="border:none; cursor:pointer">📋</button>
+            <button id="positiveBtn" class="feedback-icon" style="border:none; cursor:pointer">👍</button>
+            <button id="negativeBtn" class="feedback-icon" style="border:none; cursor:pointer">👎</button>
           </div>
         </div>`;
     },
 
-
     playText(text) {
+      console.log("xxx");
+
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.volume = this.textToSpeechOptions.volume;
       window.speechSynthesis.speak(utterance);
@@ -247,7 +254,40 @@ export default {
     handleNegativeFeedback() {
       console.log("User disliked the response.");
     },
+
+    //   bindButtons() {
+    //     setTimeout(() => {
+    //       console.log("Xxxxxxx");
+    //       const playButton = document.getElementById('playText');
+    //       const copyButton = document.getElementById('copyText');
+    //       const positiveButton = document.getElementById('positiveBtn');
+    //       const negativeButton = document.getElementById('negativeBtn');
+    //       console.log(playButton);
+
+    //       if (playButton) {
+    //         playButton.addEventListener('click', () => this.playText(this.htmlResponse));
+    //       }
+
+    //       if (copyButton) {
+    //         copyButton.addEventListener('click', () => this.copyText(this.htmlResponse));
+    //       }
+
+    //       if (positiveButton) {
+    //         positiveButton.addEventListener('click', this.handlePositiveFeedback);
+    //       }
+
+    //       if (negativeButton) {
+    //         negativeButton.addEventListener('click', this.handleNegativeFeedback);
+    //       }
+    //     }, 3000); 
+    //   },
+
+    bindButtons() {
+    },
+
   },
+
+  watch: {},
 
   computed: {
     chatStyles() {
@@ -263,10 +303,13 @@ export default {
     darkModeStyles() {
       return { backgroundColor: "#2c2c2c" };
     },
+
     lightModeStyles() {
       return { backgroundColor: "#ffffff" };
     },
   },
+
+  mounted() { }
 };
 </script>
 
