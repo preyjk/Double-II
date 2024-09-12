@@ -1,22 +1,15 @@
 <template>
+  <HeaderComponent />
   <el-card class="profile-card">
-    <!-- Header -->
-    <HeaderComponent />
 
     <div class="profile-header">
       <h2>Patients Profile</h2>
 
-      <!-- Avatar Upload Section -->
-      <el-upload
-        class="avatar-uploader"
-        action="https://jsonplaceholder.typicode.com/posts/" 
-        :show-file-list="false"
-        :on-success="handleAvatarSuccess"
-        :before-upload="beforeAvatarUpload"
-      >
+      <div class="avatar-container">
+        <input type="file" accept="image/*" class="avatar-uploader" @change="onAvatarChange" />
         <img v-if="profileForm.avatarUrl" :src="profileForm.avatarUrl" class="avatar" />
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
+      </div>
 
       <!-- User Information -->
       <div class="profile-info">
@@ -26,7 +19,8 @@
       </div>
 
       <!-- Trigger to show the password change form modal -->
-      <el-button type="primary" @click="showPasswordChangeModal" class="change-password-button">Change Password</el-button>
+      <el-button type="primary" @click="showPasswordChangeModal" class="change-password-button">Change
+        Password</el-button>
     </div>
 
     <!-- Password Change Modal -->
@@ -35,13 +29,16 @@
         <h3>Change Password</h3>
         <el-form :model="profileForm" ref="profileFormRef" label-width="100px">
           <el-form-item label="Old Password">
-            <el-input v-model="profileForm.oldPassword" type="password" placeholder="Enter old password" show-password></el-input>
+            <el-input v-model="profileForm.oldPassword" type="password" placeholder="Enter old password"
+              show-password></el-input>
           </el-form-item>
           <el-form-item label="New Password">
-            <el-input v-model="profileForm.newPassword" type="password" placeholder="Enter new password" show-password></el-input>
+            <el-input v-model="profileForm.newPassword" type="password" placeholder="Enter new password"
+              show-password></el-input>
           </el-form-item>
           <el-form-item label="Confirm Password">
-            <el-input v-model="profileForm.confirmPassword" type="password" placeholder="Confirm new password" show-password></el-input>
+            <el-input v-model="profileForm.confirmPassword" type="password" placeholder="Confirm new password"
+              show-password></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="resetPassword">Reset Password</el-button>
@@ -56,11 +53,7 @@
       <h2>Your Appointments</h2>
       <div v-if="bookings && bookings.length">
         <ul class="appointments-list">
-          <li
-            v-for="(booking, index) in bookings"
-            :key="index"
-            class="appointment-item"
-          >
+          <li v-for="(booking, index) in bookings" :key="index" class="appointment-item">
             <div class="appointment-details">
               <p><strong>Doctor:</strong> Dr. {{ booking.DoctorName }}</p>
               <p><strong>Date:</strong> {{ booking.Date }}</p>
@@ -70,12 +63,13 @@
                 <strong>Status:</strong> Appointment Cancelled
               </p>
             </div>
-            <button
-              @click="cancelBooking(index)"
-              class="cancel-button"
-              :disabled="booking.Status === 'cancelled'"
-            >
+            <button @click="cancelBooking(index)" class="cancel-button" :disabled="booking.Status === 'cancelled'">
               Cancel
+            </button>
+            <!-- Reschedule Button -->
+            <button @click="showRescheduleModal(index)" class="reschedule-button"
+              :disabled="booking.Status === 'cancelled'">
+              Reschedule
             </button>
           </li>
         </ul>
@@ -85,15 +79,32 @@
       </div>
     </div>
 
+    <!-- Reschedule Modal -->
+    <div v-if="isRescheduleModalVisible" class="modal-overlay">
+      <div class="modal-dialog">
+        <h3>Reschedule Appointment</h3>
+        <el-form :model="rescheduleForm" ref="rescheduleFormRef" label-width="100px">
+          <el-form-item label="New Date">
+            <el-date-picker v-model="rescheduleForm.newDate" type="date" placeholder="Pick a new date"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="New Time">
+            <el-time-picker v-model="rescheduleForm.newTime" placeholder="Pick a new time"></el-time-picker>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="rescheduleBooking">Reschedule</el-button>
+            <el-button @click="closeRescheduleModal">Cancel</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
+
     <!-- Medical Records Section (Placeholder for future development) -->
     <div class="medical-records">
       <h2>Your Medical Records</h2>
       <p>No medical records available at this time.</p>
     </div>
-
-    <!-- Footer -->
-    <FooterComponent />
   </el-card>
+  <FooterComponent />
 </template>
 
 <script>
@@ -117,12 +128,18 @@ export default {
       oldPassword: "",
       newPassword: "",
       confirmPassword: "",
-      avatarUrl: "", 
+      avatarUrl: "",
     });
 
     const profileFormRef = ref(null);
     const isPasswordChangeVisible = ref(false);
     const bookings = ref([]);
+    const isRescheduleModalVisible = ref(false);
+    const rescheduleForm = ref({
+      newDate: "",
+      newTime: "",
+    });
+    const currentBookingIndex = ref(null);
 
     const resetPassword = () => {
       if (profileForm.value.newPassword === profileForm.value.confirmPassword) {
@@ -147,20 +164,15 @@ export default {
       isPasswordChangeVisible.value = false;
     };
 
-    const handleAvatarSuccess = (response, file) => {
-      profileForm.value.avatarUrl = URL.createObjectURL(file.raw);
-    };
-
-    const beforeAvatarUpload = (file) => {
-      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isJPG) {
-        alert('Avatar picture must be JPG or PNG format!');
+    const onAvatarChange = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          profileForm.value.avatarUrl = e.target.result; 
+        };
+        reader.readAsDataURL(file);
       }
-      if (!isLt2M) {
-        alert('Avatar picture size must be less than 2MB!');
-      }
-      return isJPG && isLt2M;
     };
 
     const cancelBooking = (index) => {
@@ -168,10 +180,37 @@ export default {
       booking.Status = "cancelled";
     };
 
+    const showRescheduleModal = (index) => {
+      currentBookingIndex.value = index;
+      isRescheduleModalVisible.value = true;
+    };
+
+    const closeRescheduleModal = () => {
+      isRescheduleModalVisible.value = false;
+      rescheduleForm.value.newDate = "";
+      rescheduleForm.value.newTime = "";
+    };
+
+    const rescheduleBooking = () => {
+      if (rescheduleForm.value.newDate && rescheduleForm.value.newTime) {
+        const newDetails = {
+          date: rescheduleForm.value.newDate,
+          startTime: rescheduleForm.value.newTime,
+          endTime: "", // Add logic for the end time if needed
+        };
+        store.dispatch("rescheduleBooking", {
+          index: currentBookingIndex.value,
+          newDetails,
+        });
+        alert("Appointment successfully rescheduled!");
+        closeRescheduleModal();
+      } else {
+        alert("Please select a new date and time.");
+      }
+    };
+
     onMounted(() => {
       profileForm.value.email = store.state.email || localStorage.getItem("userEmail");
-
-      // Fetch appointments (mocked data)
       bookings.value = [
         {
           DoctorName: "Smith",
@@ -199,69 +238,96 @@ export default {
       isPasswordChangeVisible,
       showPasswordChangeModal,
       closePasswordChangeModal,
-      handleAvatarSuccess,
-      beforeAvatarUpload,
+      onAvatarChange,
       cancelBooking,
       bookings,
+      isRescheduleModalVisible,
+      showRescheduleModal,
+      closeRescheduleModal,
+      rescheduleForm,
+      rescheduleBooking,
     };
   },
 };
 </script>
 
+
 <style scoped>
 .profile-card {
-  background: linear-gradient(145deg, #f5f7fa, #e1e5ea);
+  background: linear-gradient(145deg, #ffffff, #f1f4f9);
   border-radius: 15px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  transition: all 0.3s ease;
 }
 
 .profile-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  color: #333;
 }
 
 .avatar-uploader {
-  width: 120px;
-  height: 120px;
+  width: 130px;
+  height: 130px;
   margin: 20px auto;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.avatar-uploader:hover {
+  transform: scale(1.05);
 }
 
 .avatar-uploader-icon {
-  font-size: 32px;
-  color: #8c939d;
+  font-size: 34px;
+  color: #b0b3c5;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f5f7fa;
+  background-color: #f0f3f8;
   border-radius: 50%;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .avatar-uploader-icon:hover {
-  background-color: #e1e5ea;
+  background-color: #d8dce6;
+  transform: scale(1.1);
 }
 
 .avatar {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border-radius: 50%;
 }
 
 .change-password-button {
-  margin-top: 10px;
+  margin-top: 15px;
+  background-color: #3498db;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.change-password-button:hover {
+  background-color: #2980b9;
+  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
 }
 
 .appointments-container {
-  margin-top: 30px;
+  margin-top: 35px;
   background: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 
 .appointments-list {
@@ -272,41 +338,75 @@ export default {
 .appointment-item {
   display: flex;
   justify-content: space-between;
-  background-color: #f5f7fa;
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #f7faff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.appointment-item:hover {
+  background-color: #e8f0ff;
+  transform: translateY(-3px);
 }
 
 .appointment-details {
   max-width: 75%;
+  color: #333;
 }
 
 .cancelled-message {
-  color: red;
+  color: #e79d96;
   font-weight: bold;
 }
 
-.cancel-button {
-  background-color: #e74c3c;
+.cancel-button,
+.reschedule-button {
+  background-color: #9bbfee;
   color: white;
-  padding: 5px 10px;
+  padding: 8px 14px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.cancel-button:hover,
+.reschedule-button:hover {
+  background-color: #e79d96;
+  transform: scale(1.05);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transition: background-color 0.3s ease;
 }
 
-.cancel-button:hover {
-  background-color: #c0392b;
+.modal-dialog {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  width: 320px;
+  max-width: 90%;
+  transition: transform 0.3s ease;
 }
 
 .medical-records {
-  margin-top: 30px;
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 35px;
+  background-color: #f9fbfc;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
 </style>
