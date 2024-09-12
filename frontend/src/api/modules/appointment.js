@@ -140,13 +140,14 @@ export const getAppointments_user = async function () {
   }
 };
 
-export const createAppointment_user = async function (formData, token) {
+export const createAppointment = async function (formData) {
+  const token = localStorage.getItem("authToken");
+  const url = token ? "/user/appointments" : "/public/appointments";
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
   const config = {
-    url: "/user/appointments",
+    url,
     method: "post",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers,
     data: {
       ScheduleId: formData.ScheduleId,
       FirstName: formData.FirstName,
