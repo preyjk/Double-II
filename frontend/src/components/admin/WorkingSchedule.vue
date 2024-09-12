@@ -109,8 +109,11 @@ export default {
 
             for (let time = start; time < end; time = new Date(time.getTime() + intervalMs)) {
                 for (const doctorId of this.selectedDoctor) {
+                    const doctor = this.doctors.find(d => d.id === doctorId);
                     schedules.push({
                         DoctorId: doctorId,
+                        DoctorName: doctor.name,
+                        Location: this.selectedClinic,
                         Date: this.selectedDate,
                         StartTime: time.toTimeString().slice(0, 5),
                         EndTime: new Date(time.getTime() + intervalMs).toTimeString().slice(0, 5),
