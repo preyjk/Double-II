@@ -7,7 +7,9 @@
       </p>
       <p>
         Your appointment with Dr. {{ booking.DoctorName }} has been
-        successfully booked.
+        successfully booked. Your booking reference is <strong>{{
+          booking.BookingReference
+        }}</strong>.
       </p>
       <p class="p-detail">Details of your booking:</p>
       <ul>
@@ -35,7 +37,7 @@
 </template>
 
 <script>
-import { getAppointments_user } from "@/api/modules/appointment.js";
+
 export default {
   name: "ConfirmationPage",
   data() {
@@ -52,7 +54,8 @@ export default {
   methods: {
     async fetchBookingDetails() {
       try {
-        const appointments = await getAppointments_user();
+        console.log(this.$store.state.bookings);
+        const appointments = this.$store.state.bookings;
         if (appointments && appointments.length > 0) {
           this.booking = appointments[appointments.length - 1];
         } else {
