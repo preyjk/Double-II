@@ -157,7 +157,7 @@ export default {
       const todayDate = new Date().getTime();
       const picekDate = date.getTime();
       if (picekDate >= todayDate) {
-        const selectedDate = date.toISOString().split("T")[0];
+        const selectedDate = date.toLocaleDateString().split("T")[0];
         this.selectedDate = selectedDate;
         this.fetchAvailableTimeslots(selectedDate);
       }
