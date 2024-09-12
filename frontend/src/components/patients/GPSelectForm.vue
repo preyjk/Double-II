@@ -1,3 +1,5 @@
+
+您说：
 <template>
   <div class="gp-select-form">
     <h1>Doctors at {{ clinicName }}</h1>
@@ -6,8 +8,9 @@
       <div
         v-for="doctor in filteredDoctors"
         :key="doctor.id"
-        @click="selectDoctor(doctor)"
         class="doctor-card"
+        :class="{ 'selected': selectedDoctor === doctor }"
+        @click="selectDoctor(doctor)"
       >
         <img
           src="/src/assets/doctor.png"
@@ -17,6 +20,13 @@
         <div class="doctor-info">
           <div class="doctor-name">{{ doctor.LastName }}</div>
           <div class="doctor-specialty">{{ doctor.Speciality }}</div>
+        </div>
+       
+        <div class="doctor-detail-overlay">
+          <div class="doctor-detail">{{ doctor.Detail }}</div>
+          <button class="booking-btn" @click="selectDoctor(doctor)">
+            Book Now
+          </button>
         </div>
       </div>
     </div>
@@ -88,14 +98,17 @@ export default {
 
 .doctor-card {
   display: flex;
+  flex-direction: row;
   align-items: center;
   width: calc(33% - 20px);
-  height: 250px;
+  height: 300px;
   background-color: #e6e6e6;
   border-radius: 5px;
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
-  border: none;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent; 
 }
 
 @media (max-width: 800px) {
@@ -110,11 +123,6 @@ export default {
   }
 }
 
-.doctor-card:hover {
-  transform: scale(1.03);
-  box-shadow: 0 6px 12px rgba(0, 77, 102, 0.15);
-}
-
 .doctor-image {
   width: 40%;
   height: 100%;
@@ -125,11 +133,8 @@ export default {
 
 .doctor-info {
   padding: 10px;
-  flex: 1;
   color: #004d66;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex: 1;
 }
 
 .doctor-name,
@@ -138,9 +143,50 @@ export default {
   font-weight: bold;
 }
 
+.doctor-detail-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 5px;
+}
+
+.doctor-card:hover .doctor-detail-overlay {
+  opacity: 1;
+}
+
+.doctor-detail {
+  margin-bottom: 15px;
+}
+
+.booking-btn {
+  padding: 10px 20px;
+  background-color: #ffffff;
+  color: #004d66;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.booking-btn:hover {
+  background-color: #004d66;
+  color: #ffffff;
+}
+
 h1,
 p {
   color: #004d66;
-  margin-bottom: 10px;
+  margin-bottom: 30px;
 }
 </style>
