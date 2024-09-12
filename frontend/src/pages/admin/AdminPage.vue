@@ -4,7 +4,7 @@
       <div class="logo-container">
         <img src="@/assets/logo.png" alt="FRW Logo" />
       </div>
-      <input type="text" placeholder="Username" v-model="username" />
+      <input type="text" placeholder="Email" v-model="email" />
       <input type="password" placeholder="Password" v-model="password" />
       <button @click="login">Login</button>
     </div>
@@ -19,13 +19,29 @@ export default {
   },
   data() {
     return {
-      username: "",
+      email: "",
       password: "",
     };
   },
   methods: {
-    login() {
-      this.$router.push({ name: "dashboard" });
+    async login() {
+      const loginResult = await fetch(`${import.meta.env.VITE_API_ENDPOINT}/public/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: this.email,
+          password: this.password,
+        }),
+      });
+      if (loginResult.ok) {
+        const data = await loginResult.json();
+        localStorage.setItem("authToken", data.token);
+        this.$router.push({ name: "dashboard" });
+      } else {
+        alert("Invalid email or password");
+      }
     },
   },
 };
