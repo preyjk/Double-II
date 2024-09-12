@@ -227,6 +227,7 @@ export default {
 }
 
 .el-menu-vertical {
+  background-color: #fafbfd;
   width: 100%;
 }
 
