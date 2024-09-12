@@ -9,11 +9,6 @@
             isSelectedDate(data.day) ? 'selected-date' : '',
             isDisabledDate(data.day) ? 'disabled-date' : '',
           ]"
-          :style="
-            isDisabledDate(data.day)
-              ? { 'pointer-events': 'none', cursor: 'default' }
-              : {}
-          "
         >
           <p>
             {{ data.day.split("-").slice(1).join("-") }}
@@ -159,9 +154,13 @@ export default {
     },
 
     handleDatePick(date) {
-      const selectedDate = date.toISOString().split("T")[0];
-      this.selectedDate = selectedDate;
-      this.fetchAvailableTimeslots(selectedDate);
+      const todayDate = new Date().getTime();
+      const picekDate = date.getTime();
+      if (picekDate >= todayDate) {
+        const selectedDate = date.toISOString().split("T")[0];
+        this.selectedDate = selectedDate;
+        this.fetchAvailableTimeslots(selectedDate);
+      }
     },
 
     isAvailableDate(date) {
@@ -175,7 +174,7 @@ export default {
     isDisabledDate(date) {
       const today = new Date(this.getTodayDate());
       const selected = new Date(date);
-      return selected < today;
+      return selected <= today;
     },
 
     disabledDate(date) {
@@ -328,6 +327,5 @@ export default {
 .disabled-date {
   background-color: #d3d3d3;
   color: #a0a0a0;
-  cursor: default;
 }
 </style>
