@@ -6,6 +6,10 @@ export default createStore({
     bookings: [],
     tempBooking: {},
     email: localStorage.getItem("email") || "",
+    firstName: localStorage.getItem("firstName") || "",
+    lastName: localStorage.getItem("lastName") || "",
+    isPaused: false, // New state to track if the process is paused
+    pausedBookingsQueue: [], // Queue for paused bookings
   },
   mutations: {
     ADD_BOOKING(state, booking) {
@@ -33,9 +37,31 @@ export default createStore({
     RESCHEDULE_BOOKING(state, { index, newDetails }) {
       state.bookings[index] = { ...state.bookings[index], ...newDetails };
     },
+    TOGGLE_PAUSE(state, isPaused) {
+      state.isPaused = isPaused;
+    },
+    QUEUE_BOOKING(state, booking) {
+      state.pausedBookingsQueue.push(booking);
+    },
+    CLEAR_QUEUE(state) {
+      state.pausedBookingsQueue = [];
+    },
+    PROCESS_QUEUED_BOOKINGS(state) {
+      state.pausedBookingsQueue.forEach((booking) => {
+        state.bookings.push(booking);
+      });
+      state.pausedBookingsQueue = [];
+    },
   },
   actions: {
-    async addBooking({ commit }, booking) {
+    async addBooking({ commit, state }, booking) {
+      if (state.isPaused) {
+        // If paused, add the booking to the queue instead of processing it
+        commit("QUEUE_BOOKING", booking);
+        console.log("Booking added to the queue due to pause:", booking);
+        return;
+      }
+      
       try {
         const token = localStorage.getItem("authToken");
 
@@ -62,7 +88,6 @@ export default createStore({
         const response = await createAppointment_user(formData, token);
 
         commit("ADD_BOOKING", response);
-
       } catch (err) {
         console.error("Error during booking:", err);
         throw err;
@@ -123,6 +148,15 @@ export default createStore({
 
     clearBookings({ commit }) {
       commit("CLEAR_BOOKINGS");
+    },
+
+    togglePause({ commit }, isPaused) {
+      commit("TOGGLE_PAUSE", isPaused);
+
+      if (!isPaused) {
+        commit("PROCESS_QUEUED_BOOKINGS");
+        console.log("Processing queued bookings as the pause is lifted.");
+      }
     },
   },
 });

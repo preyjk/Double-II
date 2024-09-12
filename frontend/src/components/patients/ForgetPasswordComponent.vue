@@ -37,7 +37,7 @@ export default {
       try {
         await forgetPassword(this.email); // Call the forgetPassword API function
         this.successMessage = "Password reset email has been sent successfully!";
-        this.email = ""; // Clear the email input after submission
+        this.email = ""; 
       } catch (error) {
         this.errorMessage = error.message || "Failed to send password reset email. Please try again.";
       }

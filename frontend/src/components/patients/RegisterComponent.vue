@@ -3,35 +3,39 @@
     <div class="modal">
       <h2>Register</h2>
       <form @submit.prevent="handleRegister">
+        <!-- First Name Field -->
         <div class="form-group">
-          <label for="reg-email">Email Address</label>
+          <label for="reg-firstname">First Name <span class="required">*</span></label>
+          <input type="text" id="reg-firstname" v-model="firstName" required />
+        </div>
+
+        <!-- Last Name Field -->
+        <div class="form-group">
+          <label for="reg-lastname">Last Name <span class="required">*</span></label>
+          <input type="text" id="reg-lastname" v-model="lastName" required />
+        </div>
+
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="reg-email">Email Address <span class="required">*</span></label>
           <input type="text" id="reg-email" v-model="email" required />
         </div>
 
+        <!-- Password Field -->
         <div class="form-group">
-          <label for="reg-password">Create Password</label>
-          <input
-            type="password"
-            id="reg-password"
-            v-model="password"
-            required
-          />
+          <label for="reg-password">Create Password <span class="required">*</span></label>
+          <input type="password" id="reg-password" v-model="password" required />
         </div>
+
+        <!-- Confirm Password Field -->
         <div class="form-group">
-          <label for="confirm-password">Confirm Password</label>
-          <input
-            type="password"
-            id="confirm-password"
-            v-model="confirmPassword"
-            required
-          />
+          <label for="confirm-password">Confirm Password <span class="required">*</span></label>
+          <input type="password" id="confirm-password" v-model="confirmPassword" required />
         </div>
 
         <div class="form-actions">
           <button type="submit" class="submit-button">Register</button>
-          <button type="button" @click="closeModal" class="cancel-button">
-            Cancel
-          </button>
+          <button type="button" @click="closeModal" class="cancel-button">Cancel</button>
         </div>
         <p class="toggle-text">
           Already Have an Account?
@@ -49,6 +53,8 @@
   </div>
 </template>
 
+
+
 <script>
 import { register } from "@/api/modules/user.js";
 import { defineAsyncComponent } from "vue";
@@ -59,6 +65,8 @@ export default {
       showModal: true,
       showLoginModal: false,
       email: "",
+      firstName: "", 
+      lastName: "",  
       password: "",
       confirmPassword: "",
     };
@@ -76,7 +84,7 @@ export default {
         alert("Passwords do not match!");
         return;
       }
-      register(this.email, this.password)
+      register(this.firstName, this.lastName, this.email, this.password)
         .then((data) => {
           console.log("Registration data received:", data);
           alert("Registration successful!");
@@ -101,6 +109,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .modal-overlay {
   position: fixed;
@@ -165,6 +174,10 @@ export default {
     --a: 360deg;
   }
 }
+.required {
+  color: #dbcf8f;
+}
+
 
 .form-group {
   margin-bottom: 20px;

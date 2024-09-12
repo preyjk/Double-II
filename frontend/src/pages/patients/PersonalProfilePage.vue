@@ -21,22 +21,11 @@
       </div>
 
       <!-- User Information -->
-     <div class="profile-info">
-       <table class="info-table">
-         <tr>
-           <td><strong>Name:</strong></td>
-           <td>{{ profileForm.name }}</td>
-         </tr>
-         <tr>
-           <td><strong>Email:</strong></td>
-           <td>{{ profileForm.email }}</td>
-         </tr>
-         <tr>
-           <td><strong>Phone:</strong></td>
-           <td>{{ profileForm.phone }}</td>
-         </tr>
-       </table>
-     </div>
+      <div class="profile-info">
+        <p><strong>Name:</strong> {{ profileForm.name }}</p>
+        <p><strong>Email:</strong> {{ profileForm.email }}</p>
+        <p><strong>Phone:</strong> {{ profileForm.phone }}</p>
+      </div>
 
       <!-- Trigger to show the password change form modal -->
       <el-button type="primary" @click="showPasswordChangeModal" class="change-password-button">Change

@@ -20,11 +20,11 @@ export const login = async function (email, password) {
   }
 };
 
-export const register = async function (email, password) {
+export const register = async function (email, password,firstName,lastName) {
   const config = {
     url: "/public/auth/signup",
     method: "post",
-    data: { email, password },
+    data: { email, password,firstName,lastName},
   };
 
   try {
