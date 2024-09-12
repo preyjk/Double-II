@@ -7,12 +7,13 @@
       </video>
     </div>
     <div class="right-section">
-      <h1 class="hero-title">YOUR JOURNEY TO WELLNESS BEGINS HERE</h1>
+      <h1 class="hero-title">Book Your Appointment with Ease</h1>
       <div class="play-button-container" @click="goChatbotPage">
         <div class="play-button">
-          <span class="triangle"></span>
+          <img :src="clickImageSrc" alt="Click Icon" class="click-icon" />
         </div>
       </div>
+      <p class="subtitle">Try Our Chatbot!</p>
       <img :src="robotImageSrc" alt="Robot Image" class="robot-image" />
     </div>
   </div>
@@ -20,6 +21,7 @@
 
 <script>
 import robotImage from "@/assets/robot.png";
+import clickImage from "@/assets/click.png"; // Importing the click image
 import videoSrc from "@/assets/1.mp4";
 export default {
   name: "BannerComponent",
@@ -27,6 +29,7 @@ export default {
     return {
       videoSrc,
       robotImageSrc: robotImage,
+      clickImageSrc: clickImage, // Assigning the click image to be used in the play button
       videoReadyToPlay: true,
     };
   },
@@ -63,7 +66,7 @@ export default {
 }
 
 .left-section {
-  width: 68%;
+  width: 65%;
   height: 80vh;
   position: relative;
 }
@@ -75,29 +78,39 @@ video {
 }
 
 .right-section {
-  width: 40%;
+  width: 35%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
   padding: 20px;
-  position: relative;
   background: linear-gradient(135deg, #004d66, #accfd8);
+  position: relative;
 }
 
 .robot-image {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  width: 35%;
+  width: 30%;
   height: auto;
 }
 
 .hero-title {
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: #e0f7ff;
   margin-top: 20px;
+  font-weight: bold;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.subtitle {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin-top: 20px;
+  /* No background or extra styling */
 }
 
 .play-button-container {
@@ -110,38 +123,47 @@ video {
 .play-button {
   background-color: #accfd8;
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
+  width: 150px; /* Increased button size */
+  height: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s;
-  animation: breathing 2s infinite ease-in-out;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  animation: pulse 2s infinite ease-in-out;
+  box-shadow: 0 0 20px rgba(172, 207, 216, 0.7), 0 0 40px rgba(172, 207, 216, 0.5);
 }
 
 .play-button:hover {
   background-color: #ddeeff;
+  box-shadow: 0 0 30px rgba(172, 207, 216, 0.8), 0 0 50px rgba(172, 207, 216, 0.6);
 }
 
-.play-button .triangle {
-  border-left: 25px solid white;
-  border-top: 15px solid transparent;
-  border-bottom: 15px solid transparent;
+.click-icon {
+  width: 100px; /* Increased click image size */
+  height: 100px;
 }
 
-@keyframes breathing {
+@keyframes pulse {
   0% {
     transform: scale(1);
-    background-color: #accfd8;
+    box-shadow: 0 0 20px rgba(172, 207, 216, 0.7);
   }
   50% {
     transform: scale(1.1);
-    background-color: #8fbcd3;
+    box-shadow: 0 0 30px rgba(172, 207, 216, 0.9);
   }
   100% {
     transform: scale(1);
-    background-color: #accfd8;
+    box-shadow: 0 0 20px rgba(172, 207, 216, 0.7);
   }
 }
 </style>
+
+
+
+
+
+
+
+
