@@ -5,19 +5,24 @@
     <div class="profile-header">
       <h2>Patients Profile</h2>
 
-      <div class="avatar-container">
-        <input type="file" accept="image/*" class="avatar-uploader" @change="onAvatarChange" />
-        <img v-if="profileForm.avatarUrl" :src="profileForm.avatarUrl" class="avatar" />
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+     <!-- Avatar Upload -->
+     <div class="avatar-container">
+        <label class="avatar-uploader">
+          <input type="file" accept="image/*" class="avatar-input" @change="onAvatarChange" />
+          <div class="avatar-wrapper">
+            <!-- If avatar is uploaded, show the image, otherwise show the upload prompt -->
+            <img v-if="profileForm.avatarUrl" :src="profileForm.avatarUrl" class="avatar" />
+            <div v-else class="avatar-placeholder">
+              <i class="el-icon-plus avatar-uploader-icon"></i>
+              <span class="avatar-hint">Click to upload</span>
+            </div>
+          </div>
+        </label>
       </div>
 
       <!-- User Information -->
       <div class="profile-info">
-        <p><strong>FirstName:</strong> {{ profileForm.firstName }}</p>
-        <p><strong>Gender:</strong> {{ profileForm.Gender }}</p>
-        <p><strong>Age:</strong> {{ profileForm.Age }}</p>
-        <p><strong>Address:</strong> {{ profileForm.Address }}</p>
-        <p><strong>LastName:</strong> {{ profileForm.lastName }}</p>
+        <p><strong>Name:</strong> {{ profileForm.name }}</p>
         <p><strong>Email:</strong> {{ profileForm.email }}</p>
         <p><strong>Phone:</strong> {{ profileForm.phone }}</p>
       </div>
@@ -257,49 +262,84 @@ export default {
 
 
 <style scoped>
+
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px; /* 增加顶部的间距 */
+  margin-bottom: 20px;
+}
+
 .profile-card {
-  background: linear-gradient(145deg, #ffffff, #f1f4f9);
+  background: linear-gradient(145deg, #fff, #f9f9f9);
   border-radius: 15px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 30px;
   transition: all 0.3s ease;
 }
 
 .profile-header {
   text-align: center;
   margin-bottom: 25px;
-  color: #333;
+  color: #004d66; 
+  margin-bottom: 30px;
+}
+
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .avatar-uploader {
+  position: relative;
   width: 130px;
   height: 130px;
-  margin: 20px auto;
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
+  border: 2px solid #3498db;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.avatar-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-placeholder {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #3498db;
 }
 
 .avatar-uploader:hover {
   transform: scale(1.05);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.avatar-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
 
 .avatar-uploader-icon {
   font-size: 34px;
   color: #b0b3c5;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f3f8;
-  border-radius: 50%;
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: color 0.3s ease;
 }
 
 .avatar-uploader-icon:hover {
-  background-color: #d8dce6;
-  transform: scale(1.1);
+  color: #3498db;
 }
 
 .avatar {
@@ -308,6 +348,18 @@ export default {
   object-fit: cover;
   border-radius: 50%;
 }
+
+.avatar-hint {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #3498db;
+  transition: color 0.3s ease;
+}
+
+.avatar-hint:hover {
+  color: #2980b9;
+}
+
 
 .change-password-button {
   margin-top: 15px;
@@ -413,4 +465,37 @@ export default {
   border-radius: 12px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
 }
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.info-table tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.info-table td {
+  padding: 12px 15px;
+  font-size: 16px;
+  color: #333;
+}
+
+.info-table td:first-child {
+  font-weight: bold;
+  color: #3498db;
+  width: 120px;
+}
+
+.info-table td:last-child {
+  text-align: left;
+}
+
+.info-table tr:hover {
+  background-color: #f9fbfc;
+}
 </style>
+
+
+
