@@ -11,6 +11,9 @@ import MyBooking from "@/pages/patients/MyBooking.vue";
 import VerifyEmailPage from "@/pages/patients/VerifyEmailPage.vue";
 import ResetPasswordPage from "@/pages/patients/ResetPasswordPage.vue";
 import GoogleLoginPage from "../pages/patients/GoogleLoginPage.vue";
+import BasePage from "../pages/admin/BasePage.vue";
+import WorkingSchedule from "../components/admin/WorkingSchedule.vue";
+import ReservationCalendar from "../components/admin/ReservationCalendar.vue";
 
 const routes = [
   /*
@@ -93,6 +96,25 @@ const routes = [
     name: "dashboard",
     component: DashboardPage,
   },
+
+  {
+    path: "/admin/console",
+    component: BasePage,
+    children: [
+      {
+        path: "dashboard",
+        component: DashboardPage,
+      },
+      {
+        path: "appointments",
+        component: ReservationCalendar,
+      },
+      {
+        path: "schedule",
+        component: WorkingSchedule,
+      }
+    ]
+  }
 ];
 
 const router = createRouter({
