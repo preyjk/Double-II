@@ -1,11 +1,24 @@
 <template>
   <div class="schedule-container">
-    <el-calendar @input="handleDatePick">
+    <el-calendar :disabled-date="disabledDate" @input="handleDatePick">
       <template #date-cell="{ data }">
-        <p :class="isAvailableDate(data.day) ? 'is-selected' : ''">
-          {{ data.day.split("-").slice(1).join("-") }}
-          {{ isAvailableDate(data.day) ? "✔️" : "" }}
-        </p>
+        <div
+          :class="[
+            'date-cell',
+            isAvailableDate(data.day) ? 'available-date' : '',
+            isSelectedDate(data.day) ? 'selected-date' : '',
+            isDisabledDate(data.day) ? 'disabled-date' : '',
+          ]"
+          :style="
+            isDisabledDate(data.day)
+              ? { 'pointer-events': 'none', cursor: 'default' }
+              : {}
+          "
+        >
+          <p>
+            {{ data.day.split("-").slice(1).join("-") }}
+          </p>
+        </div>
       </template>
     </el-calendar>
 
@@ -20,10 +33,18 @@
     </div>
 
     <div v-if="!loading && !error && groupedSchedules">
-      <div v-for="(schedules, hour) in groupedSchedules" :key="hour" class="hour-group">
+      <div
+        v-for="(schedules, hour) in groupedSchedules"
+        :key="hour"
+        class="hour-group"
+      >
         <h3>{{ hour }}:00</h3>
         <ul class="schedule-list">
-          <li v-for="schedule in schedules" :key="schedule.Id" class="schedule-item">
+          <li
+            v-for="schedule in schedules"
+            :key="schedule.Id"
+            class="schedule-item"
+          >
             <span>Time: {{ schedule.StartTime }} - {{ schedule.EndTime }}</span>
             <button @click="selectTimeSlot(schedule)" class="select-button">
               Book
@@ -40,7 +61,10 @@
 </template>
 
 <script>
-import { getAvailableDates_public, getAvailableTimeslots_public } from "@/api/modules/appointment.js";
+import {
+  getAvailableDates_public,
+  getAvailableTimeslots_public,
+} from "@/api/modules/appointment.js";
 
 export default {
   props: {
@@ -111,7 +135,9 @@ export default {
 
       getAvailableTimeslots_public(this.doctorId, date)
         .then((data) => {
-          this.schedules = data.filter(schedule => schedule.Status === 'available');
+          this.schedules = data.filter(
+            (schedule) => schedule.Status === "available"
+          );
           this.loading = false;
         })
         .catch((error) => {
@@ -140,6 +166,22 @@ export default {
 
     isAvailableDate(date) {
       return this.availableDates.includes(date);
+    },
+
+    isSelectedDate(date) {
+      return date === this.selectedDate;
+    },
+
+    isDisabledDate(date) {
+      const today = new Date(this.getTodayDate());
+      const selected = new Date(date);
+      return selected < today;
+    },
+
+    disabledDate(date) {
+      const today = new Date(this.getTodayDate()).getTime();
+      const selected = new Date(date).getTime();
+      return selected < today;
     },
 
     selectTimeSlot(schedule) {
@@ -245,6 +287,14 @@ export default {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+::v-deep .el-calendar-table .el-calendar-day {
+  padding: 0 !important;
+}
+
+.date-cell[data-v-beab77a3] {
+  border-radius: 0;
+}
+
 .select-button:hover {
   background-color: #2980b9;
   transform: translateY(-2px);
@@ -254,8 +304,30 @@ export default {
   transform: translateY(0);
 }
 
-.is-selected {
-  color: #3498db;
-  font-weight: bold;
+.date-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  /* padding: 10px; */
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.available-date {
+  background-color: #9ed283;
+  color: white;
+}
+
+.selected-date {
+  background-color: #7faeda;
+  color: white;
+}
+
+.disabled-date {
+  background-color: #d3d3d3;
+  color: #a0a0a0;
+  cursor: default;
 }
 </style>
