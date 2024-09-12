@@ -154,13 +154,13 @@ input[type="password"]:focus {
 }
 
 .error-msg {
-  color: red;
+  color: #e7877e;
   margin-top: 10px;
   font-weight: bold;
 }
 
 .success-msg {
-  color: #28a745;
+  color: #9bbfee;
   margin-top: 10px;
   font-weight: bold;
   background-color: #e6f7ee;

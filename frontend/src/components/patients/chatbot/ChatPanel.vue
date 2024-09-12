@@ -45,7 +45,7 @@ export default {
       sessionId: null,
       animationData,
       isRobotAnimationShow: true,
-      responses: [], // 用于存储每条 AI 回复
+      responses: [], 
       textInput: {
         value: "",
         styles: {
@@ -127,7 +127,7 @@ export default {
             await postData({ prompt }, headers);
             this.sessionId = data.value.sessionId;
 
-            // 发送回复并添加反馈按钮
+      
             const responseWithFeedback = this.generateResponseWithFeedback(data.value.response);
             signals.onResponse({
               html: responseWithFeedback,
@@ -158,7 +158,6 @@ export default {
       );
     },
 
-    // 生成带反馈按钮的响应 HTML
     generateResponseWithFeedback(responseText) {
       return `
         <div class="response-container">
@@ -172,14 +171,13 @@ export default {
         </div>`;
     },
 
-    // 播放文字
+
     playText(text) {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.volume = this.textToSpeechOptions.volume;
       window.speechSynthesis.speak(utterance);
     },
 
-    // 复制文字
     copyText(text) {
       navigator.clipboard.writeText(text).then(() => {
         alert("Text copied to clipboard");
@@ -188,12 +186,11 @@ export default {
       });
     },
 
-    // 处理正面反馈
+
     handlePositiveFeedback() {
       console.log("User liked the response.");
     },
 
-    // 处理负面反馈
     handleNegativeFeedback() {
       console.log("User disliked the response.");
     },
