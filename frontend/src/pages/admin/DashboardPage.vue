@@ -124,49 +124,9 @@
       </el-aside>
 
       <el-container class="dashboard-right">
-        <el-header class="dashboard-header">
-          <el-row>
-            <el-col :span="8">
-              <div class="grid-content ep-bg-purple"></div>
-            </el-col>
-            <el-col :span="7">
-              <div class="grid-content ep-bg-purple-light"></div>
-            </el-col>
-            <el-col :span="1">
-              <div class="grid-content ep-bg-purple"></div>
-            </el-col>
-            <el-col :span="1">
-              <div class="grid-content ep-bg-purple-light"></div>
-            </el-col>
-            <el-col :span="1">
-              <div class="grid-content ep-bg-purple"></div>
-            </el-col>
-            <el-col :span="2">
-              <div class="grid-content ep-bg-purple-light"></div>
-            </el-col>
-            <el-col :span="4">
-              <div class="grid-content ep-bg-purple"></div>
-            </el-col>
-          </el-row>
-        </el-header>
-
         <el-main class="dashboard-main">
-          <el-row>
-            <el-col :span="4">
-              <div class="grid-content ep-bg-purple"></div>
-            </el-col>
-            <el-col :span="4">
-              <div class="grid-content ep-bg-purple-light"></div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="24">
-              <div class="grid-content ep-bg-purple"></div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <ReservationCalendar></ReservationCalendar>
-          </el-row>
+          <AdminHeader></AdminHeader>
+          <AdminNavigation></AdminNavigation>
         </el-main>
       </el-container>
     </el-container>
@@ -175,11 +135,13 @@
 
 <script>
 import logoSrc from "@/assets/logo.png";
-import ReservationCalendar from "@/components/admin/ReservationCalendar.vue";
+import AdminHeader from "@/components/admin/AdminHeader.vue";
+import AdminNavigation from "@/components/admin/AdminNavigation.vue";
 
 export default {
   components: {
-    ReservationCalendar,
+    AdminHeader,
+    AdminNavigation,
   },
   data() {
     return {

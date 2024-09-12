@@ -1,6 +1,39 @@
 <template>
   <div>
-    <el-table :data="timeSlots" style="width: 100%" border>
+    <!-- Top Row with Calendar, Appointment Count, Date Picker, and Doctor Filter -->
+    <div class="header-row">
+      <div class="left-section">
+        <el-icon><i class="el-icon-date"></i></el-icon>
+        <span>Appointments: {{ appointments.length }}</span>
+      </div>
+
+      <div class="center-section">
+        <el-date-picker
+          v-model="selectedDate"
+          type="date"
+          placeholder="Select Date"
+          style="margin-right: 10px"
+        ></el-date-picker>
+      </div>
+
+      <div class="right-section">
+        <el-select v-model="selectedDoctorFilter" placeholder="Select Doctor">
+          <el-option label="All GP" value="all"></el-option>
+          <el-option
+            v-for="doctor in doctors"
+            :key="doctor.id"
+            :label="doctor.name"
+            :value="doctor.id"
+          ></el-option>
+        </el-select>
+        <el-button type="primary" @click="filterAppointments"
+          >Filters</el-button
+        >
+      </div>
+    </div>
+
+    <!-- Table for Appointments -->
+    <el-table :data="filteredTimeSlots" style="width: 100%" border>
       <el-table-column
         prop="time"
         label="Time"
@@ -13,7 +46,7 @@
       </el-table-column>
 
       <el-table-column
-        v-for="doctor in doctors"
+        v-for="doctor in filteredDoctors"
         :key="doctor.id"
         :label="doctor.name"
         width="320"
@@ -68,6 +101,8 @@ export default {
       },
       selectedTime: null,
       selectedDoctor: null,
+      selectedDate: null, // For date picker
+      selectedDoctorFilter: "all", // For doctor filtering
       doctors: [
         { id: 1, name: "Dr. Soap Mactavish" },
         { id: 2, name: "Dr. Cipeng" },
@@ -87,6 +122,21 @@ export default {
         { time: "5pm", intervals: ["5:00", "5:15", "5:30", "5:45"] },
       ],
     };
+  },
+  computed: {
+    // Filtered doctors based on the selected filter
+    filteredDoctors() {
+      if (this.selectedDoctorFilter === "all") {
+        return this.doctors;
+      }
+      return this.doctors.filter(
+        (doctor) => doctor.id === this.selectedDoctorFilter
+      );
+    },
+    // Apply date filter to time slots (assuming your timeSlots might change with the date in future)
+    filteredTimeSlots() {
+      return this.timeSlots;
+    },
   },
   methods: {
     // Open appointment dialog
@@ -120,11 +170,34 @@ export default {
       this.appointmentForm.patientName = "";
       this.appointmentForm.reason = "";
     },
+    // Filter appointments (future functionality, you can extend it)
+    filterAppointments() {
+      console.log("Filter applied");
+      // Filtering logic will go here if necessary
+    },
   },
 };
 </script>
 
 <style scoped>
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.left-section,
+.center-section,
+.right-section {
+  display: flex;
+  align-items: center;
+}
+
+.right-section {
+  gap: 10px;
+}
+
 .appointment-cell {
   cursor: pointer;
   padding: 10px;
