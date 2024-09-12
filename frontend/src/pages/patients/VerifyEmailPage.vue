@@ -72,6 +72,6 @@ h1 {
 }
 
 .success {
-  color: #28a745;
+  color: #7e9ed2;
 }
 </style>

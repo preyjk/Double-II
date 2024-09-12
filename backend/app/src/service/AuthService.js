@@ -115,16 +115,20 @@ class AuthService {
       email: doctor.Email,
       password,
       roles: ['doctor'],
-      active: true
+      active: true,
+      firstName: doctor.FirstName,
+      lastName: doctor.LastName
     });
     await EmailService.sendInitialPasswordEmail({ to: doctor.Email, password });
     return { success: true, message: 'User created' };
   }
 
-  static async signup({ id, email, password, roles, active }) {
+  static async signup({ id, email, password, roles, active, firstName, lastName }) {
     try {
       const hashedPassword = AuthService.hashPassword(password);
       const createUserCommand = User.create({
+        FirstName: firstName,
+        LastName: lastName,
         Password: hashedPassword,
         Providers: [{ Provider: 'email', ProviderId: email }],
         Roles: roles || [],
@@ -248,19 +252,23 @@ class AuthService {
     const googleUser = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${data.access_token}`);
     const userData = await googleUser.json();
     const openid = userData.id;
+    const givenName = userData.given_name;
+    const familyName = userData.family_name;
     const indexResult = await dynamo.send(UserIndex.findById(
       UserIndex.generateId({ Provider: 'google', ProviderId: openid })
     ));
     let index = indexResult.Item;
     if (!index) {
-      index = await AuthService.signupWithGoogle({ openid });
+      index = await AuthService.signupWithGoogle({ openid, givenName, familyName });
     }
     const token = AuthService.generateToken({ id: index.UserId });
     return { success: true, token }; 
   }
 
-  static async signupWithGoogle({ openid }) {
+  static async signupWithGoogle({ openid, givenName, familyName }) {
     const createUserCommand = User.create({
+      FirstName: givenName,
+      LastName: familyName,
       Providers: [{ Provider: 'google', ProviderId: openid }],
       Roles: ['user'],
       Active: true

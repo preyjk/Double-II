@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import { getAppointments_user, createAppointment_user, cancelAppointment_user } from "@/api/modules/appointment.js";
+import { getAppointments_user, createAppointment_user, cancelAppointment_user, rescheduleAppointment_user } from "@/api/modules/appointment.js";
 
 export default createStore({
   state: {
@@ -29,7 +29,10 @@ export default createStore({
     },
     CANCEL_BOOKING(state, index) {
       state.bookings[index].Status = "cancelled";
-    }
+    },
+    RESCHEDULE_BOOKING(state, { index, newDetails }) {
+      state.bookings[index] = { ...state.bookings[index], ...newDetails };
+    },
   },
   actions: {
     async addBooking({ commit }, booking) {
@@ -86,6 +89,30 @@ export default createStore({
         console.log("Appointment canceled successfully");
       } catch (err) {
         console.error("Error canceling appointment:", err);
+        throw err;
+      }
+    },
+
+    async rescheduleBooking({ commit, state }, { index, newDetails }) {
+      try {
+        const appointmentId = state.bookings[index].Id;
+
+        const rescheduleData = {
+          ScheduleId: newDetails.scheduleId,
+          DoctorId: newDetails.DoctorId,
+          DoctorName: newDetails.doctorName,
+          Date: newDetails.date,
+          StartTime: newDetails.startTime,
+          EndTime: newDetails.endTime,
+          Reason: newDetails.reason || state.bookings[index].Reason,
+        };
+
+        await rescheduleAppointment_user(appointmentId, rescheduleData);
+
+        commit("RESCHEDULE_BOOKING", { index, newDetails });
+        console.log("Appointment rescheduled successfully");
+      } catch (err) {
+        console.error("Error rescheduling appointment:", err);
         throw err;
       }
     },
