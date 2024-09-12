@@ -1,5 +1,3 @@
-
-您说：
 <template>
   <div class="gp-select-form">
     <h1>Doctors at {{ clinicName }}</h1>
