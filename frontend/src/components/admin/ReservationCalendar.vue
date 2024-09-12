@@ -66,7 +66,11 @@
                 {{ formatTimeRange(interval) }}
               </p>
               <p v-if="getAppointment(interval, doctor.id)">
-                {{ getReasonAbbreviation(getAppointmentReason(interval, doctor.id)) }}
+                {{
+                  getReasonAbbreviation(
+                    getAppointmentReason(interval, doctor.id)
+                  )
+                }}
               </p>
               <p v-if="isAppointmentCompleted(interval, doctor.id)">
                 <span class="finish-badge">Finish</span>
@@ -76,24 +80,27 @@
         </template>
       </el-table-column>
     </el-table>
-
     <!-- Dialog: Add Appointment -->
-    <el-dialog
-      title="Add Appointment"
-      :visible.sync="dialogVisible"
-      width="30%"
-    >
+    <el-dialog title="Add/Edit Appointment" v-model="dialogVisible" width="30%">
+      <p><strong>Doctor:</strong> {{ selectedDoctor?.name }}</p>
+      <p><strong>Time:</strong> {{ selectedTime }}</p>
       <el-form :model="appointmentForm">
         <el-form-item label="Patient Name">
-          <el-input v-model="appointmentForm.patientName"></el-input>
+          <el-input
+            v-model="appointmentForm.patientName"
+            :disabled="true"
+          ></el-input>
         </el-form-item>
         <el-form-item label="Reason">
           <el-input v-model="appointmentForm.reason"></el-input>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancel</el-button>
+      <div slot="footer" class="dialog-footer button-container">
         <el-button type="primary" @click="submitAppointment">Confirm</el-button>
+        <el-button type="danger" @click="cancelAppointment"
+          >Cancel Appointment</el-button
+        >
+        <el-button @click="contactPatient">Contact Patient</el-button>
       </div>
     </el-dialog>
   </div>
@@ -162,21 +169,68 @@ export default {
   },
   methods: {
     openDialog(interval, doctor) {
+      const appointment = this.appointments.find(
+        (a) => a.time === interval && a.doctorId === doctor.id
+      );
+
+      if (appointment) {
+        this.appointmentForm.patientName = appointment.patientName;
+        this.appointmentForm.reason = appointment.reason;
+      } else {
+        this.clearForm();
+      }
+
       this.selectedTime = interval;
       this.selectedDoctor = doctor;
       this.dialogVisible = true;
     },
+    cancelAppointment() {
+      const existingAppointmentIndex = this.appointments.findIndex(
+        (a) =>
+          a.time === this.selectedTime && a.doctorId === this.selectedDoctor.id
+      );
+      if (existingAppointmentIndex !== -1) {
+        this.appointments.splice(existingAppointmentIndex, 1); // 删除预约
+        this.dialogVisible = false;
+      }
+    },
+
+    contactPatient() {
+      const appointment = this.appointments.find(
+        (a) =>
+          a.time === this.selectedTime && a.doctorId === this.selectedDoctor.id
+      );
+      if (appointment) {
+        // 假设有病人的联系方式
+        const patientContact = "Contact Info: john.doe@example.com";
+        alert(`Contacting ${appointment.patientName}.\n${patientContact}`);
+      }
+    },
     submitAppointment() {
-      this.appointments.push({
-        doctorId: this.selectedDoctor.id,
-        time: this.selectedTime,
-        patientName: this.appointmentForm.patientName,
-        reason: this.appointmentForm.reason,
-        completed: false,
-      });
+      const existingAppointmentIndex = this.appointments.findIndex(
+        (a) =>
+          a.time === this.selectedTime && a.doctorId === this.selectedDoctor.id
+      );
+
+      if (existingAppointmentIndex !== -1) {
+        this.appointments[existingAppointmentIndex].patientName =
+          this.appointmentForm.patientName;
+        this.appointments[existingAppointmentIndex].reason =
+          this.appointmentForm.reason;
+      } else {
+        this.appointments.push({
+          doctorId: this.selectedDoctor.id,
+          time: this.selectedTime,
+          patientName: this.appointmentForm.patientName,
+          reason: this.appointmentForm.reason,
+          completed: false,
+        });
+      }
+
       this.dialogVisible = false;
       this.clearForm();
     },
+
     getAppointment(time, doctorId) {
       const appointment = this.appointments.find(
         (a) => a.time === time && a.doctorId === doctorId
@@ -190,7 +244,13 @@ export default {
       return appointment ? appointment.reason : null;
     },
     getReasonAbbreviation(reason) {
-      return reason ? reason.split(" ").map((word) => word[0]).join("").toUpperCase() : "";
+      return reason
+        ? reason
+            .split(" ")
+            .map((word) => word[0])
+            .join("")
+            .toUpperCase()
+        : "";
     },
     isAppointmentCompleted(time, doctorId) {
       const appointment = this.appointments.find(
@@ -247,5 +307,21 @@ export default {
 .finish-badge {
   color: green;
   font-weight: bold;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.el-button {
+  margin-left: 10px;
 }
 </style>
