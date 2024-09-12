@@ -65,6 +65,7 @@
           <li v-for="(booking, index) in bookings" :key="index" class="appointment-item">
             <div class="appointment-details">
               <p><strong>Doctor:</strong> Dr. {{ booking.DoctorName }}</p>
+              <p><strong>Location:</strong> {{ booking.Location }}</p>
               <p><strong>Date:</strong> {{ booking.Date }}</p>
               <p><strong>Time:</strong> {{ booking.StartTime }} - {{ booking.EndTime }}</p>
               <p><strong>Patient:</strong> {{ booking.LastName }}</p>
