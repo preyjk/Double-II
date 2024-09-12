@@ -5,8 +5,8 @@
     <div class="profile-header">
       <h2>Patients Profile</h2>
 
-     <!-- Avatar Upload -->
-     <div class="avatar-container">
+      <!-- Avatar Upload -->
+      <div class="avatar-container">
         <label class="avatar-uploader">
           <input type="file" accept="image/*" class="avatar-input" @change="onAvatarChange" />
           <div class="avatar-wrapper">
@@ -72,16 +72,18 @@
                 <strong>Status:</strong> Appointment Cancelled
               </p>
             </div>
-            <button @click="cancelBooking(index)" class="cancel-button" :disabled="booking.Status === 'cancelled'">
-              Cancel
-            </button>
-            <!-- Reschedule Button -->
-            <button @click="showRescheduleModal(index)" class="reschedule-button"
-              :disabled="booking.Status === 'cancelled'">
-              Reschedule
-            </button>
+            <div class="appointment-actions">
+              <button @click="cancelBooking(index)" class="cancel-button" :disabled="booking.Status === 'cancelled'">
+                Cancel
+              </button>
+              <button @click="showRescheduleModal(index)" class="reschedule-button"
+                :disabled="booking.Status === 'cancelled'">
+                Reschedule
+              </button>
+            </div>
           </li>
         </ul>
+
       </div>
       <div v-else>
         <p>You have no appointments scheduled.</p>
@@ -122,6 +124,7 @@ import { useStore } from "vuex";
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
 import { changePassword } from "@/api/modules/user.js";
+import { getPatientById_user } from "@/api/modules/patients.js";
 
 export default {
   components: {
@@ -131,24 +134,25 @@ export default {
   setup() {
     const store = useStore();
     const profileForm = ref({
-      name: "John Doe",
-      email: "john.doe@example.com",
-      phone: "123-456-7890",
+      name: "",
+      email: "",
+      phone: "",
       oldPassword: "",
       newPassword: "",
       confirmPassword: "",
       avatarUrl: "",
     });
+    const patientsDetails = ref([]);
 
     const profileFormRef = ref(null);
     const isPasswordChangeVisible = ref(false);
-    const bookings = ref([]);
     const isRescheduleModalVisible = ref(false);
     const rescheduleForm = ref({
       newDate: "",
       newTime: "",
     });
     const currentBookingIndex = ref(null);
+    const bookings = ref([]);
 
     const resetPassword = () => {
       if (profileForm.value.newPassword === profileForm.value.confirmPassword) {
@@ -178,15 +182,10 @@ export default {
       if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          profileForm.value.avatarUrl = e.target.result; 
+          profileForm.value.avatarUrl = e.target.result;
         };
         reader.readAsDataURL(file);
       }
-    };
-
-    const cancelBooking = (index) => {
-      const booking = bookings.value[index];
-      booking.Status = "cancelled";
     };
 
     const showRescheduleModal = (index) => {
@@ -218,26 +217,34 @@ export default {
       }
     };
 
+    const getPatients = async () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        this.message = "Authentication required. Please log in.";
+        return;
+      }
+
+      try {
+        patientsDetails.value = await getPatientById_user("");
+        profileForm.value.name = patientsDetails.value[0].Name;
+        profileForm.value.email = patientsDetails.value[0].Email;
+        profileForm.value.phone = patientsDetails.value[0].Phone;
+      } catch (error) {
+        console.error("Error adding patient:", error);
+        this.message = "Failed to add patient. Please try again.";
+      }
+    };
+
+    const cancelBooking = (index) => {
+      store.dispatch('cancelBooking', index);
+    };
+
     onMounted(() => {
-      profileForm.value.email = store.state.email || localStorage.getItem("userEmail");
-      bookings.value = [
-        {
-          DoctorName: "Smith",
-          Date: "2024-09-15",
-          StartTime: "10:00",
-          EndTime: "10:30",
-          LastName: "Doe",
-          Status: "active",
-        },
-        {
-          DoctorName: "Jones",
-          Date: "2024-09-16",
-          StartTime: "14:00",
-          EndTime: "14:30",
-          LastName: "Doe",
-          Status: "active",
-        },
-      ];
+      getPatients();
+      store.dispatch('getBookings').then(() => {
+        bookings.value = store.state.bookings;
+      });
+      console.log("xxx:", bookings.value);
     });
 
     return {
@@ -262,11 +269,11 @@ export default {
 
 
 <style scoped>
-
 .avatar-container {
   display: flex;
   justify-content: center;
-  margin-top: 30px; /* 增加顶部的间距 */
+  margin-top: 30px;
+  /* 增加顶部的间距 */
   margin-bottom: 20px;
 }
 
@@ -281,7 +288,7 @@ export default {
 .profile-header {
   text-align: center;
   margin-bottom: 25px;
-  color: #004d66; 
+  color: #004d66;
   margin-bottom: 30px;
 }
 
@@ -394,6 +401,7 @@ export default {
 .appointment-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   background-color: #f7faff;
   padding: 15px;
   border-radius: 10px;
@@ -402,14 +410,21 @@ export default {
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
+
 .appointment-item:hover {
   background-color: #e8f0ff;
   transform: translateY(-3px);
 }
 
 .appointment-details {
-  max-width: 75%;
+  flex: 1;
+  text-align: left;
   color: #333;
+}
+
+.appointment-actions {
+  display: flex;
+  gap: 10px;
 }
 
 .cancelled-message {
@@ -419,6 +434,7 @@ export default {
 
 .cancel-button,
 .reschedule-button {
+  width: 100px;
   background-color: #9bbfee;
   color: white;
   padding: 8px 14px;
@@ -433,6 +449,12 @@ export default {
 .reschedule-button:hover {
   background-color: #e79d96;
   transform: scale(1.05);
+}
+
+.cancel-button:disabled,
+.reschedule-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .modal-overlay {
@@ -496,6 +518,3 @@ export default {
   background-color: #f9fbfc;
 }
 </style>
-
-
-

@@ -58,6 +58,8 @@ export default {
   created() {
     if (this.$route.path === "/about") {
       this.activateTab("about");
+    }else if(this.$route.path === "/patient"){
+      this.activateTab("PatientRegister");
     }
   },
   methods: {
@@ -79,8 +81,8 @@ export default {
       this.$router.push({ name: "OnlineBooking" });
     },
     goToPatientRegisterPage() {
-      this.activateTab("PatientRegister"); // Updated tab activation to match the correct name
-      this.$router.push("/Patient"); // Ensures it routes to the correct page
+      this.activateTab("PatientRegister"); 
+      this.$router.push("/patient"); 
     },
   },
 };
