@@ -17,6 +17,13 @@
           >Home</span
         >
       </li>
+      <li>
+        <span
+          :class="['for-PatientRegister', { active: activeTab === 'PatientRegister' }]"
+          @click="goToPatientRegisterPage"
+          >Join Us</span
+        >
+      </li>
       <li class="providers-btn">
         <span
           :class="['for-about', { active: activeTab === 'about' }]"
@@ -71,6 +78,10 @@ export default {
     goToBookingPage() {
       this.$router.push({ name: "OnlineBooking" });
     },
+    goToPatientRegisterPage() {
+      this.activateTab("PatientRegister"); // Updated tab activation to match the correct name
+      this.$router.push("/Patient"); // Ensures it routes to the correct page
+    },
   },
 };
 </script>
@@ -79,21 +90,21 @@ export default {
 .header {
   display: flex;
   box-sizing: border-box;
-  background: linear-gradient(135deg, #004d66, #accfd8); 
-  color: #ffffff; 
+  background: linear-gradient(135deg, #004d66, #accfd8);
+  color: #ffffff;
   border-bottom: 2px solid gray;
-  height: 80px; 
+  height: 80px;
   align-items: center;
-  padding: 0 48px; 
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  padding: 0 48px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
   display: flex;
-  font-size: 36px; 
-  color: white; 
+  font-size: 36px;
+  color: white;
   align-items: center;
-  flex: 0.2; 
+  flex: 0.2;
   cursor: pointer;
 }
 
@@ -106,8 +117,8 @@ export default {
 }
 
 .header-menu li {
-  margin-left: 20px; 
-  color: #ffffff; 
+  margin-left: 20px;
+  color: #ffffff;
   height: 100%;
   display: flex;
   align-items: center;
@@ -116,21 +127,21 @@ export default {
 .header-menu li span {
   cursor: pointer;
   display: inline-block;
-  padding: 0 10px; 
+  padding: 0 10px;
   height: 100%;
   display: flex;
   align-items: center;
-  transition: color 0.3s ease; 
+  transition: color 0.3s ease;
 }
 
 .header-menu li span:hover {
-  color: #365a82; 
+  color: #365a82;
 }
 
 .header-menu li .active {
   font-weight: bold;
-  color: #365a82; 
-  border-bottom: 3px solid #365a82; 
+  color: #365a82;
+  border-bottom: 3px solid #365a82;
 }
 
 .profile-avatar span {
@@ -138,7 +149,7 @@ export default {
 }
 
 .profile-avatar span:hover {
-  color: #365a82; 
+  color: #365a82;
 }
 
 .booking-btn {
@@ -146,8 +157,8 @@ export default {
 }
 
 .online-booking-button {
-  background-color: #365a82; 
-  color: white; 
+  background-color: #365a82;
+  color: white;
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
@@ -157,6 +168,6 @@ export default {
 }
 
 .online-booking-button:hover {
-  background-color: #2a4665; 
+  background-color: #2a4665;
 }
 </style>
