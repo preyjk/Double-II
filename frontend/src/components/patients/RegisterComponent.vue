@@ -44,11 +44,7 @@
       </form>
     </div>
     <transition name="fade" mode="out-in">
-      <component
-        :is="loginComponent"
-        v-if="showLoginModal"
-        @close="closeLoginModal"
-      />
+      <component :is="loginComponent" v-if="showLoginModal" @close="closeLoginModal" />
     </transition>
   </div>
 </template>
@@ -65,8 +61,8 @@ export default {
       showModal: true,
       showLoginModal: false,
       email: "",
-      firstName: "", 
-      lastName: "",  
+      firstName: "",
+      lastName: "",
       password: "",
       confirmPassword: "",
     };
@@ -84,7 +80,7 @@ export default {
         alert("Passwords do not match!");
         return;
       }
-      register(this.firstName, this.lastName, this.email, this.password)
+      register(this.email, this.password, this.firstName, this.lastName)
         .then((data) => {
           console.log("Registration data received:", data);
           alert("Registration successful!");
@@ -134,7 +130,7 @@ export default {
   position: relative;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 4px solid transparent; 
+  border: 4px solid transparent;
   overflow: hidden;
 }
 
@@ -147,15 +143,13 @@ export default {
   bottom: 0;
   border-radius: 15px;
   background: none;
-  border: 5px solid transparent; 
-  border-image: repeating-conic-gradient(
-    from var(--a),
-    #accfd8 0%,
-    #accfd8 10%,
-    transparent 10%,
-    transparent 80%,
-    #accfd8 100%
-  ) 1;
+  border: 5px solid transparent;
+  border-image: repeating-conic-gradient(from var(--a),
+      #accfd8 0%,
+      #accfd8 10%,
+      transparent 10%,
+      transparent 80%,
+      #accfd8 100%) 1;
   animation: animate 2.5s linear infinite;
   pointer-events: none;
 }
@@ -170,10 +164,12 @@ export default {
   0% {
     --a: 0deg;
   }
+
   100% {
     --a: 360deg;
   }
 }
+
 .required {
   color: #dbcf8f;
 }
@@ -195,9 +191,9 @@ export default {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.5); 
-  backdrop-filter: blur(5px); 
-  -webkit-backdrop-filter: blur(5px); 
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
 }
 
 .form-actions {
@@ -216,6 +212,7 @@ export default {
   cursor: pointer;
   font-weight: bold;
 }
+
 .toggle-text {
   margin-top: 15px;
   text-align: center;
@@ -229,7 +226,7 @@ export default {
 
 .toggle-text a:hover {
   text-decoration: underline;
-  text-decoration-color:#accfd8;
+  text-decoration-color: #accfd8;
 }
 
 .submit-button:hover,
