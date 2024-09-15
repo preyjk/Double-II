@@ -4,6 +4,7 @@ import router from '../routes/routes';
 import AuthService from '../service/AuthService.js';
 import UserService from '../service/UserService.js';
 import EmailService from '../service/EmailService.js';
+import e from 'express';
 
 const app = express();
 app.use(express.json());
@@ -22,6 +23,7 @@ describe('User Authentication API', () => {
   let resetPassword = 'resetedpassword';
   let userId;
   let emailVerificationToken;
+  let refreshToken;
 
   jest.mock('../service/EmailService');
 
@@ -84,6 +86,17 @@ describe('User Authentication API', () => {
     const token = response.body.token;
     expect(typeof token).toBe('string');
     userId = AuthService.verifyToken(token).data.id;
+
+    refreshToken = response.body.refreshToken;
+  });
+
+  it('should refresh token', async () => {
+    const response = await request(app)
+      .post('/public/auth/refresh-token')
+      .send({ refreshToken })
+      .expect(200);
+    expect(response.body).toHaveProperty('token');
+    expect(AuthService.verifyToken(response.body.token).data.id).toBe(userId);
   });
 
   it('should not log in with incorrect password', async () => {
