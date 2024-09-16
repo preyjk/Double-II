@@ -1,8 +1,16 @@
 <template>
   <div class="container_body">
     <HeaderComponent class="container_header"></HeaderComponent>
-    <p class="welcome-text">Welcome to FRW Healthcare Limited</p>
-
+    <div class="about-us-section">
+      <img src="@/assets/aboutus.png" alt="About Us" class="about-us-image" />
+      <div class="about-us-overlay">About Us</div>
+    </div>
+    <div class="welcome-section">
+      <p class="welcome-text">FRW is a distinguished healthcare provider with 15 sites across New Zealand, supported by a dedicated team of professionals.</p>
+      <p class="welcome-text">We operate in key cities including Christchurch, Wellington, and Auckland, offering services like general practice, urgent care, and specialist consulting.</p>
+      <p class="welcome-text">We provide healthcare services to both existing patients and the general public through our on-site and online platforms.</p>
+      <p class="welcome-text">At FRW, we believe a healthier community begins with outstanding medical care, and we strive to make that a reality. For Everyone.</p>
+    </div>
     <!-- Our Story Section -->
     <div class="content-section">
       <img class="section-image" src="@/assets/building.png" alt="FRW Healthcare Building" />
@@ -129,6 +137,28 @@ export default {
 </script>
 
 <style scoped>
+.about-us-section {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.about-us-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.about-us-overlay {
+  position: absolute;
+  top: 50%;
+  right: 200px;
+  transform: translateY(-50%);
+  color: #004d66;
+  font-size: 48px;
+  font-weight: bold;
+}
+
 .container_body {
   display: flex;
   flex-direction: column;
@@ -140,13 +170,23 @@ export default {
   width: 100%;
 }
 
+.welcome-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80%; 
+  margin: 50px auto; 
+}
+
 .welcome-text {
   font-weight: bold;
-  font-size: 28px;
+  font-size: 24px; 
   color: #004d66;
   text-align: center;
-  margin-top: 50px;
+  margin-bottom: 20px;
+  line-height: 1.4; 
 }
+
 
 .content-section {
   display: flex;
@@ -300,7 +340,7 @@ export default {
   justify-content: center;
   align-items: center;
   width: 90%;
-  margin: 100px auto; /* 增加 margin-top 值，使卡片与上方内容有更多空间 */
+  margin: 100px auto; 
   padding: 10px 20px;
   background: linear-gradient(145deg, #004d66, #accfd8);
   border-radius: 15px;
@@ -382,7 +422,7 @@ export default {
 }
 
 
-/* Leadership and Community Engagement 专属样式 */
+/* Leadership and Community Engagement  */
 .custom-leadership-community {
   width: 90%;
   margin-top: 70px;
@@ -409,7 +449,6 @@ export default {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-/* 图片样式 - 炫酷效果 */
 .custom-leadership-image, .custom-community-image {
   width: 250px;
   height: auto;
@@ -418,7 +457,6 @@ export default {
   transition: transform 0.4s ease-in-out, filter 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
 }
 
-/* 悬停时的炫酷效果 */
 .custom-leadership-image:hover, .custom-community-image:hover {
   transform: scale(1.1) rotate(3deg);
   filter: brightness(1.2) saturate(1.3);
@@ -443,7 +481,6 @@ export default {
   text-align: justify;
 }
 
-/* 响应式设计 */
 @media (max-width: 768px) {
   .custom-leadership-section, .custom-community-section {
     flex-direction: column;
@@ -459,7 +496,4 @@ export default {
     width: 100%;
   }
 }
-
-
-
 </style>
