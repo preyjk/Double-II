@@ -1,14 +1,14 @@
 import { ref } from 'vue';
 import { useGet, usePost, useDelete, usePut } from '../useApi'; // Adjust the path accordingly
-import axios from 'axios';
+import axios from '../backendApi'; // Adjust the path accordingly
 import { mount, flushPromises } from '@vue/test-utils';
-import { describe, it, expect, vi } from 'vitest';
-
-vi.mock('axios');
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import MockAdapter from 'axios-mock-adapter';
 
 describe('API Hooks', () => {
+
   // Mock Component to use in tests
-  const mockComponent = (url, dependency = null) => {
+  const mockComponent = (url, dependency = []) => {
     return {
       setup() {
         return useGet(url, dependency);
@@ -17,13 +17,22 @@ describe('API Hooks', () => {
     };
   };
 
+  let mock;
+  beforeEach(() => {
+    mock = new MockAdapter(axios);
+  });
+
+  afterEach(() => {
+    mock.restore();
+  });
+
   // useGet Test Cases
   describe('useGet', () => {
     it('should fetch data on mount', async () => {
       const mockData = { data: 'test data' };
-      axios.get.mockResolvedValueOnce({ data: mockData });
+      mock.onGet('/items').reply(200, mockData);
 
-      const wrapper = mount(mockComponent('https://api.example.com/items'));
+      const wrapper = mount(mockComponent('/items'));
 
       await flushPromises();
 
@@ -34,28 +43,28 @@ describe('API Hooks', () => {
     });
 
     it('should handle errors correctly', async () => {
-      const mockError = new Error('Network Error');
-      axios.get.mockRejectedValueOnce(mockError);
+      mock.onGet('/items').reply(500);
 
-      const wrapper = mount(mockComponent('https://api.example.com/items'));
+      const wrapper = mount(mockComponent('/items'));
 
       await flushPromises();
 
       const { error, loading } = wrapper.vm;
 
       expect(loading).toBe(false);
-      expect(error).toEqual(mockError);
+      expect(error).toEqual(new Error('Request failed with status code 500'));
     });
 
     it('should refetch data when dependencies change', async () => {
       const mockData1 = { data: 'initial data' };
       const mockData2 = { data: 'updated data' };
       const mockData3 = { data: 'final data' };
-      axios.get.mockResolvedValueOnce({ data: mockData1 });
+      
+      mock.onGet('/items').reply(200, mockData1);
 
       const dependency1 = ref(1);
       const dependency2 = ref('a');
-      const wrapper = mount(mockComponent('https://api.example.com/items', [dependency1, dependency2]));
+      const wrapper = mount(mockComponent('/items', [dependency1, dependency2]));
 
       await flushPromises();
       
@@ -63,7 +72,7 @@ describe('API Hooks', () => {
       expect(loading).toBe(false);
       expect(data).toEqual(mockData1);
 
-      axios.get.mockResolvedValueOnce({ data: mockData2 });
+      mock.onGet('/items').reply(200, mockData2);
       dependency1.value = 2;
 
       await flushPromises();
@@ -72,7 +81,7 @@ describe('API Hooks', () => {
       expect(loading).toBe(false);
       expect(data).toEqual(mockData2);
 
-      axios.get.mockResolvedValueOnce({ data: mockData3 });
+      mock.onGet('/items').reply(200, mockData3);
       dependency2.value = 'b';
 
       await flushPromises();
@@ -87,9 +96,9 @@ describe('API Hooks', () => {
   describe('usePost', () => {
     it('should post data and return response', async () => {
       const mockResponse = { data: 'post success' };
-      axios.post.mockResolvedValueOnce({ data: mockResponse });
+      mock.onPost('/items').reply(200, mockResponse);
 
-      const { data, postData } = usePost('https://api.example.com/items');
+      const { data, postData } = usePost('/items');
       postData({ name: 'New Item' });
 
       await flushPromises();
@@ -97,14 +106,13 @@ describe('API Hooks', () => {
     });
 
     it('should handle post errors correctly', async () => {
-      const mockError = new Error('Post Error');
-      axios.post.mockRejectedValueOnce(mockError);
+      mock.onPost('/items').reply(500);
 
-      const { error, postData } = usePost('https://api.example.com/items');
+      const { error, postData } = usePost('/items');
       postData({ name: 'New Item' });
 
       await flushPromises();
-      expect(error.value).toEqual(mockError);
+      expect(error.value).toEqual(new Error('Request failed with status code 500'));
     });
   });
 
@@ -112,9 +120,9 @@ describe('API Hooks', () => {
   describe('useDelete', () => {
     it('should delete data and return response', async () => {
       const mockResponse = { data: 'delete success' };
-      axios.delete.mockResolvedValueOnce({ data: mockResponse });
+      mock.onDelete('/items/1').reply(200, mockResponse);
 
-      const { data, deleteData } = useDelete('https://api.example.com/items/1');
+      const { data, deleteData } = useDelete('/items/1');
       deleteData();
 
       await flushPromises();
@@ -122,14 +130,13 @@ describe('API Hooks', () => {
     });
 
     it('should handle delete errors correctly', async () => {
-      const mockError = new Error('Delete Error');
-      axios.delete.mockRejectedValueOnce(mockError);
+      mock.onDelete('/items/1').reply(500);
 
-      const { error, deleteData } = useDelete('https://api.example.com/items/1');
+      const { error, deleteData } = useDelete('/items/1');
       deleteData();
 
       await flushPromises();
-      expect(error.value).toEqual(mockError);
+      expect(error.value).toEqual(new Error('Request failed with status code 500'));
     });
   });
 
@@ -137,9 +144,9 @@ describe('API Hooks', () => {
   describe('usePut', () => {
     it('should put data and return response', async () => {
       const mockResponse = { data: 'put success' };
-      axios.put.mockResolvedValueOnce({ data: mockResponse });
+      mock.onPut('/items/1').reply(200, mockResponse);
 
-      const { data, putData } = usePut('https://api.example.com/items/1');
+      const { data, putData } = usePut('/items/1');
       putData({ name: 'Updated Item' });
 
       await flushPromises();
@@ -147,14 +154,13 @@ describe('API Hooks', () => {
     });
 
     it('should handle put errors correctly', async () => {
-      const mockError = new Error('Put Error');
-      axios.put.mockRejectedValueOnce(mockError);
+      mock.onPut('/items/1').reply(500);
 
-      const { error, putData } = usePut('https://api.example.com/items/1');
+      const { error, putData } = usePut('/items/1');
       putData({ name: 'Updated Item' });
 
       await flushPromises();
-      expect(error.value).toEqual(mockError);
+      expect(error.value).toEqual(new Error('Request failed with status code 500'));
     });
   });
 });

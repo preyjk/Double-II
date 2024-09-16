@@ -1,7 +1,5 @@
 import { ref, watch, onMounted } from 'vue';
-import axios from 'axios';
-
-const BASE_URL = import.meta.env.VITE_API_ENDPOINT;
+import axios from './backendApi';
 
 export function useGet(url, dependencies = []) {
   const data = ref(null);
@@ -11,7 +9,7 @@ export function useGet(url, dependencies = []) {
   const fetchData = async () => {
     loading.value = true;
     try {
-      const response = await axios.get(BASE_URL + url);
+      const response = await axios.get(url);
       data.value = response.data;
     } catch (err) {
       error.value = err;
@@ -37,7 +35,7 @@ export function usePost(url) {
   const postData = async (payload, headers = {}) => {
     loading.value = true;
     try {
-      const response = await axios.post(BASE_URL + url, payload, { headers });
+      const response = await axios.post(url, payload, { headers });
       data.value = response.data;
     } catch (err) {
       error.value = err;
@@ -57,7 +55,7 @@ export function usePut(url) {
   const putData = async (payload, headers = {}) => {
     loading.value = true;
     try {
-      const response = await axios.put(BASE_URL + url, payload, { headers });
+      const response = await axios.put(url, payload, { headers });
       data.value = response.data;
     } catch (err) {
       error.value = err;
@@ -77,7 +75,7 @@ export function useDelete(url) {
   const deleteData = async (headers = {}) => {
     loading.value = true;
     try {
-      const response = await axios.delete(BASE_URL + url, { headers });
+      const response = await axios.delete(url, { headers });
       data.value = response.data;
     } catch (err) {
       error.value = err;

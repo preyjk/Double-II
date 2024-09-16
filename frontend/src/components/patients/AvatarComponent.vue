@@ -53,6 +53,7 @@ export default {
     },
     logout() {
       localStorage.removeItem("authToken");
+      localStorage.removeItem("refreshToken");
       this.$emit("logout");
       this.$router.push({ name: "Home" });
       this.dropdownVisible = false;
