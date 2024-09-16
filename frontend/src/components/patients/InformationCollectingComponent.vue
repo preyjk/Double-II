@@ -1,4 +1,5 @@
 <template>
+  <div class="overlay"></div>
   <div class="enrollment-form">
     <h1>Enrol as our Patient</h1>
     <p>
@@ -244,6 +245,7 @@
       <button type="submit">Submit</button>
     </form>
   </div>
+  
 </template>
 
 <script>

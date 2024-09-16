@@ -1,7 +1,6 @@
 <template>
   <HeaderComponent />
   <el-card class="profile-card">
-
     <div class="profile-header">
       <h2>Patients Profile</h2>
 
@@ -26,6 +25,9 @@
         <p><strong>Email:</strong> {{ profileForm.email }}</p>
         <p><strong>Phone:</strong> {{ profileForm.phone }}</p>
       </div>
+
+      <!-- Add Patient Button -->
+      <el-button type="primary" @click="goToAddPatient" class="add-patient-button">Add Patient</el-button>
 
       <!-- Trigger to show the password change form modal -->
       <el-button type="primary" @click="showPasswordChangeModal" class="change-password-button">Change
@@ -65,7 +67,6 @@
           <li v-for="(booking, index) in bookings" :key="index" class="appointment-item">
             <div class="appointment-details">
               <p><strong>Doctor:</strong> Dr. {{ booking.DoctorName }}</p>
-              <p><strong>Location:</strong> {{ booking.Location }}</p>
               <p><strong>Date:</strong> {{ booking.Date }}</p>
               <p><strong>Time:</strong> {{ booking.StartTime }} - {{ booking.EndTime }}</p>
               <p><strong>Patient:</strong> {{ booking.LastName }}</p>
@@ -84,7 +85,6 @@
             </div>
           </li>
         </ul>
-
       </div>
       <div v-else>
         <p>You have no appointments scheduled.</p>
@@ -126,6 +126,7 @@ import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
 import { changePassword } from "@/api/modules/user.js";
 import { getPatientById_user } from "@/api/modules/patients.js";
+import { useRouter } from 'vue-router'; 
 
 export default {
   components: {
@@ -134,6 +135,7 @@ export default {
   },
   setup() {
     const store = useStore();
+    const router = useRouter(); 
     const profileForm = ref({
       name: "",
       email: "",
@@ -144,8 +146,6 @@ export default {
       avatarUrl: "",
     });
     const patientsDetails = ref([]);
-
-    const profileFormRef = ref(null);
     const isPasswordChangeVisible = ref(false);
     const isRescheduleModalVisible = ref(false);
     const rescheduleForm = ref({
@@ -155,6 +155,7 @@ export default {
     const currentBookingIndex = ref(null);
     const bookings = ref([]);
 
+    // Reset Password
     const resetPassword = () => {
       if (profileForm.value.newPassword === profileForm.value.confirmPassword) {
         changePassword(profileForm.value.email, profileForm.value.oldPassword, profileForm.value.newPassword)
@@ -170,14 +171,17 @@ export default {
       }
     };
 
+    // Show password change modal
     const showPasswordChangeModal = () => {
       isPasswordChangeVisible.value = true;
     };
 
+    // Close password change modal
     const closePasswordChangeModal = () => {
       isPasswordChangeVisible.value = false;
     };
 
+    // Handle avatar change
     const onAvatarChange = (event) => {
       const file = event.target.files[0];
       if (file) {
@@ -189,6 +193,7 @@ export default {
       }
     };
 
+    // Show reschedule modal
     const showRescheduleModal = (index) => {
       currentBookingIndex.value = index;
       isRescheduleModalVisible.value = true;
@@ -200,6 +205,7 @@ export default {
       rescheduleForm.value.newTime = "";
     };
 
+    // Reschedule booking
     const rescheduleBooking = () => {
       if (rescheduleForm.value.newDate && rescheduleForm.value.newTime) {
         const newDetails = {
@@ -218,10 +224,11 @@ export default {
       }
     };
 
+    // Fetch patient details
     const getPatients = async () => {
       const token = localStorage.getItem("authToken");
       if (!token) {
-        this.message = "Authentication required. Please log in.";
+        alert("Authentication required. Please log in.");
         return;
       }
 
@@ -231,26 +238,30 @@ export default {
         profileForm.value.email = patientsDetails.value[0].Email;
         profileForm.value.phone = patientsDetails.value[0].Phone;
       } catch (error) {
-        console.error("Error adding patient:", error);
-        this.message = "Failed to add patient. Please try again.";
+        console.error("Error fetching patient data:", error);
+        alert("Failed to fetch patient data. Please try again.");
       }
     };
-
+ 
     const cancelBooking = (index) => {
-      store.dispatch('cancelBooking', index);
+      store.dispatch("cancelBooking", index);
     };
 
+    // Navigate to add patient page
+    const goToAddPatient = () => {
+      router.push("/patient"); // Navigate to the patient registration page
+    };
+
+    // Load data on mount
     onMounted(() => {
       getPatients();
-      store.dispatch('getBookings').then(() => {
+      store.dispatch("getBookings").then(() => {
         bookings.value = store.state.bookings;
       });
-      console.log("xxx:", bookings.value);
     });
 
     return {
       profileForm,
-      profileFormRef,
       resetPassword,
       isPasswordChangeVisible,
       showPasswordChangeModal,
@@ -263,6 +274,7 @@ export default {
       closeRescheduleModal,
       rescheduleForm,
       rescheduleBooking,
+      goToAddPatient,
     };
   },
 };
@@ -368,23 +380,29 @@ export default {
   color: #2980b9;
 }
 
-
+.add-patient-button,
 .change-password-button {
-  margin-top: 15px;
-  background-color: #3498db;
-  border: none;
+  width: 180px; 
+  background-color: #3498db; 
+  border: 2px solid #2980b9; 
   color: white;
-  padding: 8px 16px;
-  font-size: 14px;
-  border-radius: 5px;
+  padding: 10px 20px; 
+  font-size: 16px; 
+  font-weight: bold; 
+  border-radius: 8px; 
   cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.3s ease; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
 }
 
+.add-patient-button:hover,
 .change-password-button:hover {
-  background-color: #2980b9;
-  box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+  background-color: #e79d96; 
+  border-color: #e67e73; 
+  transform: scale(1.05); 
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
 }
+ 
 
 .appointments-container {
   margin-top: 35px;
