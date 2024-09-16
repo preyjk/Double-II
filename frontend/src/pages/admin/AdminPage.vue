@@ -38,7 +38,7 @@ export default {
       if (loginResult.ok) {
         const data = await loginResult.json();
         localStorage.setItem("authToken", data.token);
-        this.$router.push({ name: "dashboard" });
+        this.$router.push({ name: "console" });
       } else {
         alert("Invalid email or password");
       }
