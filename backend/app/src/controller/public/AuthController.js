@@ -71,6 +71,15 @@ router.post('/signup', asyncHandler(async (req, res) => {
  *     responses:
  *       '200':
  *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                 refreshToken:
+ *                   type: string
  *       '401':
  *         description: Login failed
  *       '500':
@@ -81,7 +90,7 @@ router.post('/login', asyncHandler(async (req, res) => {
 
   const result = await AuthService.login({ email, password });
   if (result.success) {
-    res.status(200).json({ token: result.token });
+    res.status(200).json({ token: result.token, refreshToken: result.refreshToken });
   } else {
     res.status(401).json(result.message);
   }
@@ -254,15 +263,20 @@ router.get('/google/login', asyncHandler(async (req, res) => {
 /**
  * @openapi
  * /public/auth/google/token:
- *   get:
+ *   post:
  *     summary: Google token
  *     description: Google token
- *     parameters:
- *       - in: query
- *         name: code
- *         required: true
- *         schema:
- *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - code
+ *             properties:
+ *               code:
+ *                 type: string
  *     responses:
  *       '200':
  *         description: Google login successful
@@ -273,12 +287,54 @@ router.get('/google/login', asyncHandler(async (req, res) => {
  *               properties:
  *                 token:
  *                   type: string
+ *                 refreshToken:
+ *                   type: string
  *       '401':
  *         description: Google login failed
  */
-router.get('/google/token', asyncHandler(async (req, res) => {
-  const { code } = req.query;
+router.post('/google/token', asyncHandler(async (req, res) => {
+  const { code } = req.body;
   const result = await AuthService.googleLogin(code);
+  if (result.success) {
+    res.status(200).json({ token: result.token, refreshToken: result.refreshToken });
+  } else {
+    res.status(401).json(result.message);
+  }
+}));
+
+/**
+ * @openapi
+ * /public/auth/refresh-token:
+ *   post:
+ *     summary: Refresh token
+ *     description: Refresh token
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - refreshToken
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       '200':
+ *         description: Token refreshed
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *       '401':
+ *         description: Refresh token failed
+ */
+router.post('/refresh-token', asyncHandler(async (req, res) => {
+  const { refreshToken } = req.body;
+  const result = await AuthService.refreshAccessToken(refreshToken);
   if (result.success) {
     res.status(200).json({ token: result.token });
   } else {
