@@ -286,7 +286,6 @@ export default {
   display: flex;
   justify-content: center;
   margin-top: 30px;
-  /* 增加顶部的间距 */
   margin-bottom: 20px;
 }
 

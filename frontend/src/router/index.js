@@ -15,6 +15,16 @@ import GoogleLoginPage from "../pages/patients/GoogleLoginPage.vue";
 import BasePage from "../pages/admin/BasePage.vue";
 import WorkingSchedule from "../components/admin/WorkingSchedule.vue";
 import ReservationCalendar from "../components/admin/ReservationCalendar.vue";
+import PageLayout from "../pages/public/PageLayout.vue";
+import Home from "../pages/public/Home.vue";
+import AboutUs from "../pages/public/AboutUs.vue";
+import Error404 from "../pages/Error404.vue";
+import Login from "../pages/public/Login.vue";
+import Signup from "../pages/public/Signup.vue";
+import GoogleLogin from "../pages/public/GoogleLogin.vue";
+import EmailVarification from "../pages/public/EmailVarification.vue";
+import ResetPassword from "../pages/public/ResetPassword.vue";
+import ForgetPassword from "../pages/public/ForgetPassword.vue";
 
 const routes = [
   /*
@@ -77,19 +87,34 @@ const routes = [
   {
     path: "/verify-email",
     name: "VerifyEmail",
-    component: VerifyEmailPage,
+    component: PageLayout,
+    children: [
+      {
+        path: "",
+        component: EmailVarification,
+      }
+    ]
   },
   {
     path: "/reset-password",
     name: "ResetPasswordPage",
-    component : ResetPasswordPage,
+    component: ResetPassword,
+  },
+  {
+    path: "/forgot-password",
+    name: "ForgotPassword",
+    component: ForgetPassword,
   },
   {
     path: "/login/google/callback",
-    name: "GoogleLogin",
-    component: GoogleLoginPage,
+    component: PageLayout,
+    children: [
+      {
+        path: "",
+        component: GoogleLogin,
+      }]
   },
-  
+
   /*
     admin routers
   */
@@ -118,7 +143,19 @@ const routes = [
         component: WorkingSchedule,
       }
     ]
-  }
+  },
+
+  {
+    path: "/public",
+    component: PageLayout,
+    children: [
+      { path: "", component: Home },
+      { path: "about", component: AboutUs },
+      { path: "/:pathMatch(.*)*", component: Error404 }
+    ]
+  },
+  { path: "/login", component: Login },
+  { path: "/sign-up", component: Signup },
 ];
 
 const router = createRouter({
