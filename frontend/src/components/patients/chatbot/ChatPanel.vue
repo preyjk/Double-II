@@ -1,13 +1,30 @@
 <template>
-  <div class="container_body" :style="isDarkMode ? darkModeStyles : lightModeStyles">
-    <deep-chat :textInput="textInput" :submitButtonStyles="submitButtonStyles" :style="chatStyles"
-      :textToSpeech="textToSpeechOptions" :speechToText="speechToTextOptions" demo="true" id="chat-element"
-      :connect="chatConnect" style="border-radius: 8px" :responseInterceptor="bindButtons">
+  <div
+    class="container_body"
+    :style="isDarkMode ? darkModeStyles : lightModeStyles"
+  >
+    <deep-chat
+      :textInput="textInput"
+      :submitButtonStyles="submitButtonStyles"
+      :style="chatStyles"
+      :textToSpeech="textToSpeechOptions"
+      :speechToText="speechToTextOptions"
+      demo="true"
+      id="chat-element"
+      :connect="chatConnect"
+      style="border-radius: 0px"
+      :responseInterceptor="bindButtons"
+    >
     </deep-chat>
 
     <div class="animation-container">
-      <LottieAnimation :animationData="animationData" :loop="true" :autoplay="true" v-show="isRobotAnimationShow"
-        class="robot-animation" />
+      <LottieAnimation
+        :animationData="animationData"
+        :loop="true"
+        :autoplay="true"
+        v-show="isRobotAnimationShow"
+        class="robot-animation"
+      />
     </div>
   </div>
 </template>
@@ -94,7 +111,7 @@ export default {
                 cursor: "pointer",
                 transform: "translateY(-5px)",
                 width: "36px",
-                height: "36px"
+                height: "36px",
               },
             },
             svg: {
@@ -144,10 +161,10 @@ export default {
                     "brightness(0) saturate(100%) invert(70%) sepia(70%) saturate(4438%) hue-rotate(170deg) brightness(92%) contrast(98%)",
                   width: "24px",
                   height: "24px",
-                }
-              }
-            }
-          }
+                },
+              },
+            },
+          },
         },
 
         translations: {
@@ -184,12 +201,14 @@ export default {
             await postData({ prompt }, headers);
             this.sessionId = data.value.sessionId;
 
+            const responseWithFeedback = this.generateResponseWithFeedback(
+              data.value.response
+            );
 
-            const responseWithFeedback = this.generateResponseWithFeedback(data.value.response);
-
-            signals.onResponse({ text: data.value.response, html: responseWithFeedback });
-
-
+            signals.onResponse({
+              text: data.value.response,
+              html: responseWithFeedback,
+            });
           } catch (error) {
             console.error("Error during API request:", error);
             signals.onResponse({
@@ -197,8 +216,8 @@ export default {
             });
           }
         },
-      }
-    }
+      },
+    };
   },
 
   methods: {
@@ -239,13 +258,15 @@ export default {
     },
 
     copyText(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Text copied to clipboard");
-      }).catch(err => {
-        console.error('Error copying text: ', err);
-      });
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          alert("Text copied to clipboard");
+        })
+        .catch((err) => {
+          console.error("Error copying text: ", err);
+        });
     },
-
 
     handlePositiveFeedback() {
       console.log("User liked the response.");
@@ -279,12 +300,10 @@ export default {
     //       if (negativeButton) {
     //         negativeButton.addEventListener('click', this.handleNegativeFeedback);
     //       }
-    //     }, 3000); 
+    //     }, 3000);
     //   },
 
-    bindButtons() {
-    },
-
+    bindButtons() {},
   },
 
   watch: {},
@@ -297,7 +316,6 @@ export default {
         display: "block",
         backgroundColor: this.isDarkMode ? "#333" : "#99bbc3",
         border: "none",
-        borderRadius: "8px",
       };
     },
     darkModeStyles() {
@@ -309,15 +327,22 @@ export default {
     },
   },
 
-  mounted() { }
+  mounted() {},
 };
 </script>
 
 <style scoped>
 .container_body {
   position: relative;
-  width: 100%;
+  display: flex;
   height: 100vh;
+  flex-direction: column;
+}
+
+@media (min-width: 768px) {
+  .container_body {
+    flex-direction: row;
+  }
 }
 
 .animation-container {
@@ -349,11 +374,13 @@ export default {
 }
 
 .feedback-icon-positive {
-  filter: brightness(0) saturate(100%) invert(56%) sepia(68%) saturate(207%) hue-rotate(93deg) brightness(88%) contrast(89%);
+  filter: brightness(0) saturate(100%) invert(56%) sepia(68%) saturate(207%)
+    hue-rotate(93deg) brightness(88%) contrast(89%);
 }
 
 .feedback-icon-negative {
-  filter: brightness(0) saturate(100%) invert(36%) sepia(99%) saturate(2487%) hue-rotate(335deg) brightness(87%) contrast(87%);
+  filter: brightness(0) saturate(100%) invert(36%) sepia(99%) saturate(2487%)
+    hue-rotate(335deg) brightness(87%) contrast(87%);
   transform: rotate(180deg);
   margin-left: 3px;
 }
@@ -381,5 +408,15 @@ export default {
 
 .feedback-icon:hover {
   color: #007bff;
+}
+
+@media (max-width: 768px) {
+  .animation-container {
+    top: 40%;
+  }
+
+  .robot-animation {
+    transform: scale(0.8);
+  }
 }
 </style>

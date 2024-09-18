@@ -11,79 +11,100 @@
       </div>
     </div>
 
-    <!-- Top Bar with Home Dropdown and Settings -->
-    <div :class="['main-content', { dark: isDarkMode }]">
-      <div class="top-bar">
-        <el-dropdown @command="handleCommand">
-          <template v-slot:dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item
-                v-if="selectedWorkspace !== 'Home'"
-                command="Home"
-                >Home</el-dropdown-item
-              >
-              <el-dropdown-item
-                v-if="selectedWorkspace !== 'Workspace 1'"
-                command="Workspace 1"
-                >Workspace 1</el-dropdown-item
-              >
-              <el-dropdown-item
-                v-if="selectedWorkspace !== 'Workspace 2'"
-                command="Workspace 2"
-                >Workspace 2</el-dropdown-item
-              >
-              <el-dropdown-item
-                v-if="selectedWorkspace !== 'Workspace 3'"
-                command="Workspace 3"
-                >Workspace 3</el-dropdown-item
-              >
-            </el-dropdown-menu>
-          </template>
-          <div class="home">
-            <el-icon><HomeFilled /></el-icon>
-            <span>{{ selectedWorkspace }}</span>
-            <el-icon><ArrowDown /></el-icon>
-          </div>
-        </el-dropdown>
+    <!-- Main Content with Collapse Transition -->
+    <el-collapse-transition>
+      <div
+        v-show="!isCollapsed"
+        :class="['main-content', { dark: isDarkMode }]"
+      >
+        <div class="top-bar">
+          <el-dropdown @command="handleCommand">
+            <template v-slot:dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item
+                  v-if="selectedWorkspace !== 'Home'"
+                  command="Home"
+                  >Home</el-dropdown-item
+                >
+                <el-dropdown-item
+                  v-if="selectedWorkspace !== 'Workspace 1'"
+                  command="Workspace 1"
+                  >Workspace 1</el-dropdown-item
+                >
+                <el-dropdown-item
+                  v-if="selectedWorkspace !== 'Workspace 2'"
+                  command="Workspace 2"
+                  >Workspace 2</el-dropdown-item
+                >
+                <el-dropdown-item
+                  v-if="selectedWorkspace !== 'Workspace 3'"
+                  command="Workspace 3"
+                  >Workspace 3</el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </template>
+            <div class="home">
+              <el-icon><HomeFilled /></el-icon>
+              <span>{{ selectedWorkspace }}</span>
+              <el-icon><ArrowDown /></el-icon>
+            </div>
+          </el-dropdown>
 
-        <!-- Settings Dropdown for Dark and Care Mode -->
-        <el-dropdown @command="handleSettingsCommand">
-          <template v-slot:dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item command="Dark Mode">Dark Mode</el-dropdown-item>
-              <el-dropdown-item command="Care Mode">Care Mode</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-          <div class="settings">
-            <el-icon><Setting /></el-icon>
-          </div>
-        </el-dropdown>
-      </div>
+          <!-- Settings Dropdown -->
+          <el-dropdown @command="handleSettingsCommand">
+            <template v-slot:dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item command="Dark Mode"
+                  >Dark Mode</el-dropdown-item
+                >
+                <el-dropdown-item command="Care Mode"
+                  >Care Mode</el-dropdown-item
+                >
+              </el-dropdown-menu>
+            </template>
+            <div class="settings">
+              <el-icon><Setting /></el-icon>
+            </div>
+          </el-dropdown>
+        </div>
 
-      <!-- + New Chat Button -->
-      <div class="new-chat">
-        <button @click="createNewChat">+ New Chat</button>
-      </div>
+        <!-- New Chat Button -->
+        <div class="new-chat">
+          <button @click="createNewChat">+ New Chat</button>
+        </div>
 
-      <!-- Search Chats Input -->
-      <div class="search-chats">
-        <input
-          type="text"
-          placeholder="Search chats..."
-          v-model="searchQuery"
-        />
-      </div>
+        <!-- Search Chats Input -->
+        <div class="search-chats">
+          <input
+            type="text"
+            placeholder="Search chats..."
+            v-model="searchQuery"
+          />
+        </div>
 
-      <!-- Chats List -->
-      <div class="chats-list">
-        <p v-if="!chats.length">No Chats</p>
-        <ul v-else>
-          <li v-for="chat in filteredChats" :key="chat.id">
-            {{ chat.name }}
-          </li>
-        </ul>
+        <!-- Chats List -->
+        <div class="chats-list">
+          <p v-if="!chats.length">No Chats</p>
+          <ul v-else>
+            <li v-for="chat in filteredChats" :key="chat.id">
+              {{ chat.name }}
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </el-collapse-transition>
+
+    <!-- Toggle Collapse Circular Button -->
+    <el-button
+      @click="toggleCollapse"
+      circle
+      class="collapse-toggle"
+      size="small"
+      icon="el-icon-arrow-up"
+      :class="{ 'icon-flip': isCollapsed }"
+    >
+      <el-icon><ArrowLeft /></el-icon>
+    </el-button>
   </div>
 </template>
 
@@ -97,6 +118,7 @@ export default {
       selectedWorkspace: "Home",
       isDarkMode: false,
       isCareMode: false,
+      isCollapsed: false,
     };
   },
   computed: {
@@ -127,7 +149,11 @@ export default {
         }
       }
     },
-    notiyDarkModeChange(){
+    toggleCollapse() {
+      this.isCollapsed = !this.isCollapsed;
+      this.$emit("toggleCollapse", this.isCollapsed);
+    },
+    notiyDarkModeChange() {
       this.$emit("changeDarkMode");
     },
     backHome() {
@@ -138,13 +164,12 @@ export default {
 </script>
 
 <style scoped>
-
 .container_body {
+  position: relative;
   display: flex;
   height: 100vh;
   transition: background-color 0.3s ease, color 0.3s ease, font-size 0.3s ease;
 }
-
 
 .container_body.dark {
   background-color: #333;
@@ -158,7 +183,6 @@ export default {
 .icon.dark {
   color: #f5f5f5;
 }
-
 
 .container_body.care {
   font-size: 18px;
@@ -219,14 +243,6 @@ export default {
   color: #f5f5f5;
 }
 
-.home el-icon {
-  margin-right: 12px;
-}
-
-.home span {
-  padding-left: 4px;
-}
-
 .settings {
   background-color: transparent;
   cursor: pointer;
@@ -285,5 +301,19 @@ export default {
 
 .container_body.dark .chats-list li {
   background-color: #444;
+}
+
+/* Circular Collapse Button */
+.collapse-toggle {
+  position: absolute;
+  bottom: 50vh;
+  left: 25px;
+  background-color: #547a8a;
+  color: white;
+  text-align: center;
+}
+
+.icon-flip {
+  transform: rotate(180deg);
 }
 </style>

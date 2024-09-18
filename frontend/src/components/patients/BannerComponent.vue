@@ -18,11 +18,23 @@
         <img :src="robotImageSrc" alt="Robot Image" class="robot-image" />
       </div>
     </div>
-    <div class="patient-review-section" style="background-image: url('@/assets/reviews-bg.jpg');">
-     <h2 class="review-title">Real User Experiences with Our Chatbot</h2>
-     <div class="reviews-container">
-        <div v-for="(patient, index) in patients" :key="index" class="review-card">
-          <img :src="patient.imageSrc" :alt="'Patient ' + (index + 1)" class="patient-avatar" @error="imageError" />
+    <div
+      class="patient-review-section"
+      style="background-image: url('@/assets/reviews-bg.jpg')"
+    >
+      <h2 class="review-title">Real User Experiences with Our Chatbot</h2>
+      <div class="reviews-container">
+        <div
+          v-for="(patient, index) in patients"
+          :key="index"
+          class="review-card"
+        >
+          <img
+            :src="patient.imageSrc"
+            :alt="'Patient ' + (index + 1)"
+            class="patient-avatar"
+            @error="imageError"
+          />
           <p class="patient-quote">{{ patient.quote }}</p>
           <p class="patient-detail">{{ patient.detail }}</p>
           <p class="patient-name">- {{ patient.name }}</p>
@@ -42,8 +54,8 @@ import patient3 from "@/assets/p3.png";
 import patient4 from "@/assets/p4.png";
 import patient5 from "@/assets/p5.png";
 import patient6 from "@/assets/p6.png";
-import patient7 from "@/assets/p7.png";  // 新增病人7图片
-import patient8 from "@/assets/p8.png";  // 新增病人8图片
+import patient7 from "@/assets/p7.png"; // 新增病人7图片
+import patient8 from "@/assets/p8.png"; // 新增病人8图片
 
 export default {
   name: "HomePageComponent",
@@ -54,15 +66,63 @@ export default {
       clickImageSrc: clickImage,
       videoReadyToPlay: true,
       patients: [
-        { imageSrc: patient2, quote: "As a busy worker, I value flexibility.", detail: "The chatbot lets me book appointments 24/7 and easily cancel or change them anytime, which is incredibly convenient.", name: "Mike Lee" },
-        { imageSrc: patient1, quote: "Senior-friendly with excellent voice features!", detail: "The voice functionality is perfect for someone like me who isn't comfortable with typing. It's like talking to a real person.", name: "Betty White" },
-        { imageSrc: patient4, quote: "Navigating healthcare has never been simpler.", detail: "I always found it difficult to navigate hospital websites. This chatbot makes everything straightforward and simple.", name: "Samantha Chu" },
-        { imageSrc: patient3, quote: "Efficiency at its best!", detail: "I was amazed at how quickly I could schedule an urgent appointment. No waiting, no stress.", name: "Carlos Gomez" },
-        { imageSrc: patient6, quote: "A game-changer for busy moms! ", detail: "With three kids, finding time to call during office hours is tough. Now, I book appointments while on the go, anytime.", name: "Aisha Rahman" },
-        { imageSrc: patient5, quote: "Tech at the service of health, wonderfully executed.", detail: "The chatbot handles my appointments, sends reminders, and even directs me to health tips. It's like having a personal health assistant.", name: "Tommy Nguyen" },
-        { imageSrc: patient7, quote: "Highly intuitive and easy to use.", detail: "The chatbot experience was smooth and intuitive. It made managing my appointments seamless.", name: "Jenny Park" },  // 新增病人7信息
-        { imageSrc: patient8, quote: "Perfect for someone with a busy schedule.", detail: "I love how fast I can get everything done with the chatbot. No need to call or wait in line.", name: "David Wong" }  // 新增病人8信息
-      ]
+        {
+          imageSrc: patient2,
+          quote: "As a busy worker, I value flexibility.",
+          detail:
+            "The chatbot lets me book appointments 24/7 and easily cancel or change them anytime, which is incredibly convenient.",
+          name: "Mike Lee",
+        },
+        {
+          imageSrc: patient1,
+          quote: "Senior-friendly with excellent voice features!",
+          detail:
+            "The voice functionality is perfect for someone like me who isn't comfortable with typing. It's like talking to a real person.",
+          name: "Betty White",
+        },
+        {
+          imageSrc: patient4,
+          quote: "Navigating healthcare has never been simpler.",
+          detail:
+            "I always found it difficult to navigate hospital websites. This chatbot makes everything straightforward and simple.",
+          name: "Samantha Chu",
+        },
+        {
+          imageSrc: patient3,
+          quote: "Efficiency at its best!",
+          detail:
+            "I was amazed at how quickly I could schedule an urgent appointment. No waiting, no stress.",
+          name: "Carlos Gomez",
+        },
+        {
+          imageSrc: patient6,
+          quote: "A game-changer for busy moms! ",
+          detail:
+            "With three kids, finding time to call during office hours is tough. Now, I book appointments while on the go, anytime.",
+          name: "Aisha Rahman",
+        },
+        {
+          imageSrc: patient5,
+          quote: "Tech at the service of health, wonderfully executed.",
+          detail:
+            "The chatbot handles my appointments, sends reminders, and even directs me to health tips. It's like having a personal health assistant.",
+          name: "Tommy Nguyen",
+        },
+        {
+          imageSrc: patient7,
+          quote: "Highly intuitive and easy to use.",
+          detail:
+            "The chatbot experience was smooth and intuitive. It made managing my appointments seamless.",
+          name: "Jenny Park",
+        }, // 新增病人7信息
+        {
+          imageSrc: patient8,
+          quote: "Perfect for someone with a busy schedule.",
+          detail:
+            "I love how fast I can get everything done with the chatbot. No need to call or wait in line.",
+          name: "David Wong",
+        }, // 新增病人8信息
+      ],
     };
   },
   methods: {
@@ -85,9 +145,9 @@ export default {
       this.$router.push({ name: "Chatbot" });
     },
     imageError(event) {
-      event.target.src = "@/assets/default-avatar.png"; 
-    }
-  }
+      event.target.src = "@/assets/default-avatar.png";
+    },
+  },
 };
 </script>
 
@@ -106,7 +166,8 @@ export default {
   padding: 0;
 }
 
-.left-section, .right-section {
+.left-section,
+.right-section {
   height: 80vh;
 }
 
@@ -130,11 +191,11 @@ video {
   text-align: center;
   padding: 20px;
   background: linear-gradient(135deg, #004d66, #accfd8);
-  position:relative;
+  position: relative;
 }
 
 .robot-image {
-  position:absolute;
+  position: absolute;
   bottom: 10px;
   right: 10px;
   width: 30%;
@@ -169,17 +230,19 @@ video {
   width: 150px;
   height: 150px;
   display: flex;
-  justify-content:center;
+  justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: background-color 0.3s, box-shadow 0.3s;
   animation: pulse 2s infinite ease-in-out;
-  box-shadow: 0 0 20px rgba(172, 207, 216, 0.7), 0 0 40px rgba(172, 207, 216, 0.5);
+  box-shadow: 0 0 20px rgba(172, 207, 216, 0.7),
+    0 0 40px rgba(172, 207, 216, 0.5);
 }
 
 .play-button:hover {
   background-color: #ddeeff;
-  box-shadow: 0 0 30px rgba(172, 207, 216, 0.8), 0 0 50px rgba(172, 207, 216, 0.6);
+  box-shadow: 0 0 30px rgba(172, 207, 216, 0.8),
+    0 0 50px rgba(172, 207, 216, 0.6);
 }
 
 .click-icon {
@@ -206,19 +269,19 @@ video {
 .patient-review-section {
   width: 100%;
   padding: 60px 40px;
-  background-color: #6190a1; 
+  background-color: #6190a1;
   text-align: center;
-  color: #e0f7ff; 
-  border-top: 5px solid white; 
+  color: #e0f7ff;
+  border-top: 0px solid white;
 }
 
 .review-title {
-  color: #e0f7ff; 
+  color: #e0f7ff;
   margin-bottom: 50px;
   font-size: 3rem;
   text-transform: uppercase;
   letter-spacing: 2px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6); 
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 .reviews-container {
@@ -228,8 +291,8 @@ video {
 }
 
 .review-card {
-  background-color: rgba(255, 255, 255, 0.9); 
-  border-left: 5px solid #ffd700; 
+  background-color: rgba(255, 255, 255, 0.9);
+  border-left: 5px solid #ffd700;
   padding: 20px;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
@@ -248,7 +311,7 @@ video {
   margin: 20px auto 15px;
   display: block;
   object-fit: cover;
-  border: 3px solid #ffd700; 
+  border: 3px solid #ffd700;
 }
 
 .patient-quote {
@@ -259,13 +322,13 @@ video {
 
 .patient-detail {
   font-size: 1.2rem;
-  color: #333; 
+  color: #333;
   margin: 5px 0 15px;
 }
 
 .patient-name {
   font-size: 1.2rem;
-  color: #666; 
+  color: #666;
   font-style: italic;
 }
 
@@ -273,15 +336,8 @@ video {
   .left-section {
     display: none;
   }
-  .right-section{
+  .right-section {
     width: 100%;
   }
 }
 </style>
-
-
-
-
-
-
-

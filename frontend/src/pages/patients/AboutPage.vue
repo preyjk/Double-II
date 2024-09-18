@@ -6,22 +6,45 @@
       <div class="about-us-overlay">About Us</div>
     </div>
     <div class="welcome-section">
-      <p class="welcome-text">FRW is a distinguished healthcare provider with 15 sites across New Zealand, supported by a dedicated team of professionals.</p>
-      <p class="welcome-text">We operate in key cities including Christchurch, Wellington, and Auckland, offering services like general practice, urgent care, and specialist consulting.</p>
-      <p class="welcome-text">We provide healthcare services to both existing patients and the general public through our on-site and online platforms.</p>
-      <p class="welcome-text">At FRW, we believe a healthier community begins with outstanding medical care, and we strive to make that a reality. For Everyone.</p>
+      <p class="welcome-text">
+        FRW is a distinguished healthcare provider with 15 sites across New
+        Zealand, supported by a dedicated team of professionals.
+      </p>
+      <p class="welcome-text">
+        We operate in key cities including Christchurch, Wellington, and
+        Auckland, offering services like general practice, urgent care, and
+        specialist consulting.
+      </p>
+      <p class="welcome-text">
+        We provide healthcare services to both existing patients and the general
+        public through our on-site and online platforms.
+      </p>
+      <p class="welcome-text">
+        At FRW, we believe a healthier community begins with outstanding medical
+        care, and we strive to make that a reality. For Everyone.
+      </p>
     </div>
     <!-- Our Story Section -->
     <div class="content-section">
-      <img class="section-image" src="@/assets/building.png" alt="FRW Healthcare Building" />
+      <img
+        class="section-image"
+        src="@/assets/building.png"
+        alt="FRW Healthcare Building"
+      />
       <div class="story-box cool-card">
         <h2 class="story-title">Our Story</h2>
         <p class="story-text">
-          Founded in the heart of Christchurch in 1992, FRW Healthcare Limited began as a modest medical practitioner's office established by Drs. Frond, Reed, and Willow. From the outset, our founders envisioned a healthcare system where comprehensive, affordable medical services were accessible to all.
+          Founded in the heart of Christchurch in 1992, FRW Healthcare Limited
+          began as a modest medical practitioner's office established by Drs.
+          Frond, Reed, and Willow. From the outset, our founders envisioned a
+          healthcare system where comprehensive, affordable medical services
+          were accessible to all.
         </p>
         <br />
         <p class="story-text">
-          Today, FRW Healthcare has grown into a premier healthcare provider with 15 locations across Auckland, Wellington, and Christchurch, each dedicated to maintaining the health and well-being of our communities.
+          Today, FRW Healthcare has grown into a premier healthcare provider
+          with 15 locations across Auckland, Wellington, and Christchurch, each
+          dedicated to maintaining the health and well-being of our communities.
         </p>
       </div>
     </div>
@@ -36,10 +59,19 @@
       <div class="mission-text-box cool-card">
         <h2 class="mission-title">Our Mission</h2>
         <p class="mission-text">
-          <span class="highlight">"Excellent Service, Excellent Health"</span> encapsulates our mission at FRW Healthcare. We are committed to enabling medical services that align with patient understanding, wellbeing, and health. Our approach is patient-centric, focusing on providing care that not only treats but also educates and empowers our patients.
+          <span class="highlight">"Excellent Service, Excellent Health"</span>
+          encapsulates our mission at FRW Healthcare. We are committed to
+          enabling medical services that align with patient understanding,
+          wellbeing, and health. Our approach is patient-centric, focusing on
+          providing care that not only treats but also educates and empowers our
+          patients.
         </p>
       </div>
-      <img class="section-image" src="@/assets/mission.png" alt="Our Mission Image" />
+      <img
+        class="section-image"
+        src="@/assets/mission.png"
+        alt="Our Mission Image"
+      />
     </div>
 
     <!-- Separator for Core Services -->
@@ -52,74 +84,132 @@
       <h2 class="core-services-title">Our Core Services</h2>
       <div class="services-grid">
         <div class="service-item">
-          <img class="service-image" src="@/assets/GeneralPractice.png" alt="General Practice" />
+          <img
+            class="service-image"
+            src="@/assets/GeneralPractice.png"
+            alt="General Practice"
+          />
           <p class="service-title">General Practice</p>
-          <p class="service-description">At the heart of our services, general practice is available at all our locations, providing consistent, comprehensive care.</p>
+          <p class="service-description">
+            At the heart of our services, general practice is available at all
+            our locations, providing consistent, comprehensive care.
+          </p>
         </div>
         <div class="service-item">
-          <img class="service-image" src="@/assets/UrgentCare.png" alt="Urgent Care" />
+          <img
+            class="service-image"
+            src="@/assets/UrgentCare.png"
+            alt="Urgent Care"
+          />
           <p class="service-title">Urgent Care</p>
-          <p class="service-description">We offer 24/7 emergency services at select sites, equipped to handle acute medical situations promptly and efficiently.</p>
+          <p class="service-description">
+            We offer 24/7 emergency services at select sites, equipped to handle
+            acute medical situations promptly and efficiently.
+          </p>
         </div>
         <div class="service-item">
-          <img class="service-image" src="@/assets/SpecialistConsulting.png" alt="Specialist Consulting" />
+          <img
+            class="service-image"
+            src="@/assets/SpecialistConsulting.png"
+            alt="Specialist Consulting"
+          />
           <p class="service-title">Specialist Consulting</p>
-          <p class="service-description">Available at most of our sites, our specialist consulting services offer expert advice across a range of medical specialties.</p>
+          <p class="service-description">
+            Available at most of our sites, our specialist consulting services
+            offer expert advice across a range of medical specialties.
+          </p>
         </div>
         <div class="service-item">
-          <img class="service-image" src="@/assets/PharmacyServices.png" alt="Pharmacy Services" />
+          <img
+            class="service-image"
+            src="@/assets/PharmacyServices.png"
+            alt="Pharmacy Services"
+          />
           <p class="service-title">Pharmacy Services</p>
-          <p class="service-description">Our pharmacies complement our medical services by providing easy access to prescriptions and general health products, both in-store and online.</p>
+          <p class="service-description">
+            Our pharmacies complement our medical services by providing easy
+            access to prescriptions and general health products, both in-store
+            and online.
+          </p>
         </div>
       </div>
     </div>
 
     <div class="rectangular-card">
-  <div class="card-content">
-    <div class="left-content">
-      <p class="left-text">
-        At FRW Healthcare, we continually enhance patient care through innovative solutions. Our patient management system now uses cloud services and AI to improve service delivery and outcomes, ensuring high standards of care.
-      </p>
+      <div class="card-content">
+        <div class="left-content">
+          <p class="left-text">
+            At FRW Healthcare, we continually enhance patient care through
+            innovative solutions. Our patient management system now uses cloud
+            services and AI to improve service delivery and outcomes, ensuring
+            high standards of care.
+          </p>
+        </div>
+        <div class="circle-image">
+          <img
+            src="@/assets/r.png"
+            alt="Technology Innovation Image"
+            class="center-image"
+          />
+        </div>
+        <div class="right-content">
+          <p class="right-text">
+            Looking ahead, we're developing a chatbot to simplify appointment
+            booking. This technology will make scheduling, rescheduling, and
+            cancellations more convenient, improving accessibility and patient
+            satisfaction.
+          </p>
+        </div>
+      </div>
+      <h2 class="image-title">Innovation and Technology</h2>
     </div>
-    <div class="circle-image">
-      <img src="@/assets/r.png" alt="Technology Innovation Image" class="center-image" />
-    </div>
-    <div class="right-content">
-      <p class="right-text">
-        Looking ahead, we're developing a chatbot to simplify appointment booking. This technology will make scheduling, rescheduling, and cancellations more convenient, improving accessibility and patient satisfaction.
-      </p>
-    </div>
-  </div>
-  <h2 class="image-title">Innovation and Technology</h2>
-</div>
 
- <!-- Leadership and Structure and Community Engagement Section -->
-<div class="leadership-community-card custom-leadership-community">
-  <div class="custom-leadership-community-content">
-    <!-- Leadership and Structure Section -->
-    <div class="custom-leadership-section">
-      <img class="custom-leadership-image" src="@/assets/L.png" alt="Leadership Image" />
-      <div class="custom-leadership-text">
-        <h3 class="custom-leadership-title">Leadership and Structure</h3>
-        <p class="custom-leadership-description">
-          Our Riccarton super clinic not only serves as our flagship facility but also houses our headquarters. Under the leadership of our CEO and supported by an experienced executive team, we ensure that our operations across all sites are efficient and effective. Our board of directors, including founding members and independent directors, provides strategic direction and oversight, ensuring that our mission and values are at the forefront of all decisions.
-        </p>
+    <!-- Leadership and Structure and Community Engagement Section -->
+    <div class="leadership-community-card custom-leadership-community">
+      <div class="custom-leadership-community-content">
+        <!-- Leadership and Structure Section -->
+        <div class="custom-leadership-section">
+          <img
+            class="custom-leadership-image"
+            src="@/assets/L.png"
+            alt="Leadership Image"
+          />
+          <div class="custom-leadership-text">
+            <h3 class="custom-leadership-title">Leadership and Structure</h3>
+            <p class="custom-leadership-description">
+              Our Riccarton super clinic not only serves as our flagship
+              facility but also houses our headquarters. Under the leadership of
+              our CEO and supported by an experienced executive team, we ensure
+              that our operations across all sites are efficient and effective.
+              Our board of directors, including founding members and independent
+              directors, provides strategic direction and oversight, ensuring
+              that our mission and values are at the forefront of all decisions.
+            </p>
+          </div>
+        </div>
+
+        <!-- Community Engagement Section -->
+        <div class="custom-community-section">
+          <div class="custom-community-text">
+            <h3 class="custom-community-title">Community Engagement</h3>
+            <p class="custom-community-description">
+              FRW Healthcare is committed to contributing positively to the
+              communities we serve. We actively participate in health fairs,
+              educational workshops, and collaborate with local hospitals and
+              emergency services to manage healthcare needs effectively. These
+              initiatives help us stay connected with the community and respond
+              to its needs.
+            </p>
+          </div>
+          <img
+            class="custom-community-image"
+            src="@/assets/C.png"
+            alt="Community Engagement Image"
+          />
+        </div>
       </div>
     </div>
 
-    <!-- Community Engagement Section -->
-    <div class="custom-community-section">
-      <div class="custom-community-text">
-        <h3 class="custom-community-title">Community Engagement</h3>
-        <p class="custom-community-description">
-          FRW Healthcare is committed to contributing positively to the communities we serve. We actively participate in health fairs, educational workshops, and collaborate with local hospitals and emergency services to manage healthcare needs effectively. These initiatives help us stay connected with the community and respond to its needs.
-        </p>
-      </div>
-      <img class="custom-community-image" src="@/assets/C.png" alt="Community Engagement Image" />
-    </div>
-  </div>
-</div>
-  
     <FooterComponent class="container_footer"></FooterComponent>
   </div>
 </template>
@@ -166,7 +256,8 @@ export default {
   width: 100%;
 }
 
-.container_header, .container_footer {
+.container_header,
+.container_footer {
   width: 100%;
 }
 
@@ -174,19 +265,18 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 80%; 
-  margin: 50px auto; 
+  width: 80%;
+  margin: 50px auto;
 }
 
 .welcome-text {
   font-weight: bold;
-  font-size: 24px; 
+  font-size: 24px;
   color: #004d66;
   text-align: center;
   margin-bottom: 20px;
-  line-height: 1.4; 
+  line-height: 1.4;
 }
-
 
 .content-section {
   display: flex;
@@ -194,7 +284,6 @@ export default {
   align-items: center;
   margin-top: 30px;
   width: 90%;
-  
 }
 
 .section-image {
@@ -205,7 +294,8 @@ export default {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.story-box, .mission-text-box {
+.story-box,
+.mission-text-box {
   width: 45%;
   padding: 20px;
   background-color: #f9fafc;
@@ -214,11 +304,17 @@ export default {
 }
 
 .cool-card {
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.85), rgba(230, 230, 250, 0.9));
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.85),
+    rgba(230, 230, 250, 0.9)
+  );
   border: 1px solid rgba(0, 170, 255, 0.2);
 }
 
-.story-title, .mission-title, .core-services-title {
+.story-title,
+.mission-title,
+.core-services-title {
   font-size: 26px;
   font-weight: 600;
   color: #005580;
@@ -226,7 +322,8 @@ export default {
   text-align: center;
 }
 
-.story-text, .mission-text {
+.story-text,
+.mission-text {
   font-size: 16px;
   line-height: 1.6;
   color: #333;
@@ -305,7 +402,7 @@ export default {
   color: white;
   font-size: 18px;
   font-weight: bold;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); 
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
 .service-description {
@@ -319,7 +416,7 @@ export default {
   visibility: hidden;
   opacity: 0;
   transition: visibility 0s, opacity 0.3s ease-in-out;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7)
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
 /* Responsive Styles */
@@ -340,7 +437,7 @@ export default {
   justify-content: center;
   align-items: center;
   width: 90%;
-  margin: 100px auto; 
+  margin: 100px auto;
   padding: 10px 20px;
   background: linear-gradient(145deg, #004d66, #accfd8);
   border-radius: 15px;
@@ -356,14 +453,16 @@ export default {
   width: 100%;
 }
 
-.left-content, .right-content {
+.left-content,
+.right-content {
   width: 40%;
 }
 
-.left-text, .right-text {
+.left-text,
+.right-text {
   font-size: 16px;
   color: white;
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-weight: 400;
   line-height: 1.5;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
@@ -400,7 +499,8 @@ export default {
     padding: 20px 15px;
   }
 
-  .left-content, .right-content {
+  .left-content,
+  .right-content {
     width: 100%;
     margin-bottom: 20px;
   }
@@ -421,7 +521,6 @@ export default {
   }
 }
 
-
 /* Leadership and Community Engagement  */
 .custom-leadership-community {
   width: 90%;
@@ -439,7 +538,8 @@ export default {
   gap: 40px;
 }
 
-.custom-leadership-section, .custom-community-section {
+.custom-leadership-section,
+.custom-community-section {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -449,32 +549,38 @@ export default {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.custom-leadership-image, .custom-community-image {
+.custom-leadership-image,
+.custom-community-image {
   width: 250px;
   height: auto;
   object-fit: cover;
   border-radius: 15px;
-  transition: transform 0.4s ease-in-out, filter 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+  transition: transform 0.4s ease-in-out, filter 0.4s ease-in-out,
+    box-shadow 0.4s ease-in-out;
 }
 
-.custom-leadership-image:hover, .custom-community-image:hover {
+.custom-leadership-image:hover,
+.custom-community-image:hover {
   transform: scale(1.1) rotate(3deg);
   filter: brightness(1.2) saturate(1.3);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
 }
 
-.custom-leadership-text, .custom-community-text {
+.custom-leadership-text,
+.custom-community-text {
   width: 60%;
 }
 
-.custom-leadership-title, .custom-community-title {
+.custom-leadership-title,
+.custom-community-title {
   font-size: 24px;
   font-weight: 700;
   color: #003366;
   margin-bottom: 15px;
 }
 
-.custom-leadership-description, .custom-community-description {
+.custom-leadership-description,
+.custom-community-description {
   font-size: 16px;
   line-height: 1.8;
   color: #333;
@@ -482,18 +588,258 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .custom-leadership-section, .custom-community-section {
+  .custom-leadership-section,
+  .custom-community-section {
     flex-direction: column;
     text-align: center;
   }
 
-  .custom-leadership-image, .custom-community-image {
+  .custom-leadership-image,
+  .custom-community-image {
     width: 100%;
     margin-bottom: 20px;
   }
 
-  .custom-leadership-text, .custom-community-text {
+  .custom-leadership-text,
+  .custom-community-text {
     width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .container_body {
+    padding: 10px;
+  }
+
+  .welcome-section,
+  .content-section,
+  .core-services-section {
+    width: 100%;
+  }
+
+  .welcome-text,
+  .story-text,
+  .mission-text,
+  .service-description,
+  .left-text,
+  .right-text {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .story-title,
+  .mission-title,
+  .core-services-title,
+  .image-title {
+    font-size: 22px;
+  }
+
+  .story-box,
+  .mission-text-box,
+  .cool-card {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .section-image {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .about-us-overlay {
+    font-size: 32px;
+    right: 50px;
+  }
+
+  .services-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .service-title {
+    font-size: 16px;
+  }
+
+  .service-description {
+    font-size: 14px;
+  }
+
+  .custom-leadership-community-content {
+    gap: 20px;
+  }
+
+  .custom-leadership-section,
+  .custom-community-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .custom-leadership-image,
+  .custom-community-image {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .custom-leadership-text,
+  .custom-community-text {
+    width: 100%;
+  }
+
+  .rectangular-card {
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .circle-image {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 20px;
+  }
+
+  .left-content,
+  .right-content {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .left-text,
+  .right-text {
+    text-align: center;
+  }
+
+  .welcome-text {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 480px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .section-image {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .story-box,
+  .mission-text-box {
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  .story-title,
+  .mission-title {
+    font-size: 22px;
+  }
+
+  .story-text,
+  .mission-text {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .mission-text .highlight {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .section-image {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .story-box,
+  .mission-text-box {
+    width: 100%;
+  }
+
+  .story-text,
+  .mission-text {
+    font-size: 14px;
+  }
+
+  .story-title,
+  .mission-title {
+    font-size: 20px;
+  }
+}
+@media (max-width: 768px) {
+  .custom-leadership-section,
+  .custom-community-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .custom-leadership-image,
+  .custom-community-image {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .custom-leadership-text,
+  .custom-community-text {
+    width: 100%;
+    text-align: center;
+  }
+
+  .custom-leadership-title,
+  .custom-community-title {
+    font-size: 22px;
+    margin-bottom: 15px;
+  }
+
+  .custom-leadership-description,
+  .custom-community-description {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-leadership-section,
+  .custom-community-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .custom-leadership-image,
+  .custom-community-image {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  .custom-leadership-text,
+  .custom-community-text {
+    width: 100%;
+  }
+
+  .custom-leadership-title,
+  .custom-community-title {
+    font-size: 20px;
+  }
+
+  .custom-leadership-description,
+  .custom-community-description {
+    font-size: 14px;
+    line-height: 1.6;
   }
 }
 </style>

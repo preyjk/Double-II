@@ -5,37 +5,59 @@
       <form @submit.prevent="handleRegister">
         <!-- First Name Field -->
         <div class="form-group">
-          <label for="reg-firstname">First Name <span class="required">*</span></label>
+          <label for="reg-firstname"
+            >First Name <span class="required">*</span></label
+          >
           <input type="text" id="reg-firstname" v-model="firstName" required />
         </div>
 
         <!-- Last Name Field -->
         <div class="form-group">
-          <label for="reg-lastname">Last Name <span class="required">*</span></label>
+          <label for="reg-lastname"
+            >Last Name <span class="required">*</span></label
+          >
           <input type="text" id="reg-lastname" v-model="lastName" required />
         </div>
 
         <!-- Email Field -->
         <div class="form-group">
-          <label for="reg-email">Email Address <span class="required">*</span></label>
+          <label for="reg-email"
+            >Email Address <span class="required">*</span></label
+          >
           <input type="text" id="reg-email" v-model="email" required />
         </div>
 
         <!-- Password Field -->
         <div class="form-group">
-          <label for="reg-password">Create Password <span class="required">*</span></label>
-          <input type="password" id="reg-password" v-model="password" required />
+          <label for="reg-password"
+            >Create Password <span class="required">*</span></label
+          >
+          <input
+            type="password"
+            id="reg-password"
+            v-model="password"
+            required
+          />
         </div>
 
         <!-- Confirm Password Field -->
         <div class="form-group">
-          <label for="confirm-password">Confirm Password <span class="required">*</span></label>
-          <input type="password" id="confirm-password" v-model="confirmPassword" required />
+          <label for="confirm-password"
+            >Confirm Password <span class="required">*</span></label
+          >
+          <input
+            type="password"
+            id="confirm-password"
+            v-model="confirmPassword"
+            required
+          />
         </div>
 
         <div class="form-actions">
           <button type="submit" class="submit-button">Register</button>
-          <button type="button" @click="closeModal" class="cancel-button">Cancel</button>
+          <button type="button" @click="closeModal" class="cancel-button">
+            Cancel
+          </button>
         </div>
         <p class="toggle-text">
           Already Have an Account?
@@ -44,12 +66,14 @@
       </form>
     </div>
     <transition name="fade" mode="out-in">
-      <component :is="loginComponent" v-if="showLoginModal" @close="closeLoginModal" />
+      <component
+        :is="loginComponent"
+        v-if="showLoginModal"
+        @close="closeLoginModal"
+      />
     </transition>
   </div>
 </template>
-
-
 
 <script>
 import { register } from "@/api/modules/user.js";
@@ -144,18 +168,21 @@ export default {
   border-radius: 15px;
   background: none;
   border: 5px solid transparent;
-  border-image: repeating-conic-gradient(from var(--a),
+  border-image: repeating-conic-gradient(
+      from var(--a),
       #accfd8 0%,
       #accfd8 10%,
       transparent 10%,
       transparent 80%,
-      #accfd8 100%) 1;
+      #accfd8 100%
+    )
+    1;
   animation: animate 2.5s linear infinite;
   pointer-events: none;
 }
 
 @property --a {
-  syntax: '<angle>';
+  syntax: "<angle>";
   inherits: false;
   initial-value: 0deg;
 }
@@ -173,7 +200,6 @@ export default {
 .required {
   color: #dbcf8f;
 }
-
 
 .form-group {
   margin-bottom: 20px;
@@ -194,6 +220,7 @@ export default {
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+  color: black;
 }
 
 .form-actions {
@@ -232,5 +259,79 @@ export default {
 .submit-button:hover,
 .cancel-button:hover {
   background-color: #4081ea;
+}
+
+@media (max-width: 768px) {
+  .modal {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .form-group input {
+    padding: 8px;
+  }
+
+  .submit-button,
+  .cancel-button {
+    padding: 8px 16px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .submit-button,
+  .cancel-button {
+    width: 100%;
+  }
+
+  .toggle-text {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 768px) {
+  h2 {
+    font-size: 18px;
+  }
+
+  label {
+    font-size: 14px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group input {
+    font-size: 14px;
+  }
+}
+
+.modal-overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-group input {
+    padding: 2px;
+    font-size: 14px;
+  }
+
+  .submit-button,
+  .cancel-button {
+    padding: 4px;
+    font-size: 14px;
+  }
 }
 </style>

@@ -466,4 +466,98 @@ export default {
   display: block;
   margin-bottom: 5px;
 }
+
+@media (max-width: 768px) {
+  .modal-content {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .map-container {
+    width: 100%;
+    height: 50vh;
+  }
+
+  .search-bar {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .close-button {
+    font-size: 1.2rem;
+  }
+
+  .clinic-item {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .book-button,
+  .confirm-book-button,
+  .cancel-button {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .confirm-book-button {
+    margin-right: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-body {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    height: auto;
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .filter-icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+
+  .filter-menu {
+    top: 100%;
+    right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .booking-modal-content {
+    width: 90%;
+    padding: 10px;
+  }
+
+  .confirm-book-button,
+  .cancel-button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-content,
+  .booking-modal-content {
+    overflow-y: auto;
+  }
+}
 </style>
