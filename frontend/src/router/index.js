@@ -23,6 +23,7 @@ import GoogleLogin from "../pages/public/GoogleLogin.vue";
 import EmailVarification from "../pages/public/EmailVarification.vue";
 import ResetPassword from "../pages/public/ResetPassword.vue";
 import ForgetPassword from "../pages/public/ForgetPassword.vue";
+import UserPageLayout from "../pages/user/PageLayout.vue";
 
 const routes = [
   /*
@@ -158,6 +159,13 @@ const routes = [
   },
   { path: "/login", component: Login },
   { path: "/sign-up", component: Signup },
+
+  {
+    path: "/user",
+    component: UserPageLayout,
+    
+
+  },
 ];
 
 const router = createRouter({
