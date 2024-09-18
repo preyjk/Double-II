@@ -20,6 +20,15 @@ class UserService {
         const result = await dynamo.send(User.list());
         return { success: true, data: result.Items };
     }
+
+    static async getUserById(id) {
+        const result = await dynamo.send(User.findById(id));
+        if (result.Item) {
+            return { success: true, data: result.Item };
+        } else {
+            return { success: false, message: 'User not found' };
+        }
+    }
 }
 
 export default UserService;
