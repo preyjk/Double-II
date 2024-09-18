@@ -411,9 +411,6 @@ export default {
 }
 
 @media (max-width: 768px) {
-  .container_body {
-  }
-
   .animation-container {
     top: 40%;
   }
