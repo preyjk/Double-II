@@ -268,6 +268,15 @@ video {
   color: #666; 
   font-style: italic;
 }
+
+@media (max-width: 768px) {
+  .left-section {
+    display: none;
+  }
+  .right-section{
+    width: 100%;
+  }
+}
 </style>
 
 

@@ -123,15 +123,12 @@ const routes = [
     name: "Admin",
     component: AdminPage,
   },
-  {
-    path: "/dashboard",
-    name: "dashboard",
-    component: DashboardPage,
-  },
+
 
   {
     path: "/admin/console",
     component: BasePage,
+    name: "console",
     children: [
       {
         path: "dashboard",
