@@ -34,7 +34,7 @@ export default {
       try {
         await axios.post('/public/auth/forgot-password', { email: this.email });
         alert("Password reset email sent successfully. Please check your email inbox.");
-        this.$router.push('/login');
+        this.$router.push({name: 'login'});
       } catch (error) {
         this.errorMessage = error.message || "Failed to send password reset email. Please try again.";
       }

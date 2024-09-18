@@ -6,9 +6,9 @@
       <div class="flex flex-col w-full">
         <img src="/logo.png" alt="App Name" class="p-4" />
         <ul class="flex-1">
-          <li v-for="item in menuItems" :key="item.name" class="p-4 hover:bg-gray-700 cursor-pointer">
+          <li v-for="item in menuItems" :key="item.name" :class="['p-4 hover:bg-gray-700 cursor-pointer', $route.name === item.pageName && 'bg-gray-600']">
             <!-- Use router-link for navigation if not the sign-out button -->
-            <router-link :to="item.path" class="block">
+            <router-link :to="{name: item.pageName}" class="block">
               {{ item.name }}
             </router-link>
           </li>
@@ -51,9 +51,9 @@
         </button>
       </div>
       <ul class="mt-4">
-        <li v-for="item in menuItems" :key="item.name" class="p-4 hover:bg-gray-700 cursor-pointer">
+        <li v-for="item in menuItems" :key="item.name" :class="['p-4 hover:bg-gray-700 cursor-pointer', $route.name === item.pageName && 'bg-gray-600']">
           <!-- Use router-link for navigation if not the sign-out button -->
-          <router-link @click="closeMobileMenu" :to="item.path" class="block">
+          <router-link @click="closeMobileMenu" :to="{name: item.pageName}" class="block">
             {{ item.name }}
           </router-link>
         </li>
@@ -77,6 +77,8 @@
 
 <script>
 import Footer from '../../components/Footer.vue';
+import { mapMutations } from 'vuex';
+
 export default {
   components: {
     Footer,
@@ -86,9 +88,9 @@ export default {
       isMobileMenuOpen: false, // To control the mobile menu visibility
       // Menu items with associated paths
       menuItems: [
-        { name: 'Appointments', path: '/user/appointment' },
-        { name: 'Family', path: '/user/family' },
-        { name: 'Profile', path: '/user/profile' },
+        { name: 'Appointments', pageName: 'user-appointment' },
+        { name: 'Family', pageName: 'user-family' },
+        { name: 'Profile', pageName: 'user-profile' },
       ],
     };
   },
@@ -100,9 +102,11 @@ export default {
       this.isMobileMenuOpen = false;
     },
     signOut() {
-      // Add your sign-out logic here
-      console.log('Sign out clicked');
+      this.setToken(null);
+      this.setRefreshToken(null);
+      this.$router.push({ name: 'home' });
     },
+    ...mapMutations('localStorage', ['setToken', 'setRefreshToken']),
   },
 };
 </script>

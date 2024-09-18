@@ -167,7 +167,7 @@ export default {
           password: this.password,
         });
         alert('Account created successfully! Please check your email to active your account.');
-        this.$router.push('/login');
+        this.$router.push({ name: 'login' });
       } catch (error) {
         console.error(error);
         alert('An error occurred. Please try again.');

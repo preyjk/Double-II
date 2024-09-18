@@ -85,23 +85,23 @@ const routes = [
 
   {
     path: "/verify-email",
-    name: "VerifyEmail",
     component: PageLayout,
     children: [
       {
         path: "",
+        name: "verify-email",
         component: EmailVarification,
       }
     ]
   },
   {
     path: "/reset-password",
-    name: "ResetPasswordPage",
+    name: "reset-password",
     component: ResetPassword,
   },
   {
     path: "/forgot-password",
-    name: "ForgotPassword",
+    name: "forgot-password",
     component: ForgetPassword,
   },
   {
@@ -152,19 +152,23 @@ const routes = [
     path: "/public",
     component: PageLayout,
     children: [
-      { path: "", component: Home },
-      { path: "about", component: AboutUs },
-      { path: "/:pathMatch(.*)*", component: Error404 }
+      { path: "", name: "home", component: Home },
+      { path: "about", name: "aboutus", component: AboutUs },
+      { path: "/public/:pathMatch(.*)*", component: Error404 }
     ]
   },
-  { path: "/login", component: Login },
-  { path: "/sign-up", component: Signup },
+  { path: "/login", name: "login", component: Login },
+  { path: "/sign-up", name: "sign-up", component: Signup },
 
   {
     path: "/user",
     component: UserPageLayout,
-    
-
+    children: [
+      { path: "appointment", name: "user-appointment", },
+      { path: "profile", name: "user-profile", },
+      { path: "family", name: "user-family", },
+      { path: "/user/:pathMatch(.*)*", component: Error404 }
+    ]
   },
 ];
 

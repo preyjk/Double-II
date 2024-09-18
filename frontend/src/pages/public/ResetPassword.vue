@@ -50,7 +50,7 @@ export default {
         alert("Password reset successful. You can now login with your new password.");
         this.errorMessage = '';
         // Automatically redirect to the homepage after a successful reset
-        this.$router.push('/login'); // Assuming '/' is the homepage route
+        this.$router.push({name: 'login'}); // Assuming '/' is the homepage route
       } catch (error) {
         this.errorMessage = error.response?.data?.message || error.message || "Error occurred while resetting the password";
         this.successMessage = '';
