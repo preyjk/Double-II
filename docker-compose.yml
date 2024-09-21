@@ -8,6 +8,8 @@ services:
     working_dir: /home/dynamodblocal
     networks:
       - double-ii
+    ports:
+      - "8002:8000"
   backend:
     build:
       context: backend/app

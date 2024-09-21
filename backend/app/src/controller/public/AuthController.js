@@ -342,4 +342,52 @@ router.post('/refresh-token', asyncHandler(async (req, res) => {
   }
 }));
 
+/**
+ * @openapi
+ * /public/auth/user-info:
+ *   get:
+ *     summary: Get user info from JWT token
+ *     description: Retrieve user information using the JWT token
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: User information retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 Id:
+ *                   type: string
+ *                 email:
+ *                   type: string
+ *                 firstName:
+ *                   type: string
+ *                 lastName:
+ *                   type: string
+ *       '401':
+ *         description: Unauthorized or invalid token
+ */
+router.get('/user-info', asyncHandler(async (req, res) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    return res.status(401).json({ success: false, message: 'Authorization header missing' });
+  }
+
+  const token = authHeader.split(' ')[1]; // Bearer <token>
+  if (!token) {
+    return res.status(401).json({ success: false, message: 'Token missing' });
+  }
+
+  const result = await AuthService.getUserInfoFromToken(token);
+
+  if (result.success) {
+    res.status(200).json(result);
+  } else {
+    res.status(401).json({ success: false, message: result.message });
+  }
+}));
+
 export default router;

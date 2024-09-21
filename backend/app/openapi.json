@@ -1760,6 +1760,50 @@
         }
       }
     },
+    "/public/auth/user-info": {
+      "get": {
+        "summary": "Get user info from JWT token",
+        "description": "Retrieve user information using the JWT token",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User information retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Unique identifier of the user"
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "Email address of the user"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "description": "First name of the user"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "description": "Last name of the user"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized or invalid token"
+          }
+        }
+      }
+    },
     "/public/chatbot": {
       "post": {
         "summary": "Chatbot",

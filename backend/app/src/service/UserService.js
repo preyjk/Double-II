@@ -1,4 +1,4 @@
-import User, { UserIndex } from "../dal/User.js";
+import {User, UserIndex } from '../dal/User.js';
 import { dynamo, TransactionBuilder } from "../dal/DynamoDB.js";
 
 class UserService {
