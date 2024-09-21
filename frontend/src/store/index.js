@@ -1,7 +1,14 @@
 import { createStore } from "vuex";
 import { getAppointments_user, createAppointment, cancelAppointment_user, rescheduleAppointment_user } from "@/api/modules/appointment.js";
+import localStorageStore from "./localStorageStore";
+import { localStoragePlugin } from "./plugins/localStoragePlugin";
+
 
 export default createStore({
+  plugins: [ localStoragePlugin ],
+  modules: {
+    localStorage: localStorageStore,
+  },
   state: {
     bookings: [],
     tempBooking: {},

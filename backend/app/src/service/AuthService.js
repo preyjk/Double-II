@@ -168,8 +168,9 @@ class AuthService {
         return { success: false, message: 'Unverified Email Address' };
       }
       if (AuthService.verifyPassword(password, result.Item.Password)) {
-        const token = AuthService.generateToken({ id: result.Item.Id, roles: result.Item.Roles });
-        return { success: true, token };
+        const token = AuthService.generateAccessToken({ id: result.Item.Id, roles: result.Item.Roles });
+        const refreshToken = AuthService.generateRefreshToken({ id: result.Item.Id });
+        return { success: true, token, refreshToken };
       }
     }
     return { success: false, message: 'Unauthorized' };
@@ -236,6 +237,26 @@ class AuthService {
     return EmailService.sendResetPasswordEmail({ to: emailAddress, token });
   }
 
+  static generateAccessToken(content) {
+    return AuthService.generateToken({ ...content, type: 'access_token' }, '1h');
+  }
+
+  static generateRefreshToken(content) {
+    return AuthService.generateToken({ ...content, type: 'refresh_token' }, '7d');
+  }
+
+  static async refreshAccessToken(refreshToken) {
+    const verificationResult = AuthService.verifyToken(refreshToken);
+    if (!verificationResult.success || verificationResult.data.type !== 'refresh_token') {
+      return { success: false, message: 'Invalid token' };
+    }
+    const user = await dynamo.send(User.findById(verificationResult.data.id));
+    if (!user.Item) {
+      return { success: false, message: 'User not found' };
+    }
+    const token = AuthService.generateAccessToken({ id: user.Item.Id, roles: user.Item.Roles });
+    return { success: true, token };
+  }
 
   static getGoogleAuthUrl() {
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${process.env.GOOGLE_REDIRECT_URI}&response_type=code&scope=openid%20email%20profile`;
@@ -250,6 +271,9 @@ class AuthService {
     });
     const data = await response.json();
     const googleUser = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${data.access_token}`);
+    if (!googleUser.ok) {
+      return { success: false, message: 'Google login failed' };
+    }
     const userData = await googleUser.json();
     const openid = userData.id;
     const givenName = userData.given_name;
@@ -261,8 +285,9 @@ class AuthService {
     if (!index) {
       index = await AuthService.signupWithGoogle({ openid, givenName, familyName });
     }
-    const token = AuthService.generateToken({ id: index.UserId });
-    return { success: true, token }; 
+    const token = AuthService.generateAccessToken({ id: index.UserId });
+    const refreshToken = AuthService.generateRefreshToken({ id: index.UserId });
+    return { success: true, token, refreshToken }; 
   }
 
   static async signupWithGoogle({ openid, givenName, familyName }) {

@@ -1,6 +1,8 @@
 <template>
   <div>
-    <span v-if="showSign" @click="showModal = true" class="sign-in-button">Sign In</span>
+    <span v-if="showSign" @click="showModal = true" class="sign-in-button"
+      >Sign In</span
+    >
     <AvatarComponent v-if="showAvatar" @logout="handleLogout" />
     <div v-if="showModal" class="modal-overlay">
       <div class="modal">
@@ -17,21 +19,30 @@
           <div class="form-actions">
             <button type="submit" class="submit-button">Submit</button>
             <span v-if="isLoading" class="loading-spinner"></span>
-            <button type="button" @click="showModal = false" class="cancel-button">
+            <button
+              type="button"
+              @click="showModal = false"
+              class="cancel-button"
+            >
               Cancel
             </button>
 
             <!-- New Button (e.g., Help button) -->
-
           </div>
           <p class="toggle-text">
-            <a href="#" @click.prevent="switchToForgetPassword">Forgot Password?</a>
+            <a href="#" @click.prevent="switchToForgetPassword"
+              >Forgot Password?</a
+            >
             <a href="#" @click.prevent="switchToRegister">Register here</a>
           </p>
         </form>
         <!-- login with google -->
         <button class="google-login-button" @click="loginWithGoogle">
-          <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google Logo" class="google-logo" />
+          <img
+            src="https://developers.google.com/identity/images/g-logo.png"
+            alt="Google Logo"
+            class="google-logo"
+          />
           Login with Google
         </button>
       </div>
@@ -39,12 +50,18 @@
 
     <!-- Register Component -->
     <transition name="fade" mode="out-in">
-      <RegisterComponent v-if="showRegisterModal" @close="showRegisterModal = false" />
+      <RegisterComponent
+        v-if="showRegisterModal"
+        @close="showRegisterModal = false"
+      />
     </transition>
 
     <!-- Forget Password Component -->
     <transition name="fade" mode="out-in">
-      <ForgetPasswordComponent v-if="showForgetPasswordModal" @close="showForgetPasswordModal = false" />
+      <ForgetPasswordComponent
+        v-if="showForgetPasswordModal"
+        @close="showForgetPasswordModal = false"
+      />
     </transition>
   </div>
 </template>
@@ -94,7 +111,7 @@ export default {
             this.showModal = false;
             this.showSign = false;
             this.showAvatar = true;
-            this.$store.commit('SET_EMAIL', this.email);
+            this.$store.commit("SET_EMAIL", this.email);
             this.email = "";
             this.password = "";
           })
@@ -124,7 +141,9 @@ export default {
       alert("Please contact support for assistance.");
     },
     loginWithGoogle() {
-      window.location.href = `${import.meta.env.VITE_API_ENDPOINT}/public/auth/google/login`;
+      window.location.href = `${
+        import.meta.env.VITE_API_ENDPOINT
+      }/public/auth/google/login`;
     },
   },
 };
@@ -167,18 +186,21 @@ export default {
   border-radius: 15px;
   background: none;
   border: 5px solid transparent;
-  border-image: repeating-conic-gradient(from var(--a),
+  border-image: repeating-conic-gradient(
+      from var(--a),
       #accfd8 0%,
       #accfd8 10%,
       transparent 10%,
       transparent 80%,
-      #accfd8 100%) 1;
+      #accfd8 100%
+    )
+    1;
   animation: animate 2.5s linear infinite;
   pointer-events: none;
 }
 
 @property --a {
-  syntax: '<angle>';
+  syntax: "<angle>";
   inherits: false;
   initial-value: 0deg;
 }
@@ -220,6 +242,7 @@ export default {
   background: rgba(255, 255, 255, 0.5);
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
+  color: black;
 }
 
 .form-actions {
@@ -264,8 +287,6 @@ export default {
   text-decoration: underline;
   text-decoration-color: #accfd8;
 }
-
-
 
 .loading-spinner {
   border: 6px solid #f3f3f3;

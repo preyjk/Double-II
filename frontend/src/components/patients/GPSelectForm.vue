@@ -1,5 +1,3 @@
-
-您说：
 <template>
   <div class="gp-select-form">
     <h1>Doctors at {{ clinicName }}</h1>
@@ -18,7 +16,7 @@
           class="doctor-image"
         />
         <div class="doctor-info">
-          <div class="doctor-name">{{ doctor.LastName }}</div>
+          <div class="doctor-name">{{ doctor.FirstName }} {{ doctor.LastName }}</div>
           <div class="doctor-specialty">{{ doctor.Speciality }}</div>
         </div>
        
@@ -62,6 +60,7 @@ export default {
           workplace: props.clinicName,
         });
         filteredDoctors.value = doctors;
+        console.log(filteredDoctors.value);  
       } catch (error) {
         console.error("Error fetching doctors:", error);
       }
@@ -153,11 +152,12 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: #fff;
+  background-color: rgba(0, 77, 102, 0.85);
+  color: #ffffff;
   opacity: 0;
   transition: opacity 0.3s ease;
-  border-radius: 5px;
+  border-radius: 15px;
+  padding: 20px;
 }
 
 .doctor-card:hover .doctor-detail-overlay {
@@ -169,24 +169,35 @@ export default {
 }
 
 .booking-btn {
-  padding: 10px 20px;
-  background-color: #ffffff;
-  color: #004d66;
+  padding: 12px 25px;
+  background: linear-gradient(135deg, #004d66, #accfd8);
+  color: #ffffff;
   border: none;
-  border-radius: 5px;
+  border-radius: 30px;
   cursor: pointer;
   font-weight: bold;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background 0.4s ease;
+  text-transform: uppercase;
 }
 
 .booking-btn:hover {
-  background-color: #004d66;
-  color: #ffffff;
+  background: linear-gradient(135deg, #accfd8, #004d66);
 }
 
-h1,
+h1 {
+  color: #004d66;
+  font-size: 2.5em;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
 p {
   color: #004d66;
-  margin-bottom: 30px;
+  font-size: 1.2em;
+  margin-bottom: 40px;
 }
 </style>
+
+
+
+

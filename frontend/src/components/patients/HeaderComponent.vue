@@ -1,14 +1,46 @@
 <template>
-  <header class="header">
-    <svg
-      style="height: 0; width: 0; display: none"
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-    </svg>
-    <div class="logo">
-      <span @click="backToHomePage">FRW</span>
+  <header class="p-3 shadow-lg bg-gradient-to-r from-blue-900 to-teal-600" style="background: linear-gradient(135deg, #004d66, #accfd8);">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="logo flex-grow">
+        <span @click="backToHomePage" class="text-white text-2xl md:text-3xl font-bold cursor-pointer">FRW</span>
+      </div>
+
+      <button @click="toggleMenu" class="text-white md:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+      </button>
+
+      <ul class="hidden md:flex space-x-6 items-center flex-grow justify-end text-white">
+        <li>
+          <span
+            :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-white text-blue-900': activeTab === 'patients' }]"
+            @click="goToPatientsPage"
+          >Home</span>
+        </li>
+        <li>
+          <span
+            :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-white text-blue-900': activeTab === 'PatientRegister' }]"
+            @click="goToPatientRegisterPage"
+          >Join Us</span>
+        </li>
+        <li>
+          <span
+            :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-white text-blue-900': activeTab === 'about' }]"
+            @click="goToAboutPage"
+          >About Us</span>
+        </li>
+        <li>
+          <LoginComponent class="login-component"></LoginComponent>
+        </li>
+        <li>
+          <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300" @click="goToBookingPage">
+            Online Booking
+          </button>
+        </li>
+      </ul>
     </div>
+<<<<<<< HEAD
     <ul class="header-menu">
       <li>
         <span
@@ -33,11 +65,52 @@
         </button>
       </li>
     </ul>
+=======
+
+    <!-- Drawer for mobile -->
+    <el-drawer
+      title="Menu"
+      v-model="menuOpen"
+      direction="ltr"
+      size="60%"
+      custom-class="mobile-menu-drawer"
+    >
+      <ul class="flex flex-col space-y-4 text-lg">
+        <li>
+          <span
+            :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-teal-600 text-white': activeTab === 'patients' }]"
+            @click="goToPatientsPage"
+          >Home</span>
+        </li>
+        <li>
+          <span
+            :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-teal-600 text-white': activeTab === 'PatientRegister' }]"
+            @click="goToPatientRegisterPage"
+          >Join Us</span>
+        </li>
+        <li>
+          <span
+            :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-teal-600 text-white': activeTab === 'about' }]"
+            @click="goToAboutPage"
+          >About Us</span>
+        </li>
+        <li>
+          <LoginComponent class="login-component"></LoginComponent>
+        </li>
+        <li>
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full transition-colors duration-300" @click="goToBookingPage">
+            Online Booking
+          </button>
+        </li>
+      </ul>
+    </el-drawer>
+>>>>>>> 12c2b5525d5a86c7942b60a45656f4555e0fdd16
   </header>
 </template>
 
 <script>
 import LoginComponent from "@/components/patients/LoginComponent.vue";
+
 export default {
   name: "HeaderComponent",
   components: {
@@ -46,12 +119,13 @@ export default {
   data() {
     return {
       activeTab: "patients",
+      menuOpen: false, 
     };
   },
   created() {
     if (this.$route.path === "/about") {
       this.activateTab("about");
-    }else if(this.$route.path === "/patient"){
+    } else if (this.$route.path === "/patient") {
       this.activateTab("PatientRegister");
     }
   },
@@ -73,92 +147,22 @@ export default {
     goToBookingPage() {
       this.$router.push({ name: "OnlineBooking" });
     },
+<<<<<<< HEAD
+=======
+    goToPatientRegisterPage() {
+      this.activateTab("PatientRegister");
+      this.$router.push("/patient");
+    },
+    toggleMenu() {
+      this.menuOpen = !this.menuOpen;
+    },
+>>>>>>> 12c2b5525d5a86c7942b60a45656f4555e0fdd16
   },
 };
 </script>
 
-<style lang="scss" scoped>
-.header {
-  display: flex;
-  box-sizing: border-box;
-  background: linear-gradient(135deg, #004d66, #accfd8);
-  color: #ffffff;
-  border-bottom: 2px solid gray;
-  height: 80px;
-  align-items: center;
-  padding: 0 48px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.logo {
-  display: flex;
-  font-size: 36px;
-  color: white;
-  align-items: center;
-  flex: 0.2;
-  cursor: pointer;
-}
-
-.header-menu {
-  display: flex;
-  flex: 1;
-  height: 100%;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-.header-menu li {
-  margin-left: 20px;
-  color: #ffffff;
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-
-.header-menu li span {
-  cursor: pointer;
-  display: inline-block;
-  padding: 0 10px;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  transition: color 0.3s ease;
-}
-
-.header-menu li span:hover {
-  color: #365a82;
-}
-
-.header-menu li .active {
-  font-weight: bold;
-  color: #365a82;
-  border-bottom: 3px solid #365a82;
-}
-
-.profile-avatar span {
-  cursor: pointer;
-}
-
-.profile-avatar span:hover {
-  color: #365a82;
-}
-
-.booking-btn {
-  margin-left: 20px;
-}
-
-.online-booking-button {
-  background-color: #365a82;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-
-.online-booking-button:hover {
-  background-color: #2a4665;
+<style scoped>
+.mobile-menu-drawer {
+  background-color: #accfd8;
 }
 </style>

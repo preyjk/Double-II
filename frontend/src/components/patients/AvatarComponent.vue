@@ -53,6 +53,7 @@ export default {
     },
     logout() {
       localStorage.removeItem("authToken");
+      localStorage.removeItem("refreshToken");
       this.$emit("logout");
       this.$router.push({ name: "Home" });
       this.dropdownVisible = false;
@@ -109,5 +110,31 @@ export default {
 
 .dropdown-menu li:hover {
   background-color: #e2e8f0;
+}
+
+@media (max-width: 768px) {
+  .avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .dropdown-menu {
+    right: -100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dropdown-menu {
+    width: 140px;
+  }
+
+  .dropdown-menu li {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
+.avatar-container {
+  touch-action: manipulation;
 }
 </style>
