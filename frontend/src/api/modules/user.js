@@ -112,6 +112,25 @@ export const changePassword = async (email, oldPassword, newPassword) => {
   }
 };
 
+export const getUserInfo = async function (token) {
+  const config = {
+    url: "/public/auth/user-info",
+    method: "get",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  try {
+    const res = await request(config);
+    console.log("User information retrieved successfully:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("Error retrieving user information:", err);
+    throw err;
+  }
+};
+
 /*
   admin
 */

@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import User, { UserIndex } from '../dal/User.js';
+import { User, UserIndex } from '../dal/User.js';
 import Doctor from '../dal/Doctor.js';
 import EmailService from './EmailService.js';
 import { dynamo, TransactionBuilder } from '../dal/DynamoDB.js';
@@ -287,7 +287,7 @@ class AuthService {
     }
     const token = AuthService.generateAccessToken({ id: index.UserId });
     const refreshToken = AuthService.generateRefreshToken({ id: index.UserId });
-    return { success: true, token, refreshToken }; 
+    return { success: true, token, refreshToken };
   }
 
   static async signupWithGoogle({ openid, givenName, familyName }) {
@@ -308,6 +308,35 @@ class AuthService {
       .add(createUserCommand)
       .execute();
     return createUserCommand.input.Item;
+  }
+
+  /**
+   * @param {string} token 
+   * @returns {object} 
+   */
+  static async getUserInfoFromToken(token) {
+    const verificationResult = AuthService.verifyToken(token);
+    if (!verificationResult.success) {
+      return { success: false, message: 'Invalid or expired token' };
+    }
+
+    const userId = verificationResult.data.id;
+
+    if (!userId) {
+      return { success: false, message: 'User ID not found in token' };
+    }
+
+    try {
+      const result = await dynamo.send(User.getUserById(userId));
+      if (result.Item) {
+        return { success: true, data: result.Item };
+      } else {
+        return { success: false, message: 'User not found' };
+      }
+    } catch (error) {
+      console.error(`Error fetching user with ID: ${userId}`, error);
+      return { success: false, message: 'Error retrieving user' };
+    }
   }
 }
 
