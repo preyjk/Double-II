@@ -24,6 +24,7 @@ import EmailVarification from "../pages/public/EmailVarification.vue";
 import ResetPassword from "../pages/public/ResetPassword.vue";
 import ForgetPassword from "../pages/public/ForgetPassword.vue";
 import UserPageLayout from "../pages/user/PageLayout.vue";
+import BookAppointment from "../pages/public/BookAppointment.vue";
 
 const routes = [
   /*
@@ -154,6 +155,7 @@ const routes = [
     children: [
       { path: "", name: "home", component: Home },
       { path: "about", name: "aboutus", component: AboutUs },
+      { path: "booking", name: "booking", component: BookAppointment },
       { path: "/public/:pathMatch(.*)*", component: Error404 }
     ]
   },

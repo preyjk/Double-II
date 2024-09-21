@@ -6,6 +6,9 @@
         <label class="block text-gray-700 text-sm font-bold mb-2">New Password:</label>
         <input v-model="newPassword" type="password" required
           class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+        <ul v-if="passwordErrors.length > 0" class="text-red-500 text-sm mt-1">
+          <li v-for="error in passwordErrors" :key="error">{{ error }}</li>
+        </ul>
       </div>
       <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2">Confirm Password:</label>
@@ -23,6 +26,7 @@
 
 <script>
 import axios from '@/api/backendApi';
+import { validatePassword } from '@/utils/validators';
 
 export default {
   data() {
@@ -31,11 +35,17 @@ export default {
       confirmPassword: '',
       errorMessage: '',
       successMessage: '',
+      passwordErrors: [],
     };
   },
 
   methods: {
     async handleSubmit() {
+      this.passwordErrors = validatePassword(this.newPassword);
+      if (this.passwordErrors.length > 0) {
+        return;
+      }
+
       // Check if passwords match
       if (this.newPassword !== this.confirmPassword) {
         this.errorMessage = "Passwords do not match. Please ensure both passwords are identical.";
@@ -50,7 +60,7 @@ export default {
         alert("Password reset successful. You can now login with your new password.");
         this.errorMessage = '';
         // Automatically redirect to the homepage after a successful reset
-        this.$router.push({name: 'login'}); // Assuming '/' is the homepage route
+        this.$router.push({ name: 'login' }); // Assuming '/' is the homepage route
       } catch (error) {
         this.errorMessage = error.response?.data?.message || error.message || "Error occurred while resetting the password";
         this.successMessage = '';
@@ -60,4 +70,3 @@ export default {
 
 };
 </script>
-
