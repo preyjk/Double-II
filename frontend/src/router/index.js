@@ -15,6 +15,7 @@ import GoogleLoginPage from "../pages/patients/GoogleLoginPage.vue";
 import BasePage from "../pages/admin/BasePage.vue";
 import WorkingSchedule from "../components/admin/WorkingSchedule.vue";
 import ReservationCalendar from "../components/admin/ReservationCalendar.vue";
+import AnalysisPage from "../components/admin/AnalysisPage.vue";
 
 const routes = [
   /*
@@ -119,6 +120,10 @@ const routes = [
       {
         path: "schedule",
         component: WorkingSchedule,
+      },
+      {
+        path: "analysis",
+        component: AnalysisPage,
       }
     ]
   }

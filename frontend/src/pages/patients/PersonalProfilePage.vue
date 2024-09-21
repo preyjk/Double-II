@@ -34,30 +34,34 @@
         Password</el-button>
     </div>
 
-    <!-- Password Change Modal -->
-    <div v-if="isPasswordChangeVisible" class="modal-overlay">
-      <div class="modal-dialog">
-        <h3>Change Password</h3>
-        <el-form :model="profileForm" ref="profileFormRef" label-width="100px">
-          <el-form-item label="Old Password">
-            <el-input v-model="profileForm.oldPassword" type="password" placeholder="Enter old password"
-              show-password></el-input>
-          </el-form-item>
-          <el-form-item label="New Password">
-            <el-input v-model="profileForm.newPassword" type="password" placeholder="Enter new password"
-              show-password></el-input>
-          </el-form-item>
-          <el-form-item label="Confirm Password">
-            <el-input v-model="profileForm.confirmPassword" type="password" placeholder="Confirm new password"
-              show-password></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="resetPassword">Reset Password</el-button>
-            <el-button @click="closePasswordChangeModal">Cancel</el-button>
-          </el-form-item>
-        </el-form>
+    <div class="patient-list-container">
+      <h3>Patients List</h3>
+      <div v-if="patients && patients.length">
+        <div class="patient-list" v-for="(patient, index) in patients" :key="index">
+          <div class="profile-info">
+            <p><strong>Name:</strong> {{ patient.name }}</p>
+            <p><strong>Email:</strong> {{ patient.email }}</p>
+            <p><strong>Phone:</strong> {{ patient.phone }}</p>
+            <p><strong>Age:</strong> {{ patient.age }}</p>
+            <p><strong>Gender:</strong> {{ patient.gender }}</p>
+            <p><strong>Address:</strong> {{ patient.address }}</p>
+          </div>
+
+          <div class="action-buttons">
+            <button @click="updatePatient(index)" class="update-button" :disabled="patient.Status === 'update'">
+              Update
+            </button>
+            <button @click="deletePatient(index)" class="delete-button" :disabled="patient.Status === 'delete'">
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <p>No patients found.</p>
       </div>
     </div>
+
 
     <!-- My Bookings Section -->
     <div class="appointments-container">
@@ -79,7 +83,7 @@
                 Cancel
               </button>
               <button @click="showRescheduleModal(index)" class="reschedule-button"
-                :disabled="booking.Status === 'cancelled'">
+                :disabled="booking.Status === 'rescheduled'">
                 Reschedule
               </button>
             </div>
@@ -125,8 +129,8 @@ import { useStore } from "vuex";
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
 import { changePassword } from "@/api/modules/user.js";
-import { getPatientById_user } from "@/api/modules/patients.js";
-import { useRouter } from 'vue-router'; 
+import { getPatientById_user, updatePatientById_user, deletePatientById_user, getPatients_user } from "@/api/modules/patients.js";
+import { useRouter } from 'vue-router';
 
 export default {
   components: {
@@ -135,7 +139,7 @@ export default {
   },
   setup() {
     const store = useStore();
-    const router = useRouter(); 
+    const router = useRouter();
     const profileForm = ref({
       name: "",
       email: "",
@@ -154,6 +158,8 @@ export default {
     });
     const currentBookingIndex = ref(null);
     const bookings = ref([]);
+    const patients = ref([]);
+
 
     // Reset Password
     const resetPassword = () => {
@@ -224,7 +230,17 @@ export default {
       }
     };
 
-    // Fetch patient details
+    const checkLogin = () => {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        alert("Authentication required. Please log in.");
+        router.push("/login"); // Redirect to login page if not logged in
+        return false;
+      }
+      return true;
+    };
+
+    // Fetch Patients Information
     const getPatients = async () => {
       const token = localStorage.getItem("authToken");
       if (!token) {
@@ -233,16 +249,78 @@ export default {
       }
 
       try {
-        patientsDetails.value = await getPatientById_user("");
-        profileForm.value.name = patientsDetails.value[0].Name;
-        profileForm.value.email = patientsDetails.value[0].Email;
-        profileForm.value.phone = patientsDetails.value[0].Phone;
+        const patientsDetails = await getPatients_user(""); // Fetch patients details
+        if (patientsDetails && patientsDetails.length > 0) {
+          patients.value = patientsDetails.map((detail) => ({
+            id: detail.id, // Make sure to include the ID for update and delete operations
+            name: detail.Name,
+            email: detail.Email,
+            phone: detail.Phone,
+            age: detail.Age,
+            gender: detail.Gender,
+            address: detail.Address,
+          }));
+
+          // Automatically set the first patient's details to profileForm
+          const firstPatient = patientsDetails[0];
+          profileForm.value = {
+            name: firstPatient.Name,
+            email: firstPatient.Email,
+            phone: firstPatient.Phone,
+            age: firstPatient.Age,
+            gender: firstPatient.Gender,
+            address: firstPatient.Address,
+          };
+        } else {
+          console.log("No patients found.");
+          patients.value = []; // Clear the list if no patients found
+        }
       } catch (error) {
         console.error("Error fetching patient data:", error);
         alert("Failed to fetch patient data. Please try again.");
       }
     };
- 
+
+    const updatePatient = async (index) => {
+      const patient = patients.value[index];
+      patient.Status = "update";
+
+      try {
+        const formData = {
+          Name: patient.name,
+          Gender: patient.gender,
+          Age: patient.age,
+          Phone: patient.phone,
+          Email: patient.email,
+          Address: patient.address,
+        };
+        await updatePatientById_user(patient.id, formData);
+        console.log("Patient updated successfully");
+      } catch (error) {
+        console.error("Error updating patient:", error);
+      } finally {
+        patient.Status = "";
+      }
+    };
+
+    // Delete a patient
+    const deletePatient = async (index) => {
+      const patient = patients.value[index];
+      patient.Status = "delete"; // Disable the button while deleting
+
+      try {
+        await deletePatientById_user(patient.id); // Call API to delete
+        console.log("Patient deleted successfully");
+        patients.value.splice(index, 1); // Remove the patient from the list
+      } catch (error) {
+        console.error("Error deleting patient:", error);
+      } finally {
+        patient.Status = ""; 
+      }
+    };
+
+
+
     const cancelBooking = (index) => {
       store.dispatch("cancelBooking", index);
     };
@@ -275,6 +353,10 @@ export default {
       rescheduleForm,
       rescheduleBooking,
       goToAddPatient,
+      patients,
+      getPatients,
+      updatePatient,
+      deletePatient,
     };
   },
 };
@@ -286,7 +368,6 @@ export default {
   display: flex;
   justify-content: center;
   margin-top: 30px;
-  /* 增加顶部的间距 */
   margin-bottom: 20px;
 }
 
@@ -300,15 +381,8 @@ export default {
 
 .profile-header {
   text-align: center;
-  margin-bottom: 25px;
   color: #004d66;
   margin-bottom: 30px;
-}
-
-.avatar-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
 }
 
 .avatar-uploader {
@@ -382,31 +456,30 @@ export default {
 
 .add-patient-button,
 .change-password-button {
-  width: 180px; 
-  background-color: #3498db; 
-  border: 2px solid #2980b9; 
+  width: 180px;
+  background-color: #3498db;
+  border: 2px solid #2980b9;
   color: white;
-  padding: 10px 20px; 
-  font-size: 16px; 
-  font-weight: bold; 
-  border-radius: 8px; 
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease; 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .add-patient-button:hover,
 .change-password-button:hover {
-  background-color: #e79d96; 
-  border-color: #e67e73; 
-  transform: scale(1.05); 
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); 
+  background-color: #e79d96;
+  border-color: #e67e73;
+  transform: scale(1.05);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
- 
 
 .appointments-container {
   margin-top: 35px;
-  background: #ffffff;
+  background-color: #ffffff;
   padding: 25px;
   border-radius: 12px;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
@@ -428,7 +501,6 @@ export default {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s ease, transform 0.3s ease;
 }
-
 
 .appointment-item:hover {
   background-color: #e8f0ff;
@@ -497,6 +569,63 @@ export default {
   width: 320px;
   max-width: 90%;
   transition: transform 0.3s ease;
+}
+
+.patient-list-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.patient-list {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.patient-list:hover {
+  background-color: #e8f0ff;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.profile-info p {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.update-button,
+.delete-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.update-button:hover,
+.delete-button:hover {
+  background-color: #2980b9;
+}
+
+.update-button:disabled,
+.delete-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
 .medical-records {

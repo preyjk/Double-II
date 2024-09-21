@@ -17,13 +17,6 @@
           >Home</span
         >
       </li>
-      <li>
-        <span
-          :class="['for-PatientRegister', { active: activeTab === 'PatientRegister' }]"
-          @click="goToPatientRegisterPage"
-          >Join Us</span
-        >
-      </li>
       <li class="providers-btn">
         <span
           :class="['for-about', { active: activeTab === 'about' }]"
@@ -79,10 +72,6 @@ export default {
     },
     goToBookingPage() {
       this.$router.push({ name: "OnlineBooking" });
-    },
-    goToPatientRegisterPage() {
-      this.activateTab("PatientRegister"); 
-      this.$router.push("/patient"); 
     },
   },
 };

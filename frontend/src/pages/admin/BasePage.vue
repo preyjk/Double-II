@@ -29,6 +29,13 @@
             </el-icon>
             <span>Working Schedule</span>
           </el-menu-item>
+          
+          <el-menu-item index="/admin/console/analysis" @click="navigate">
+            <el-icon>
+              <Cahrt />
+            </el-icon>
+            <span>Echart</span>
+          </el-menu-item>
         </el-menu>
       </el-aside>
 
