@@ -7,19 +7,10 @@
       <!-- Avatar Upload -->
       <div class="avatar-container">
         <label class="avatar-uploader">
-          <input
-            type="file"
-            accept="image/*"
-            class="avatar-input"
-            @change="onAvatarChange"
-          />
+          <input type="file" accept="image/*" class="avatar-input" @change="onAvatarChange" />
           <div class="avatar-wrapper">
             <!-- If avatar is uploaded, show the image, otherwise show the upload prompt -->
-            <img
-              v-if="profileForm.avatarUrl"
-              :src="profileForm.avatarUrl"
-              class="avatar"
-            />
+            <img v-if="profileForm.avatarUrl" :src="profileForm.avatarUrl" class="avatar" />
             <div v-else class="avatar-placeholder">
               <i class="el-icon-plus avatar-uploader-icon"></i>
               <span class="avatar-hint">Click to upload</span>
@@ -36,23 +27,13 @@
       </div>
 
       <!-- Add Patient Button -->
-      <el-button
-        type="primary"
-        @click="goToAddPatient"
-        class="add-patient-button"
-        >Add Patient</el-button
-      >
+      <el-button type="primary" @click="goToAddPatient" class="add-patient-button">Add Patient</el-button>
 
       <!-- Trigger to show the password change form modal -->
-      <el-button
-        type="primary"
-        @click="showPasswordChangeModal"
-        class="change-password-button"
-        >Change Password</el-button
-      >
+      <el-button type="primary" @click="showPasswordChangeModal" class="change-password-button">Change
+        Password</el-button>
     </div>
 
-<<<<<<< HEAD
     <div class="patient-list-container">
       <h3>Patients List</h3>
       <div v-if="patients && patients.length">
@@ -76,141 +57,97 @@
           </div>
         </div>
       </div>
-      <div v-else>
-        <p>No patients found.</p>
-=======
-    <!-- Password Change Modal -->
-    <div v-if="isPasswordChangeVisible" class="modal-overlay">
-      <div class="modal-dialog">
-        <h3>Change Password</h3>
-        <el-form :model="profileForm" ref="profileFormRef" label-width="100px">
-          <el-form-item label="Old Password">
-            <el-input
-              v-model="profileForm.oldPassword"
-              type="password"
-              placeholder="Enter old password"
-              show-password
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="New Password">
-            <el-input
-              v-model="profileForm.newPassword"
-              type="password"
-              placeholder="Enter new password"
-              show-password
-            ></el-input>
-          </el-form-item>
-          <el-form-item label="Confirm Password">
-            <el-input
-              v-model="profileForm.confirmPassword"
-              type="password"
-              placeholder="Confirm new password"
-              show-password
-            ></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="resetPassword"
-              >Reset Password</el-button
-            >
-            <el-button @click="closePasswordChangeModal">Cancel</el-button>
-          </el-form-item>
-        </el-form>
->>>>>>> 12c2b5525d5a86c7942b60a45656f4555e0fdd16
-      </div>
+    <div v-else>
+      <p>No patients found.</p></div>
     </div>
+      <!-- Password Change Modal -->
+      <div v-if="isPasswordChangeVisible" class="modal-overlay">
+        <div class="modal-dialog">
+          <h3>Change Password</h3>
+          <el-form :model="profileForm" ref="profileFormRef" label-width="100px">
+            <el-form-item label="Old Password">
+              <el-input v-model="profileForm.oldPassword" type="password" placeholder="Enter old password"
+                show-password></el-input>
+            </el-form-item>
+            <el-form-item label="New Password">
+              <el-input v-model="profileForm.newPassword" type="password" placeholder="Enter new password"
+                show-password></el-input>
+            </el-form-item>
+            <el-form-item label="Confirm Password">
+              <el-input v-model="profileForm.confirmPassword" type="password" placeholder="Confirm new password"
+                show-password></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="resetPassword">Reset Password</el-button>
+              <el-button @click="closePasswordChangeModal">Cancel</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
 
 
-    <!-- My Bookings Section -->
-    <div class="appointments-container">
-      <h2>Your Appointments</h2>
-      <div v-if="bookings && bookings.length">
-        <ul class="appointments-list">
-          <li
-            v-for="(booking, index) in bookings"
-            :key="index"
-            class="appointment-item"
-          >
-            <div class="appointment-details">
-              <p><strong>Doctor:</strong> Dr. {{ booking.DoctorName }}</p>
-              <p><strong>Date:</strong> {{ booking.Date }}</p>
-              <p>
-                <strong>Time:</strong> {{ booking.StartTime }} -
-                {{ booking.EndTime }}
-              </p>
-              <p><strong>Patient:</strong> {{ booking.LastName }}</p>
-              <p
-                v-if="booking.Status === 'cancelled'"
-                class="cancelled-message"
-              >
-                <strong>Status:</strong> Appointment Cancelled
-              </p>
-            </div>
-            <div class="appointment-actions">
-              <button
-                @click="cancelBooking(index)"
-                class="cancel-button"
-                :disabled="booking.Status === 'cancelled'"
-              >
-                Cancel
-              </button>
-<<<<<<< HEAD
-              <button @click="showRescheduleModal(index)" class="reschedule-button"
-                :disabled="booking.Status === 'rescheduled'">
-=======
-              <button
-                @click="showRescheduleModal(index)"
-                class="reschedule-button"
-                :disabled="booking.Status === 'cancelled'"
-              >
->>>>>>> 12c2b5525d5a86c7942b60a45656f4555e0fdd16
-                Reschedule
-              </button>
-            </div>
-          </li>
-        </ul>
+      <!-- My Bookings Section -->
+      <div class="appointments-container">
+        <h2>Your Appointments</h2>
+        <div v-if="bookings && bookings.length">
+          <ul class="appointments-list">
+            <li v-for="(booking, index) in bookings" :key="index" class="appointment-item">
+              <div class="appointment-details">
+                <p><strong>Doctor:</strong> Dr. {{ booking.DoctorName }}</p>
+                <p><strong>Date:</strong> {{ booking.Date }}</p>
+                <p>
+                  <strong>Time:</strong> {{ booking.StartTime }} -
+                  {{ booking.EndTime }}
+                </p>
+                <p><strong>Patient:</strong> {{ booking.LastName }}</p>
+                <p v-if="booking.Status === 'cancelled'" class="cancelled-message">
+                  <strong>Status:</strong> Appointment Cancelled
+                </p>
+              </div>
+              <div class="appointment-actions">
+                <button @click="cancelBooking(index)" class="cancel-button" :disabled="booking.Status === 'cancelled'">
+                  Cancel
+                </button>
+                <button @click="showRescheduleModal(index)" class="reschedule-button"
+                  :disabled="booking.Status === 'rescheduled'"></button>
+                <button @click="showRescheduleModal(index)" class="reschedule-button"
+                  :disabled="booking.Status === 'cancelled'">
+                  Reschedule
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div v-else>
+          <p>You have no appointments scheduled.</p>
+        </div>
       </div>
-      <div v-else>
-        <p>You have no appointments scheduled.</p>
-      </div>
-    </div>
 
-    <!-- Reschedule Modal -->
-    <div v-if="isRescheduleModalVisible" class="modal-overlay">
-      <div class="modal-dialog">
-        <h3>Reschedule Appointment</h3>
-        <el-form
-          :model="rescheduleForm"
-          ref="rescheduleFormRef"
-          label-width="100px"
-        >
-          <el-form-item label="New Date">
-            <el-date-picker
-              v-model="rescheduleForm.newDate"
-              type="date"
-              placeholder="Pick a new date"
-            ></el-date-picker>
-          </el-form-item>
-          <el-form-item label="New Time">
-            <el-time-picker
-              v-model="rescheduleForm.newTime"
-              placeholder="Pick a new time"
-            ></el-time-picker>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="rescheduleBooking"
-              >Reschedule</el-button
-            >
-            <el-button @click="closeRescheduleModal">Cancel</el-button>
-          </el-form-item>
-        </el-form>
+      <!-- Reschedule Modal -->
+      <div v-if="isRescheduleModalVisible" class="modal-overlay">
+        <div class="modal-dialog">
+          <h3>Reschedule Appointment</h3>
+          <el-form :model="rescheduleForm" ref="rescheduleFormRef" label-width="100px">
+            <el-form-item label="New Date">
+              <el-date-picker v-model="rescheduleForm.newDate" type="date"
+                placeholder="Pick a new date"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="New Time">
+              <el-time-picker v-model="rescheduleForm.newTime" placeholder="Pick a new time"></el-time-picker>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="rescheduleBooking">Reschedule</el-button>
+              <el-button @click="closeRescheduleModal">Cancel</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
       </div>
-    </div>
 
-    <!-- Medical Records Section (Placeholder for future development) -->
-    <div class="medical-records">
-      <h2>Your Medical Records</h2>
-      <p>No medical records available at this time.</p>
-    </div>
+      <!-- Medical Records Section (Placeholder for future development) -->
+      <div class="medical-records">
+        <h2>Your Medical Records</h2>
+        <p>No medical records available at this time.</p>
+      </div>
   </el-card>
   <FooterComponent />
 </template>
@@ -221,13 +158,8 @@ import { useStore } from "vuex";
 import HeaderComponent from "@/components/patients/HeaderComponent.vue";
 import FooterComponent from "@/components/patients/FooterComponent.vue";
 import { changePassword } from "@/api/modules/user.js";
-<<<<<<< HEAD
 import { getPatientById_user, updatePatientById_user, deletePatientById_user, getPatients_user } from "@/api/modules/patients.js";
 import { useRouter } from 'vue-router';
-=======
-import { getPatientById_user } from "@/api/modules/patients.js";
-import { useRouter } from "vue-router";
->>>>>>> 12c2b5525d5a86c7942b60a45656f4555e0fdd16
 
 export default {
   components: {
@@ -382,7 +314,6 @@ export default {
       }
     };
 
-<<<<<<< HEAD
     const updatePatient = async (index) => {
       const patient = patients.value[index];
       patient.Status = "update";
@@ -417,14 +348,12 @@ export default {
       } catch (error) {
         console.error("Error deleting patient:", error);
       } finally {
-        patient.Status = ""; 
+        patient.Status = "";
       }
     };
 
 
 
-=======
->>>>>>> 12c2b5525d5a86c7942b60a45656f4555e0fdd16
     const cancelBooking = (index) => {
       store.dispatch("cancelBooking", index);
     };

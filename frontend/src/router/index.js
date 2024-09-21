@@ -8,16 +8,11 @@ import AboutPage from "@/pages/patients/AboutPage.vue";
 import OnlineBookingPage from "@/pages/patients/OnlineBookingPage.vue";
 import ConfirmationPage from "@/pages/patients/ConfirmationPage.vue";
 import MyBooking from "@/pages/patients/MyBooking.vue";
-import VerifyEmailPage from "@/pages/patients/VerifyEmailPage.vue";
-import ResetPasswordPage from "@/pages/patients/ResetPasswordPage.vue";
 import PatientRegisterPage from "@/pages/patients/PatientRegisterPage.vue";
-import GoogleLoginPage from "../pages/patients/GoogleLoginPage.vue";
 import BasePage from "../pages/admin/BasePage.vue";
 import WorkingSchedule from "../components/admin/WorkingSchedule.vue";
 import ReservationCalendar from "../components/admin/ReservationCalendar.vue";
-<<<<<<< HEAD
 import AnalysisPage from "../components/admin/AnalysisPage.vue";
-=======
 import PageLayout from "../pages/public/PageLayout.vue";
 import Home from "../pages/public/Home.vue";
 import AboutUs from "../pages/public/AboutUs.vue";
@@ -28,7 +23,6 @@ import GoogleLogin from "../pages/public/GoogleLogin.vue";
 import EmailVarification from "../pages/public/EmailVarification.vue";
 import ResetPassword from "../pages/public/ResetPassword.vue";
 import ForgetPassword from "../pages/public/ForgetPassword.vue";
->>>>>>> 12c2b5525d5a86c7942b60a45656f4555e0fdd16
 
 const routes = [
   /*

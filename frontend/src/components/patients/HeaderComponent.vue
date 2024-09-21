@@ -20,12 +20,6 @@
         </li>
         <li>
           <span
-            :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-white text-blue-900': activeTab === 'PatientRegister' }]"
-            @click="goToPatientRegisterPage"
-          >Join Us</span>
-        </li>
-        <li>
-          <span
             :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-white text-blue-900': activeTab === 'about' }]"
             @click="goToAboutPage"
           >About Us</span>
@@ -40,32 +34,6 @@
         </li>
       </ul>
     </div>
-<<<<<<< HEAD
-    <ul class="header-menu">
-      <li>
-        <span
-          :class="['for-patients', { active: activeTab === 'patients' }]"
-          @click="goToPatientsPage"
-          >Home</span
-        >
-      </li>
-      <li class="providers-btn">
-        <span
-          :class="['for-about', { active: activeTab === 'about' }]"
-          @click="goToAboutPage"
-          >About Us</span
-        >
-      </li>
-      <li class="profile-avatar">
-        <LoginComponent class="login-component"></LoginComponent>
-      </li>
-      <li class="booking-btn">
-        <button class="online-booking-button" @click="goToBookingPage">
-          Online Booking
-        </button>
-      </li>
-    </ul>
-=======
 
     <!-- Drawer for mobile -->
     <el-drawer
@@ -84,12 +52,6 @@
         </li>
         <li>
           <span
-            :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-teal-600 text-white': activeTab === 'PatientRegister' }]"
-            @click="goToPatientRegisterPage"
-          >Join Us</span>
-        </li>
-        <li>
-          <span
             :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-teal-600 text-white': activeTab === 'about' }]"
             @click="goToAboutPage"
           >About Us</span>
@@ -104,7 +66,6 @@
         </li>
       </ul>
     </el-drawer>
->>>>>>> 12c2b5525d5a86c7942b60a45656f4555e0fdd16
   </header>
 </template>
 
@@ -147,16 +108,6 @@ export default {
     goToBookingPage() {
       this.$router.push({ name: "OnlineBooking" });
     },
-<<<<<<< HEAD
-=======
-    goToPatientRegisterPage() {
-      this.activateTab("PatientRegister");
-      this.$router.push("/patient");
-    },
-    toggleMenu() {
-      this.menuOpen = !this.menuOpen;
-    },
->>>>>>> 12c2b5525d5a86c7942b60a45656f4555e0fdd16
   },
 };
 </script>

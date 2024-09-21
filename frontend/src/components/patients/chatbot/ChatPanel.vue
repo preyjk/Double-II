@@ -1,29 +1,10 @@
 <template>
-<<<<<<< HEAD
   <div class="container_body" :style="isDarkMode ? darkModeStyles : lightModeStyles">
     <deep-chat :textInput="textInput" :submitButtonStyles="submitButtonStyles" :style="chatStyles"
       :textToSpeech="textToSpeechOptions" :speechToText="speechToTextOptions" demo="true" id="chat-element"
       :connect="chatConnect" style="border-radius: 8px" :responseInterceptor="bindButtons"
       messageStyles='{"default": {"user": {"bubble": {"backgroundColor": "#ff2020"}}}}'
       avatars='{"ai": {"src": "@/assets/avar.png"}}'>
-=======
-  <div
-    class="container_body"
-    :style="isDarkMode ? darkModeStyles : lightModeStyles"
-  >
-    <deep-chat
-      :textInput="textInput"
-      :submitButtonStyles="submitButtonStyles"
-      :style="chatStyles"
-      :textToSpeech="textToSpeechOptions"
-      :speechToText="speechToTextOptions"
-      demo="true"
-      id="chat-element"
-      :connect="chatConnect"
-      style="border-radius: 0px"
-      :responseInterceptor="bindButtons"
-    >
->>>>>>> 12c2b5525d5a86c7942b60a45656f4555e0fdd16
     </deep-chat>
 
     <div class="animation-container">
