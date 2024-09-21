@@ -1,20 +1,10 @@
 <template>
-  <div
-    class="container_body"
-    :style="isDarkMode ? darkModeStyles : lightModeStyles"
-  >
-    <deep-chat
-      :textInput="textInput"
-      :submitButtonStyles="submitButtonStyles"
-      :style="chatStyles"
-      :textToSpeech="textToSpeechOptions"
-      :speechToText="speechToTextOptions"
-      demo="true"
-      id="chat-element"
-      :connect="chatConnect"
-      style="border-radius: 0px"
-      :responseInterceptor="bindButtons"
-    >
+  <div class="container_body" :style="isDarkMode ? darkModeStyles : lightModeStyles">
+    <deep-chat :textInput="textInput" :submitButtonStyles="submitButtonStyles" :style="chatStyles"
+      :textToSpeech="textToSpeechOptions" :speechToText="speechToTextOptions" demo="true" id="chat-element"
+      :connect="chatConnect" style="border-radius: 8px" :responseInterceptor="bindButtons"
+      messageStyles='{"default": {"user": {"bubble": {"backgroundColor": "#ff2020"}}}}'
+      avatars='{"ai": {"src": "@/assets/avar.png"}}'>
     </deep-chat>
 
     <div class="animation-container">
@@ -98,6 +88,24 @@ export default {
             },
           },
         },
+      },
+      chatElementRef: {
+        history: [
+          { text: 'How are you doing?', role: 'user' },
+          { text: 'Good, how may I help?', role: 'ai' },
+          {
+            html: `
+            <div class="deep-chat-temporary-message">
+              <button class="deep-chat-button deep-chat-suggestion-button" style="margin-top: 5px">What do shrimps eat?</button>
+              <button class="deep-chat-button deep-chat-suggestion-button" style="margin-top: 6px">Can a shrimp fry rice?</button>
+              <button class="deep-chat-button deep-chat-suggestion-button" style="margin-top: 6px">What is a pistol shrimp?</button>
+            </div>`,
+            role: 'ai',
+          },
+        ],
+        messageStyles: { html: { shared: { bubble: { backgroundColor: 'unset', padding: '0px' } } } },
+        style: { height: '370px', borderRadius: '8px' },
+        demo: true,
       },
 
       // speech to text setting

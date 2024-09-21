@@ -20,12 +20,6 @@
         </li>
         <li>
           <span
-            :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-white text-blue-900': activeTab === 'PatientRegister' }]"
-            @click="goToPatientRegisterPage"
-          >Join Us</span>
-        </li>
-        <li>
-          <span
             :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-white text-blue-900': activeTab === 'about' }]"
             @click="goToAboutPage"
           >About Us</span>
@@ -55,12 +49,6 @@
             :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-teal-600 text-white': activeTab === 'patients' }]"
             @click="goToPatientsPage"
           >Home</span>
-        </li>
-        <li>
-          <span
-            :class="['cursor-pointer p-2 rounded-lg transition-colors duration-300', { 'bg-teal-600 text-white': activeTab === 'PatientRegister' }]"
-            @click="goToPatientRegisterPage"
-          >Join Us</span>
         </li>
         <li>
           <span
@@ -119,13 +107,6 @@ export default {
     },
     goToBookingPage() {
       this.$router.push({ name: "OnlineBooking" });
-    },
-    goToPatientRegisterPage() {
-      this.activateTab("PatientRegister");
-      this.$router.push("/patient");
-    },
-    toggleMenu() {
-      this.menuOpen = !this.menuOpen;
     },
   },
 };

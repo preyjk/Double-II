@@ -8,13 +8,11 @@ import AboutPage from "@/pages/patients/AboutPage.vue";
 import OnlineBookingPage from "@/pages/patients/OnlineBookingPage.vue";
 import ConfirmationPage from "@/pages/patients/ConfirmationPage.vue";
 import MyBooking from "@/pages/patients/MyBooking.vue";
-import VerifyEmailPage from "@/pages/patients/VerifyEmailPage.vue";
-import ResetPasswordPage from "@/pages/patients/ResetPasswordPage.vue";
 import PatientRegisterPage from "@/pages/patients/PatientRegisterPage.vue";
-import GoogleLoginPage from "../pages/patients/GoogleLoginPage.vue";
 import BasePage from "../pages/admin/BasePage.vue";
 import WorkingSchedule from "../components/admin/WorkingSchedule.vue";
 import ReservationCalendar from "../components/admin/ReservationCalendar.vue";
+import AnalysisPage from "../components/admin/AnalysisPage.vue";
 import PageLayout from "../pages/public/PageLayout.vue";
 import Home from "../pages/public/Home.vue";
 import AboutUs from "../pages/public/AboutUs.vue";
@@ -141,6 +139,10 @@ const routes = [
       {
         path: "schedule",
         component: WorkingSchedule,
+      },
+      {
+        path: "analysis",
+        component: AnalysisPage,
       }
     ]
   },
