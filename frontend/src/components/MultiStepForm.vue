@@ -17,8 +17,7 @@
 
     <!-- Step Content -->
     <div class="w-full" v-if="currentStepContent">
-      <component :is="currentStepContent" ref="currentStepComponent" :model-value="formData"
-        @update:model-value="updateFormData" />
+      <component :is="currentStepContent" ref="currentStepComponent" v-model="formData" />
     </div>
 
     <div class="flex w-1/3">
@@ -36,58 +35,49 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    steps: {
-      type: Array,
-      required: true,
-    },
-    submitForm: {
-      type: Function,
-      required: true,
-    },
-    formData: {
-      type: Object,
-      required: true,
-    },
+
+<script setup>
+import { defineModel, ref, computed } from 'vue';
+const formData = defineModel();
+
+const props = defineProps({
+  steps: {
+    type: Array,
+    required: true,
   },
-  data() {
-    return {
-      currentStep: 1,
-    };
+  submitForm: {
+    type: Function,
+    required: true,
   },
-  computed: {
-    currentStepContent() {
-      return this.steps[this.currentStep - 1];
-    },
-    progressPercentage() {
-      return (this.currentStep / this.steps.length) * 100;
-    },
-  },
-  methods: {
-    nextStep() {
-      if (this.$refs.currentStepComponent && this.$refs.currentStepComponent.validate) {
-        const isValid = this.$refs.currentStepComponent.validate();
-        if (isValid) {
-          if (this.currentStep < this.steps.length) {
-            this.currentStep++;
-          }
-        }
-      }
-    },
-    prevStep() {
-      if (this.currentStep > 1) {
-        this.currentStep--;
-      }
-    },
-    updateFormData(value) {
-      // Emit event to notify parent component of formData change
-      this.$emit('update:formData', value);
-    },
-    handleSubmit() {
-      this.submitForm();
-    },
-  },
+});
+
+const currentStep = ref(1);
+const currentStepComponent = ref(null);
+
+const currentStepContent = computed(() => {
+  return props.steps[currentStep.value - 1];
+});
+
+const progressPercentage = computed(() => {
+  return (currentStep.value / props.steps.length) * 100;
+});
+
+const nextStep = () => {
+  if (currentStepComponent.value?.validate) {
+    const isValid = currentStepComponent.value.validate();
+    if (isValid && currentStep.value < props.steps.length) {
+      currentStep.value++;
+    }
+  }
+};
+
+const prevStep = () => {
+  if (currentStep.value > 1) {
+    currentStep.value--;
+  }
+};
+
+const handleSubmit = () => {
+  props.submitForm();
 };
 </script>

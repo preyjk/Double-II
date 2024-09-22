@@ -25,6 +25,7 @@ import ResetPassword from "../pages/public/ResetPassword.vue";
 import ForgetPassword from "../pages/public/ForgetPassword.vue";
 import UserPageLayout from "../pages/user/PageLayout.vue";
 import BookAppointment from "../pages/public/BookAppointment.vue";
+import UserAppointments from "../pages/user/UserAppointments.vue";
 
 const routes = [
   /*
@@ -166,7 +167,7 @@ const routes = [
     path: "/user",
     component: UserPageLayout,
     children: [
-      { path: "appointment", name: "user-appointment", },
+      { path: "appointment", name: "user-appointment", component: UserAppointments },
       { path: "profile", name: "user-profile", },
       { path: "family", name: "user-family", },
       { path: "/user/:pathMatch(.*)*", component: Error404 }
