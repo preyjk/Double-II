@@ -78,16 +78,16 @@ export default {
         });
         this.setToken(response.data.token);
         this.setRefreshToken(response.data.refreshToken);
-        this.$router.push('/public');
+        this.$router.push({ name: 'user-appointment' });
       } catch (err) {
         this.error = "Invalid email or password";
       }
     },
     handleSignUp() {
-      this.$router.push('/sign-up');
+      this.$router.push({name: 'sign-up'});
     },
     handleForgotPassword() {
-      this.$router.push('/forgot-password');
+      this.$router.push({name: 'forgot-password'});
     },
     handleGoogleLogin() {
       window.location.href = `${import.meta.env.VITE_API_ENDPOINT}/public/auth/google/login`;

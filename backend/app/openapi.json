@@ -2588,6 +2588,43 @@
           }
         }
       }
+    },
+    "/user/profile": {
+      "get": {
+        "summary": "Get user profile",
+        "description": "Get user profile",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get user profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "FirstName": {
+                      "type": "string"
+                    },
+                    "LastName": {
+                      "type": "string"
+                    },
+                    "Email": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
     }
   },
   "tags": []

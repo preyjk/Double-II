@@ -129,6 +129,7 @@ class AuthService {
       const createUserCommand = User.create({
         FirstName: firstName,
         LastName: lastName,
+        Email: email,
         Password: hashedPassword,
         Providers: [{ Provider: 'email', ProviderId: email }],
         Roles: roles || [],
@@ -278,22 +279,24 @@ class AuthService {
     const openid = userData.id;
     const givenName = userData.given_name;
     const familyName = userData.family_name;
+    const email = userData.email;
     const indexResult = await dynamo.send(UserIndex.findById(
       UserIndex.generateId({ Provider: 'google', ProviderId: openid })
     ));
     let index = indexResult.Item;
     if (!index) {
-      index = await AuthService.signupWithGoogle({ openid, givenName, familyName });
+      index = await AuthService.signupWithGoogle({ openid, givenName, familyName, email });
     }
     const token = AuthService.generateAccessToken({ id: index.UserId });
     const refreshToken = AuthService.generateRefreshToken({ id: index.UserId });
     return { success: true, token, refreshToken };
   }
 
-  static async signupWithGoogle({ openid, givenName, familyName }) {
+  static async signupWithGoogle({ openid, givenName, familyName, email }) {
     const createUserCommand = User.create({
       FirstName: givenName,
       LastName: familyName,
+      Email: email,
       Providers: [{ Provider: 'google', ProviderId: openid }],
       Roles: ['user'],
       Active: true

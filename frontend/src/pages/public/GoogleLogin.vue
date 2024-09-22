@@ -27,7 +27,7 @@ export default {
     if (this.data) {
       this.setToken(this.data.token);
       this.setRefreshToken(this.data.refreshToken);
-      this.$router.push('/public');
+      this.$router.push({ name: 'user-appointment' });
     } else {
       this.error = 'Login failed';
     }

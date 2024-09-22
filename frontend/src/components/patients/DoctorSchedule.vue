@@ -78,7 +78,7 @@ export default {
       availableDates: [],
       loading: false,
       error: false,
-      selectedDate: this.getTodayDate(),
+      selectedDate: this.formData.date || this.getTodayDate(),
     };
   },
   computed: {
