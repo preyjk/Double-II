@@ -3,18 +3,12 @@
     <deep-chat :textInput="textInput" :submitButtonStyles="submitButtonStyles" :style="chatStyles"
       :textToSpeech="textToSpeechOptions" :speechToText="speechToTextOptions" demo="true" id="chat-element"
       :connect="chatConnect" style="border-radius: 8px" :responseInterceptor="bindButtons"
-      messageStyles='{"default": {"user": {"bubble": {"backgroundColor": "#ff2020"}}}}'
-      avatars='{"ai": {"src": "@/assets/avar.png"}}'>
+      :messageStyles="messageStyles" avatars='{"ai": {"src": "@/assets/avar.png"}}'>
     </deep-chat>
 
     <div class="animation-container">
-      <LottieAnimation
-        :animationData="animationData"
-        :loop="true"
-        :autoplay="true"
-        v-show="isRobotAnimationShow"
-        class="robot-animation"
-      />
+      <LottieAnimation :animationData="animationData" :loop="true" :autoplay="true" v-show="isRobotAnimationShow"
+        class="robot-animation" />
     </div>
   </div>
 </template>
@@ -54,7 +48,7 @@ export default {
             borderRadius: "20px",
             paddingLeft: "20px",
           },
-          focus: { border: "2px solid #a2a2ff" },
+          focus: { border: "2px solid #004d66" },
         },
         placeholder: {
           text: "Ask anything.",
@@ -66,7 +60,12 @@ export default {
         },
         characterLimit: 1000,
       },
-
+      messageStyles: {
+        "default": {
+          "user": { "bubble": { "backgroundColor": "#004d66","fontsize": "50px" } },
+          "ai" : { "bubble": { "backgroundColor": " #ffffff","fontsize": "50px" } },
+        }
+      },
       submitButtonStyles: {
         submit: {
           container: {
@@ -88,24 +87,6 @@ export default {
             },
           },
         },
-      },
-      chatElementRef: {
-        history: [
-          { text: 'How are you doing?', role: 'user' },
-          { text: 'Good, how may I help?', role: 'ai' },
-          {
-            html: `
-            <div class="deep-chat-temporary-message">
-              <button class="deep-chat-button deep-chat-suggestion-button" style="margin-top: 5px">What do shrimps eat?</button>
-              <button class="deep-chat-button deep-chat-suggestion-button" style="margin-top: 6px">Can a shrimp fry rice?</button>
-              <button class="deep-chat-button deep-chat-suggestion-button" style="margin-top: 6px">What is a pistol shrimp?</button>
-            </div>`,
-            role: 'ai',
-          },
-        ],
-        messageStyles: { html: { shared: { bubble: { backgroundColor: 'unset', padding: '0px' } } } },
-        style: { height: '370px', borderRadius: '8px' },
-        demo: true,
       },
 
       // speech to text setting
@@ -245,16 +226,25 @@ export default {
 
     generateResponseWithFeedback(responseText) {
       this.htmlResponse = responseText;
-
       return `
-        <div class="response-container">
-          <div class="feedback-buttons">
-            <button id="playText" class="feedback-icon" style="border:none; cursor:pointer">🔊</button>
-            <button id="copyText" class="feedback-icon" style="border:none; cursor:pointer">📋</button>
-            <button id="positiveBtn" class="feedback-icon" style="border:none; cursor:pointer">👍</button>
-            <button id="negativeBtn" class="feedback-icon" style="border:none; cursor:pointer">👎</button>
-          </div>
-        </div>`;
+      <div class="deep-chat-temporary-message">
+        <button class="deep-chat-button deep-chat-suggestion-button" style="margin-top: 5px;  color: black; border: 2px solid #004d66;">Which clinic is closer to me?</button>
+        <button class="deep-chat-button deep-chat-suggestion-button" style="margin-top: 5px;  color: black; border: 2px solid #004d66;">Can I check my booking?</button>
+        <button class="deep-chat-button deep-chat-suggestion-button" style="margin-top: 5px;  color: black; border: 2px solid #004d66;">Can I cancel my appointment?</button>
+        <button class="deep-chat-button deep-chat-suggestion-button" style="margin-top: 5px;  color: black; border: 2px solid #004d66;">Can I reschedule my appointment?</button>
+      </div>`;
+
+
+
+      // return `
+      //   <div class="response-container">
+      //     <div class="feedback-buttons">
+      //       <button id="playText" class="feedback-icon" style="border:none; cursor:pointer">🔊</button>
+      //       <button id="copyText" class="feedback-icon" style="border:none; cursor:pointer">📋</button>
+      //       <button id="positiveBtn" class="feedback-icon" style="border:none; cursor:pointer">👍</button>
+      //       <button id="negativeBtn" class="feedback-icon" style="border:none; cursor:pointer">👎</button>
+      //     </div>
+      //   </div>`;
     },
 
     playText(text) {
@@ -311,7 +301,7 @@ export default {
     //     }, 3000);
     //   },
 
-    bindButtons() {},
+    bindButtons() { },
   },
 
   watch: {},
@@ -335,7 +325,7 @@ export default {
     },
   },
 
-  mounted() {},
+  mounted() { },
 };
 </script>
 
@@ -382,13 +372,11 @@ export default {
 }
 
 .feedback-icon-positive {
-  filter: brightness(0) saturate(100%) invert(56%) sepia(68%) saturate(207%)
-    hue-rotate(93deg) brightness(88%) contrast(89%);
+  filter: brightness(0) saturate(100%) invert(56%) sepia(68%) saturate(207%) hue-rotate(93deg) brightness(88%) contrast(89%);
 }
 
 .feedback-icon-negative {
-  filter: brightness(0) saturate(100%) invert(36%) sepia(99%) saturate(2487%)
-    hue-rotate(335deg) brightness(87%) contrast(87%);
+  filter: brightness(0) saturate(100%) invert(36%) sepia(99%) saturate(2487%) hue-rotate(335deg) brightness(87%) contrast(87%);
   transform: rotate(180deg);
   margin-left: 3px;
 }
