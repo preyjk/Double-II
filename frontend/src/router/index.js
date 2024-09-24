@@ -26,6 +26,8 @@ import ForgetPassword from "../pages/public/ForgetPassword.vue";
 import UserPageLayout from "../pages/user/PageLayout.vue";
 import BookAppointment from "../pages/public/BookAppointment.vue";
 import UserAppointments from "../pages/user/UserAppointments.vue";
+import LinkAppointment from "../pages/user/LinkAppointment.vue";
+import UserBookAppointment from "../pages/user/BookAppointment.vue";
 
 const routes = [
   /*
@@ -170,6 +172,8 @@ const routes = [
       { path: "appointment", name: "user-appointment", component: UserAppointments },
       { path: "profile", name: "user-profile", },
       { path: "family", name: "user-family", },
+      { path: "link-appointment", name: "link-appointment", component: LinkAppointment },
+      { path: "new-appointment", name: "new-appointment", component: UserBookAppointment },
       { path: "/user/:pathMatch(.*)*", component: Error404 }
     ]
   },

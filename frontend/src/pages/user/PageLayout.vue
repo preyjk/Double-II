@@ -1,5 +1,5 @@
 <template>
-  <div class="h-screen flex flex-col md:flex-row">
+  <div class="md:h-screen flex flex-col md:flex-row">
     <!-- Sidebar for Desktop -->
     <div class="hidden md:flex bg-gradient-to-br from-[#004d66] to-[#accfd8] text-white w-64 flex-shrink-0">
       <!-- Menu Section -->

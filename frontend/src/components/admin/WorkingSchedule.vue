@@ -113,7 +113,8 @@ export default {
                     schedules.push({
                         DoctorId: doctorId,
                         DoctorName: doctor.name,
-                        Location: this.selectedClinic,
+                        Clinic: this.selectedClinic,
+                        ClinicAddress: this.clinics.find(c => c.workplace === this.selectedClinic).address,
                         Date: this.selectedDate,
                         StartTime: time.toTimeString().slice(0, 5),
                         EndTime: new Date(time.getTime() + intervalMs).toTimeString().slice(0, 5),

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col p-5 md:p-10 items-center">
+  <div class="flex flex-col items-center">
     <!-- Progress Bar -->
     <div class="relative pt-1 mb-5 w-1/2">
       <div class="flex mb-2 items-center justify-between">
@@ -17,7 +17,7 @@
 
     <!-- Step Content -->
     <div class="w-full" v-if="currentStepContent">
-      <component :is="currentStepContent" ref="currentStepComponent" v-model="formData" />
+      <component :is="currentStepContent.component" ref="currentStepComponent" v-model="formData" v-bind="currentStepContent.props" />
     </div>
 
     <div class="flex w-1/3">

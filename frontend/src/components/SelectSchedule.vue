@@ -16,7 +16,7 @@
     <div class="w-full md:w-1/3 flex flex-col p-5">
       <div class="title-container">
         <h2 class="text-2xl font-bold mb-2">Available Time Slots</h2>
-        <p class="text-gray-600">Dr. {{ formData.doctor.FirstName }} {{ formData.doctor.LastName }} on {{ selectedDate }}</p>
+        <p class="text-gray-600">Dr. {{ formData.doctor.Name }} on {{ selectedDate }}</p>
       </div>
       <div>
         <div v-if="loading" class="text-gray-600">Loading schedules...</div>
@@ -75,8 +75,6 @@ const isDisabledDate = (date) => {
   return selected < today;
 };
 
-
-
 // Handle date selection
 const handleDatePick = (date) => {
   if (isDisabledDate(date)) {
@@ -98,7 +96,7 @@ const fetchAvailableTimeslots = async (date) => {
         date,
       },
     });
-    schedules.value = response.data;
+    schedules.value = response.data.sort((a, b) => a.StartTime < b.StartTime ? -1 : 1);
   } catch (error) {
     console.error('Failed to fetch available timeslots:', error);
   } finally {
@@ -157,12 +155,13 @@ watch(() => selectedDate.value, fetchAvailableTimeslots);
 
 defineExpose({
   validate,
+  
 });
 </script>
 
 
 <style scoped>
-::v-deep .el-calendar-table .el-calendar-day {
+:deep(.el-calendar-table .el-calendar-day) {
   padding: 0 !important;
 }
 </style>

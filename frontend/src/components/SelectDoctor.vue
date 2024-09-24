@@ -36,7 +36,10 @@ const fetchDoctors = async () => {
         workplace: formData.value.clinic.name,
       },
     });
-    doctors.value = response.data;
+    doctors.value = response.data.map((doctor) => ({
+      ...doctor,
+      Name: `${doctor.FirstName} ${doctor.LastName}`,
+    }));
   } catch (error) {
     console.error(error);
   }
