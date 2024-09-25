@@ -78,6 +78,7 @@
 <script>
 import Footer from '../../components/Footer.vue';
 import { mapMutations } from 'vuex';
+import { jwtDecode } from 'jwt-decode';
 
 export default {
   components: {
@@ -105,6 +106,18 @@ export default {
       this.$router.push({ name: 'home' });
     },
     ...mapMutations('localStorage', ['setToken', 'setRefreshToken']),
+    checkLogin() {
+      if ( localStorage.getItem('token') ) {
+        const decoded = jwtDecode(JSON.parse(localStorage.getItem('token')));
+        if (decoded.roles?.includes('doctor')) {
+          return;
+        }
+      }
+      this.$router.push({ name: 'doctor-login' });
+    },
+  },
+  mounted() {
+    this.checkLogin();
   },
 };
 </script>
