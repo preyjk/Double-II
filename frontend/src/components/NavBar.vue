@@ -7,7 +7,7 @@
             <img class="h-12 w-auto" src="/logo.png" alt="FRW" />
           </div>
           <div class="sm:flex sm:flex-row hidden w-full sm:ml-6 justify-between">
-            <div class="flex items-center space-x-4 h-full">
+            <div class="flex items-center space-x-8 h-full">
               <router-link v-for="item in menuItems" :key="item.name" :to="{name: item.pageName}" :class="[
                 'text-lg hover:text-[#365a82]',
                 $route.name === item.pageName ? 'text-[#365a82] border-b-2 border-[#365a82] font-bold' : 'text-white'
@@ -76,6 +76,7 @@ export default {
         // Add your menu items here
         { name: 'Home', pageName: 'home' },
         { name: 'About', pageName: 'aboutus' },
+        { name: 'Online Booking', pageName: 'booking' },
         // Add more items as needed
       ],
     };

@@ -23,8 +23,8 @@ describe('test auto refresh token', () => {
     const refreshToken = 'refreshToken';
     const token = 'token';
     const newToken = 'new token';
-    localStorage.setItem('refreshToken', refreshToken);
-    localStorage.setItem('token', token);
+    localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
+    localStorage.setItem('token', JSON.stringify(token));
 
     // Mock the GET /test endpoint to return a 401 error
     mock.onGet('/test').reply(() => {
@@ -51,15 +51,15 @@ describe('test auto refresh token', () => {
 
     expect(refreshAccessTokenSpy).toHaveBeenCalledTimes(3);
     expect(postSpy).toHaveBeenCalledTimes(1);
-    expect(localStorage.getItem('token')).toEqual(newToken);
+    expect(JSON.parse(localStorage.getItem('token'))).toEqual(newToken);
   });
 
   it('should refresh token and the new token should work', async () => {
     const refreshToken = 'refreshToken';
     const token = 'token';
     const newToken = 'new token';
-    localStorage.setItem('refreshToken', refreshToken);
-    localStorage.setItem('token', token);
+    localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
+    localStorage.setItem('token', JSON.stringify(token));
 
     const mock = new MockAdapter(axios);
 
@@ -92,12 +92,12 @@ describe('test auto refresh token', () => {
 
     expect(refreshAccessTokenSpy).toHaveBeenCalledTimes(3);
     expect(postSpy).toHaveBeenCalledTimes(1);
-    expect(localStorage.getItem('token')).toEqual(newToken);
+    expect(JSON.parse(localStorage.getItem('token'))).toEqual(newToken);
   });
 
   it('should not refresh token if refresh token is not available', async () => {
     const token = 'token';
-    localStorage.setItem('token', token);
+    localStorage.setItem('token', JSON.stringify(token));
 
     // Mock the GET /test endpoint to return a 401 error
     mock.onGet('/test').reply(() => {
@@ -113,14 +113,14 @@ describe('test auto refresh token', () => {
 
     expect(refreshAccessTokenSpy).toHaveBeenCalledTimes(0);
     expect(postSpy).toHaveBeenCalledTimes(0);
-    expect(localStorage.getItem('token')).toEqual(token);
+    expect(JSON.parse(localStorage.getItem('token'))).toEqual(token);
   });
 
   it('should not refresh token if there is no Authorization header', async () => {
     const refreshToken = 'refreshToken';
     const token = 'token';
-    localStorage.setItem('refreshToken', refreshToken);
-    localStorage.setItem('token', token);
+    localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
+    localStorage.setItem('token', JSON.stringify(token));
 
     // Mock the GET /test endpoint to return a 401 error
     mock.onGet('/test').reply(() => {
@@ -135,14 +135,14 @@ describe('test auto refresh token', () => {
 
     expect(refreshAccessTokenSpy).toHaveBeenCalledTimes(0);
     expect(postSpy).toHaveBeenCalledTimes(0);
-    expect(localStorage.getItem('token')).toEqual(token);
+    expect(JSON.parse(localStorage.getItem('token'))).toEqual(token);
   });
 
   it('should error if refresh token fails', async () => {
     const refreshToken = 'refreshToken';
     const token = 'token';
-    localStorage.setItem('refreshToken', refreshToken);
-    localStorage.setItem('token', token);
+    localStorage.setItem('refreshToken', JSON.stringify(refreshToken));
+    localStorage.setItem('token', JSON.stringify(token));
 
     // Mock the GET /test endpoint to return a 401 error
     mock.onGet('/test').reply(401, { message: 'Unauthorised' });
@@ -164,7 +164,7 @@ describe('test auto refresh token', () => {
 
     expect(refreshAccessTokenSpy).toHaveBeenCalledTimes(3);
     expect(postSpy).toHaveBeenCalledTimes(1);
-    expect(localStorage.getItem('token')).toEqual(token);
+    expect(JSON.parse(localStorage.getItem('token'))).toEqual(token);
   });
 
 });

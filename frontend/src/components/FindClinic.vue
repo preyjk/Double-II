@@ -35,7 +35,7 @@
 
         <AdvancedMarker v-if="userLocation" :options="{ position: userLocation }"
           :pin-options="{ background: 'blue', borderColor: 'blue', glyphColor: 'blue' }">
-          <InfoWindow :options="{ headerDisabled: true }">
+          <InfoWindow ref="userLocationInfoWindow" :options="{ headerDisabled: true }">
             <div>You are here</div>
           </InfoWindow>
         </AdvancedMarker>
@@ -55,175 +55,158 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { defineModel, defineExpose } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import axios from '@/api/backendApi';
-import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map'
+import { GoogleMap, AdvancedMarker, InfoWindow } from 'vue3-google-map';
 
 const API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-export default {
-  props: ['modelValue'],
-  components: {
-    GoogleMap,
-    AdvancedMarker,
-    InfoWindow,
-  },
-  setup() {
-    return {
-      API_KEY,
-    };
-  },
-  data() {
-    return {
-      searchQuery: '',
-      sortBy: 'name',
-      clinics: [
-      ],
-      map: null,
-      markers: [],
-      userLocation: null,
-      mapCenter: { lat: -36.8478, lng: 174.7622 },
-      selectedInfoWindow: null,
-    };
-  },
-  mounted() {
-    this.fetchClinics();
-    this.getCurrentLocation();
-  },
-  computed: {
-    filteredClinics() {
-      return this.clinics.filter(clinic =>
-        clinic.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-      );
-    },
-    sortedClinics() {
-      let clinics = this.filteredClinics;
-      if (this.sortBy === 'name') {
-        return clinics.sort((a, b) => a.name.localeCompare(b.name));
-      } else if (this.sortBy === 'distance') {
-        return clinics.sort((a, b) => a.distance - b.distance);
-      }
-      return clinics;
-    },
-    formData: {
-      get() {
-        return this.modelValue;
-      },
-      set(value) {
-        this.$emit('update:modelValue', value);
-      },
+const formData = defineModel();
+const searchQuery = ref('');
+const sortBy = ref('name');
+const clinics = ref([]);
+const userLocation = ref(null);
+const mapCenter = ref({ lat: -36.8478, lng: 174.7622 });
+const selectedInfoWindow = ref(null);
+const userLocationInfoWindow = ref(null);
+
+const infoWindows = ref([]);
+
+watch(userLocationInfoWindow, (newValue) => {
+  if (newValue) {
+    newValue.open();
+  }
+});
+
+const filteredClinics = computed(() => {
+  return clinics.value.filter(clinic =>
+    clinic.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
+
+const sortedClinics = computed(() => {
+  let sorted = filteredClinics.value;
+  if (sortBy.value === 'name') {
+    return sorted.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortBy.value === 'distance') {
+    return sorted.sort((a, b) => a.distance - b.distance);
+  }
+  return sorted;
+});
+
+const updateDistance = () => {
+  clinics.value.forEach(clinic => {
+    if (clinic.location) {
+      clinic.distance = calculateDistance(clinic.location);
     }
-  },
-  methods: {
-    updateDistance() {
-      this.clinics.forEach(clinic => {
-        if (clinic.location) {
-          clinic.distance = this.calculateDistance(clinic.location);
-        }
-      });
-    },
-    async geocodeAddress(address) {
-      try {
-        const response = await axios.get(
-          "https://maps.googleapis.com/maps/api/geocode/json",
-          {
-            params: {
-              address: address,
-              key: API_KEY,
-            },
-          }
-        );
-        const { lat, lng } = response.data.results[0].geometry.location;
-        return { lat, lng };
-      } catch (error) {
-        console.error("Error geocoding address:", error);
-        return null;
-      }
-    },
-
-    async fetchClinics() {
-      try {
-        const response = await axios.get('/public/clinics');
-        this.clinics = response.data.map(clinic => {
-          return {
-            name: clinic.workplace,
-            address: clinic.address
-          }
-        });
-        this.getGeoLocation();
-      } catch (error) {
-        console.error(error);
-      }
-    },
-
-    async getGeoLocation() {
-      this.clinics.forEach(async clinic => {
-        const { lat, lng } = await this.geocodeAddress(clinic.address);
-        clinic.location = { lat, lng };
-        if (this.userLocation) {
-          clinic.distance = this.calculateDistance(clinic.location);
-        }
-      });
-    },
-
-    getCurrentLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            this.userLocation = { lat: latitude, lng: longitude };
-            this.mapCenter = { lat: latitude, lng: longitude };
-            console.debug("Location:", this.userLocation);
-            this.updateDistance();
-          },
-          (error) => {
-            console.error("Error getting location:", error);
-          }
-        );
-      } else {
-        console.error("Geolocation is not supported by this browser.");
-      }
-    },
-
-    calculateDistance(location) {
-      // Placeholder for distance calculation logic
-      // You need to implement this method based on your requirements
-      const userLocation = this.userLocation;
-      const R = 6371; // Radius of the Earth in km
-      const dLat = this.deg2rad(location.lat - userLocation.lat);
-      const dLng = this.deg2rad(location.lng - userLocation.lng);
-      const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(this.deg2rad(userLocation.lat)) * Math.cos(this.deg2rad(location.lat)) *
-        Math.sin(dLng / 2) * Math.sin(dLng / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const distance = R * c; // Distance in km
-      return distance.toFixed(2);
-    },
-    deg2rad(deg) {
-      return deg * (Math.PI / 180);
-    },
-
-    selectClinic(clinic) {
-      this.mapCenter = clinic.location;
-      // Close previously opened InfoWindow
-      if (this.selectedInfoWindow) {
-        this.selectedInfoWindow.close();
-      }
-      // Open the InfoWindow for the selected clinic
-      const infoWindowIndex = this.clinics.findIndex(c => c.name === clinic.name);
-      this.selectedInfoWindow = this.$refs.infoWindows[infoWindowIndex];
-      this.selectedInfoWindow.open();
-      this.formData.clinic = clinic;
-    },
-
-    validate() {
-      if (!this.formData.clinic) {
-        alert('Please select a clinic');
-        return false;
-      }
-      return true;
-    },
-  },
+  });
 };
+
+const geocodeAddress = async (address) => {
+  try {
+    const response = await axios.get(
+      'https://maps.googleapis.com/maps/api/geocode/json',
+      {
+        params: {
+          address: address,
+          key: API_KEY,
+        },
+      }
+    );
+    const { lat, lng } = response.data.results[0].geometry.location;
+    return { lat, lng };
+  } catch (error) {
+    console.error('Error geocoding address:', error);
+    return null;
+  }
+};
+
+const fetchClinics = async () => {
+  try {
+    const response = await axios.get('/public/clinics');
+    clinics.value = response.data.map(clinic => ({
+      name: clinic.workplace,
+      address: clinic.address,
+    }));
+    getGeoLocation();
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getGeoLocation = async () => {
+  clinics.value.forEach(async clinic => {
+    const { lat, lng } = await geocodeAddress(clinic.address);
+    clinic.location = { lat, lng };
+    if (userLocation.value) {
+      clinic.distance = calculateDistance(clinic.location);
+    }
+  });
+};
+
+const getCurrentLocation = () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        userLocation.value = { lat: latitude, lng: longitude };
+        mapCenter.value = { lat: latitude, lng: longitude };
+        console.debug('Location:', userLocation.value);
+        updateDistance();
+      },
+      (error) => {
+        console.error('Error getting location:', error);
+      }
+    );
+  } else {
+    console.error('Geolocation is not supported by this browser.');
+  }
+};
+
+const calculateDistance = (location) => {
+  const R = 6371; // Radius of the Earth in km
+  const dLat = deg2rad(location.lat - userLocation.value.lat);
+  const dLng = deg2rad(location.lng - userLocation.value.lng);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(userLocation.value.lat)) * Math.cos(deg2rad(location.lat)) *
+    Math.sin(dLng / 2) * Math.sin(dLng / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return (R * c).toFixed(2); // Distance in km
+};
+
+const deg2rad = (deg) => {
+  return deg * (Math.PI / 180);
+};
+
+const selectClinic = (clinic) => {
+  mapCenter.value = clinic.location;
+  if (selectedInfoWindow.value) {
+    selectedInfoWindow.value.close();
+  }
+  const infoWindowIndex = clinics.value.findIndex(c => c.name === clinic.name);
+  selectedInfoWindow.value = infoWindows.value[infoWindowIndex];
+  selectedInfoWindow.value.open();
+  formData.value.clinic = clinic;
+};
+
+const validate = () => {
+  if (!formData.value.clinic) {
+    alert('Please select a clinic');
+    return false;
+  }
+  return true;
+};
+
+// Automatically fetch clinics and get user location on component mount
+onMounted(() => {
+  fetchClinics();
+  getCurrentLocation();
+});
+
+defineExpose({
+  validate,
+});
 </script>

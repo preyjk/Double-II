@@ -63,21 +63,8 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "AppointmentForm",
-  components: {},
-  props: ['modelValue'],
-  computed: {
-    formData: {
-      get() {
-        return this.modelValue;
-      },
-      set(value) {
-        this.$emit('update:modelValue', value);
-      },
-    }
-  },
-}
+<script setup>
+import { defineModel } from 'vue';
 
+const formData = defineModel();
 </script>
