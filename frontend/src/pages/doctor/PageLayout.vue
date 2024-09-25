@@ -36,7 +36,7 @@
 
     <!-- Mobile Menu Drawer -->
     <div :class="[
-      'fixed inset-0 bg-gradient-to-br from-[#004d66] to-[#accfd8] text-white transition-transform transform md:hidden',
+      'z-50 fixed inset-0 bg-gradient-to-br from-[#004d66] to-[#accfd8] text-white transition-transform transform md:hidden',
       isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full',
     ]" @click.stop>
       <div class="p-4 flex flex-row justify-between">

@@ -1,7 +1,7 @@
 <template>
   <div class="md:h-full mx-4 p-4 border-b md:border-b-0 md:border-r border-gray-300">
     <h2 class="text-lg font-semibold mb-4">Appointments</h2>
-    <div class="w-1/3 flex flex-col justify-end">
+    <div class="w-1/3 flex flex-col justify-end py-2">
       <label class="text-sm text-gray-600">Status</label>
       <el-select v-model="filterStatus" placeholder="All">
         <el-option label="All" value=""></el-option>
