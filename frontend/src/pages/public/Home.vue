@@ -15,7 +15,7 @@
       </div>
       <p class="subtitle">Try Our Chatbot!</p>
     </div>
-    <ChatWidget />
+    <!-- <ChatWidget /> -->
   </div>
 </template>
 
@@ -24,15 +24,49 @@ import HomeVideo from "@/assets/Home/1.mp4";
 import ChatWidget from "@/components/patients/chatbot/ChatWidget.vue";
 import clickImageSrc from "@/assets/click.png";
 import { useRouter } from "vue-router";
+import { onMounted } from 'vue';
 
 const router = useRouter();
 const goChatbotPage = () => {
   router.push({ name: "Chatbot" });
 };
+
+onMounted(() => {
+  // Load Amazon Connect script dynamically
+  (function (w, d, x, id) {
+    let s = d.createElement("script");
+    s.src =
+      'https://dtn7rvxwwlhud.cloudfront.net/amazon-connect-chat-interface-client.js';
+    s.async = 1;
+    s.id = id;
+    d.getElementsByTagName("head")[0].appendChild(s);
+    w[x] =
+      w[x] ||
+      function () {
+        (w[x].ac = w[x].ac || []).push(arguments);
+      };
+  })(window, document, "amazon_connect", '11a33eb3-0e02-4e85-a725-cf1abeaef613');
+
+  // Configure the Amazon Connect chat interface
+  amazon_connect("styles", {
+    iconType: "CHAT_VOICE",
+    openChat: { color: "#ffffff", backgroundColor: "#123456" },
+    closeChat: { color: "#ffffff", backgroundColor: "#123456" },
+  });
+
+  amazon_connect("snippetId", 'QVFJREFIaWFZYXRVSlpIekdkUUg5YXhZenVQMktKRXNIWTVFQWpBYVErTEdzRnpvZHdIdVFldmhiLy9rS3hsNWhQYVRFSm4wQUFBQWJqQnNCZ2txaGtpRzl3MEJCd2FnWHpCZEFnRUFNRmdHQ1NxR1NJYjNEUUVIQVRBZUJnbGdoa2dCWlFNRUFTNHdFUVFNbGhKQ2NXTHlZY1IyM0thbUFnRVFnQ3ZOOWZFemZDdWhQNVFtbkRiWVpjSENMYWQ3aUR0elZHR25TM1drNElkU0hXM3AzYTZHSExlakR2V2M6Ok43YWM0ZVlzUnJwOWRzOWZCWDE4clpseFdkSmQyNmpBUFVuanBVU2NiNkp1VVdJY2o1VmhaZzZRUUlielZCZ1F3SmlsNGxCK0VKNytic215V3VRb2dHN3Q5aGJmUWFzc3hkWll3VFZuZGRlSmNhVjc1dkMzOEtid3pXNlNNaFZEbGs3ODZOZEF2YnhrWndmYW5yMndwQ0pJc1loVCs4dz0=');
+
+  amazon_connect("supportedMessagingContentTypes", [
+    "text/plain",
+    "text/markdown",
+    "application/vnd.amazonaws.connect.message.interactive",
+    "application/vnd.amazonaws.connect.message.interactive.response",
+  ]);
+});
+
 </script>
 
 <style scoped>
-
 .hero-title {
   font-size: 2.5rem;
   color: #e0f7ff;
