@@ -7,6 +7,7 @@
         <el-option label="All" value=""></el-option>
         <el-option label="Active" value="active"></el-option>
         <el-option label="Cancelled" value="cancelled"></el-option>
+        <el-option label="Completed" value="completed"></el-option>
       </el-select>
     </div>
     <div v-if="loading">
@@ -25,7 +26,8 @@
           <p class="text-sm text-gray-600">Patient: {{ appointment.FirstName }} {{ appointment.LastName }}</p>
           <p class="text-sm text-gray-600">Date: {{ appointment.Date }}</p>
           <p class="text-sm text-gray-600">Time: {{ appointment.StartTime }} - {{ appointment.EndTime }}</p>
-          <p class="text-sm text-gray-600">Status: {{ appointment.Status === 'active' ? 'Active' : 'Cancelled' }}</p>
+          <p class="text-sm text-gray-600">Status: {{ appointment.Status.charAt(0).toUpperCase() +
+            appointment.Status.slice(1) }}</p>
         </div>
       </li>
     </ul>
@@ -33,33 +35,17 @@
 </template>
 
 <script setup>
-import axios from '@/api/backendApi';
-import { ref, onMounted, defineExpose, computed } from 'vue';
+import { ref, defineExpose, computed, defineProps } from 'vue';
 
-const appointments = ref([]);
+const props = defineProps(['appointments', 'loading']);
 const selectedAppointment = ref(null);
-const loading = ref(true);
 const filterStatus = ref('active');
 const emit = defineEmits(['selectAppointment']);
 
-const fetchAppointments = async () => {
-  try {
-    loading.value = true;
-    const response = await axios.get('/user/appointments', {
-      headers: {
-        Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`,
-      },
-    });
-    appointments.value = response.data;
-  } catch (err) {
-    console.error(err);
-  } finally {
-    loading.value = false;
-  }
-}
+
 
 const filteredAppointments = computed(() => {
-  return appointments.value.filter((appointment) => {
+  return props.appointments.filter((appointment) => {
     if (!filterStatus.value) {
       return true;
     }
@@ -76,11 +62,6 @@ const filteredAppointments = computed(() => {
   });
 });
 
-
-onMounted(() => {
-  fetchAppointments();
-});
-
 const selectAppointment = (appointment) => {
   selectedAppointment.value = appointment;
   emit('selectAppointment', appointment);
@@ -88,7 +69,6 @@ const selectAppointment = (appointment) => {
 
 defineExpose({
   selectedAppointment,
-  fetchAppointments
 });
 
 </script>

@@ -32,7 +32,7 @@ const linkAppointment = async () => {
       },
     });
     alert('Appointment linked to your account');
-    router.push('user-appointment');
+    router.push({name: 'user-appointment'});
   } catch (err) {
     console.error(err);
     alert('Failed to link appointment');
