@@ -284,11 +284,14 @@ class AuthService {
       UserIndex.generateId({ Provider: 'google', ProviderId: openid })
     ));
     let index = indexResult.Item;
+    let user
     if (!index) {
-      index = await AuthService.signupWithGoogle({ openid, givenName, familyName, email });
+      user = await AuthService.signupWithGoogle({ openid, givenName, familyName, email });
+    } else {
+      user = await dynamo.send(User.findById(index.UserId));
     }
-    const token = AuthService.generateAccessToken({ id: index.UserId });
-    const refreshToken = AuthService.generateRefreshToken({ id: index.UserId });
+    const token = AuthService.generateAccessToken({ id: user.Item.Id, roles: user.Item.Roles });
+    const refreshToken = AuthService.generateRefreshToken({ id: user.Item.Id });
     return { success: true, token, refreshToken };
   }
 
@@ -310,7 +313,7 @@ class AuthService {
       .add(createUserIndexCommand)
       .add(createUserCommand)
       .execute();
-    return createUserCommand.input.Item;
+    return createUserCommand.input;
   }
 
   /**
