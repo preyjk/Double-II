@@ -1,10 +1,10 @@
 <template>
   <div class="flex flex-col md:flex-row md:h-full">
-    <div class="w-full md:w-1/3 overflow-y-auto">
+    <div class="w-full md:w-1/3 md:overflow-y-auto">
       <AppointmentList ref="appointmentList" @selectAppointment="selectAppointment" :appointments="appointments"
         :loading="loading" />
     </div>
-    <div class="w-full md:w-2/3 overflow-y-auto">
+    <div class="w-full md:w-2/3 md:overflow-y-auto">
       <Reschedule v-if="status === 'reschedule'" :appointment="appointmentList.selectedAppointment"
         @rescheduled="refreshAppointments" />
       <div v-if="status === 'detail' && appointmentList?.selectedAppointment">

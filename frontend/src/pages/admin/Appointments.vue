@@ -1,9 +1,9 @@
 <template>
   <div class="flex flex-col md:flex-row md:h-full">
-    <div class="w-full md:w-1/3 overflow-y-auto">
+    <div class="w-full md:w-1/3 md:overflow-y-auto">
       <AppointmentList ref="appointmentList" @selectAppointment="selectAppointment" :appointments="appointments" :loading="loading" />
     </div>
-    <div class="w-full md:w-2/3 overflow-y-auto">
+    <div class="w-full md:w-2/3 md:overflow-y-auto">
       <div v-if="appointmentList?.selectedAppointment">
         <AppointmentDetail :appointment="appointmentList.selectedAppointment" />
         <div v-if="appointmentList.selectedAppointment.Status === 'active'"

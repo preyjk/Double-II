@@ -1,12 +1,14 @@
 <template>
-  <div class="flex flex-col md:flex-row md:h-full">
-    <div class="w-full md:w-1/3 overflow-y-auto">
-      <AppointmentList ref="appointmentList" @selectAppointment="selectAppointment" :appointments="appointments" :loading="loading" />
+  <div class="flex flex-col h-screen md:flex-row md:h-full">
+    <div class="w-full md:w-1/3 md:overflow-y-auto">
+      <AppointmentList ref="appointmentList" @selectAppointment="selectAppointment" :appointments="appointments"
+        :loading="loading" />
     </div>
-    <div class="w-full md:w-2/3 overflow-y-auto">
-      <MultiOptionButton :label="'New'" :options="['Create', 'Link']" 
-      @create="goToCreateAppointment"
-      @link="goToLinkAppointment"/>
+    <div class="h-full w-full md:w-2/3 md:overflow-y-auto">
+      <div class="md:p-2 p-4">
+        <MultiOptionButton :label="'New'" :options="['Create', 'Link']" @create="goToCreateAppointment"
+          @link="goToLinkAppointment" />
+      </div>
       <Reschedule v-if="status === 'reschedule'" :appointment="appointmentList.selectedAppointment"
         @rescheduled="refreshAppointments" />
       <div v-if="status === 'detail' && appointmentList?.selectedAppointment">
