@@ -212,7 +212,7 @@ export default {
   methods: {
     handleTranscriptionComplete(transcribedText) {
       console.log("Transcribed text:", transcribedText);
-      this.textInput.value = transcribedText;
+      this.textInput.value = transcribedText;                 
 
       this.chatConnect.handler(
         { messages: [{ text: transcribedText }] },
@@ -232,7 +232,9 @@ export default {
         <button class="deep-chat-button deep-chat-suggestion-button" style="margin-top: 5px;  color: black; border: 2px solid #004d66;">Can I check my booking?</button>
         <button class="deep-chat-button deep-chat-suggestion-button" style="margin-top: 5px;  color: black; border: 2px solid #004d66;">Can I cancel my appointment?</button>
         <button class="deep-chat-button deep-chat-suggestion-button" style="margin-top: 5px;  color: black; border: 2px solid #004d66;">Can I reschedule my appointment?</button>
-      </div>`;
+      </div>`
+    
+
 
 
 
@@ -303,6 +305,7 @@ export default {
 
     bindButtons() { },
   },
+  
 
   watch: {},
 

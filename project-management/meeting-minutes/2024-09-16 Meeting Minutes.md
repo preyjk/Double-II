@@ -2,8 +2,9 @@
 
 **Date:** 2024-09-16  
 **Time:** 11:00 - 12:00  
-**Location:** Teams Talking 
-**Attendees:** 
+**Location:** Teams Talking
+**Attendees:**
+
 - Jack
 - Lee
 - Liz
@@ -20,22 +21,24 @@
 ---
 
 ### 1. Main Task and Key Function
-- **Discussion:** 
- - Added chatbot functionality and created more features.
- - Updated the patient page content and created related features.
- - Expanded the admin page and developed features.
- - Modified features based on feedback from last week's presentation
+
+- **Discussion:**
+- Added chatbot functionality and created more features.
+- Updated the patient page content and created related features.
+- Expanded the admin page and developed features.
+- Modified features based on feedback from last week's presentation
 
 - **Action Items:**
- - VAdapt the entire page for mobile terminals.-[Jack]
- - Train AI to add speech-recognisable features to AI -[Lee] -[Jack] -[Tracy] -[Liz]
- - Add a refresh token to the backend to solve the problem of the user's account being locked out for a long time.-[Lee]
- - Make more function for the homepage and do more details for the whole web and app-[Tracy]-[Liz]
- - Improve the Admin function and display related graphics, such as the usage rate of patient content.-[Jack]-[Tracy]
- - Ensuring the correctness of the logic of our pages and adding a basic information 
+- Adapt the entire page for mobile terminals.-[Jack]
+- Train AI to add speech-recognisable features to AI -[Lee] -[Jack] -[Tracy] -[Liz]
+- Add a refresh token to the backend to solve the problem of the user's account being locked out for a long time.-[Lee]
+- Make more function for the homepage and do more details for the whole web and app-[Tracy]-[Liz]
+- Improve the Admin function and display related graphics, such as the usage rate of patient content.-[Jack]-[Tracy]
+- Ensuring the correctness of the logic of our pages and adding a basic information
  form for patients on the page for feedback on the presentation-[Tracy]
- 
+
 ### 2. MVP Build
+
 - **Discussion:**
   - Further improvements to the user interface and additional functionality
   - Improved data security and network security
@@ -49,12 +52,9 @@
 - Make the user interface more useful and improve visibility-[Liz]-[Tracy]
 - Manage page layout logic and all function is working.-[Tracy]
 
-
-  
 - **Already Done:**
- - Make connect with the google email to login. -[Lee]
- - Make more function for the homepage and do more details for the whole web and app-[Tracy]-[Liz]
- - Give more chatbot features like adding voice and related features.-[Tracy]-[Liz]
- - Make the user interface more useful and improve visibility-[Liz]-[Tracy]
- - Manage page layout settings and more features-[Jack]
- 
+- Make connect with the google email to login. -[Lee]
+- Make more function for the homepage and do more details for the whole web and app-[Tracy]-[Liz]
+- Give more chatbot features like adding voice and related features.-[Tracy]-[Liz]
+- Make the user interface more useful and improve visibility-[Liz]-[Tracy]
+- Manage page layout settings and more features-[Jack]
