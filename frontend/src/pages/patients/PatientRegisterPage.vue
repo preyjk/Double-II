@@ -57,12 +57,11 @@
                 </transition>
 
                 <!-- Information Collecting Page -->
+                <transition name="fade">
+                    <InformationCollectingComponent v-if="showInfomationModal" />
+                </transition>
             </div>
-
         </div>
-        <transition name="fade">
-            <InformationCollectingComponent v-if="showInfomationModal" />
-        </transition>
         <FooterComponent class="container_footer"></FooterComponent>
     </div>
 </template>
@@ -112,6 +111,7 @@ export default {
             }
         },
         switchToInformationCollectingComponent() {
+            // Switch the entire form to InformationCollectingComponent
             this.showInfomationModal = true;
         },
     },
@@ -144,7 +144,6 @@ export default {
     align-items: center;
 }
 
-/* Card hover effect */
 .card {
     background-color: white;
     border-radius: 10px;
@@ -161,7 +160,6 @@ export default {
     transform: translateY(-5px);
 }
 
-/* Transition effects */
 .fade-enter-active, .fade-leave-active {
     transition: opacity 0.5s ease;
 }
@@ -169,7 +167,6 @@ export default {
     opacity: 0;
 }
 
-/* Form input focus effect */
 .patient-form input:focus,
 .patient-form select:focus {
     border-color: #4caf50;

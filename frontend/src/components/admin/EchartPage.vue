@@ -119,9 +119,13 @@ const pieChartOption = {
 const heatmapChartOption = {
     title: {
         text: 'Heatmap Example',
+        left: 'center',
     },
     tooltip: {
         position: 'top',
+        formatter: function (params) {
+            return `(${params.data[0]}, ${params.data[1]}): ${params.data[2]}`;
+        },
     },
     grid: {
         height: '70%',  
@@ -131,41 +135,45 @@ const heatmapChartOption = {
     },
     xAxis: {
         type: 'category',
-        data: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
+        data: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
         axisLabel: {
             fontSize: 14, 
             rotate: 45,   
         },
+        name: 'Day of the Week',
+        nameLocation: 'middle',
+        nameGap: 30,
     },
     yAxis: {
         type: 'category',
-        data: ['1', '2', '3', '4', '5', '6', '7', '8'],
+        data: ['1 AM', '2 AM', '3 AM', '4 AM', '5 AM', '6 AM', '7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM', '10 PM', '11 PM', '12 AM'],
         axisLabel: {
-            fontSize: 20, 
+            fontSize: 14, 
         },
+        name: 'Time of Day',
+        nameLocation: 'middle',
+        nameRotate: 90,
+        nameGap: 50,
     },
     visualMap: {
         min: 0,
-        max: 10,
+        max: 20,
         calculable: true,
         orient: 'horizontal',
         left: 'center',
-        bottom: '10%',  
+        bottom: '10%',
+        inRange: {
+            color: ['#f6efa6', '#d88273', '#bf444c'], 
+        },
     },
     series: [
         {
-            name: 'Punch Card',
+            name: 'Activity Heatmap',
             type: 'heatmap',
-            data: [
-                [0, 0, 5], [0, 1, 1], [0, 2, 0], [0, 3, 0], [0, 4, 0], [0, 5, 0], [0, 6, 0], [0, 7, 0],
-                [1, 0, 1], [1, 1, 0], [1, 2, 0], [1, 3, 0], [1, 4, 0], [1, 5, 0], [1, 6, 0], [1, 7, 0],
-                [2, 0, 0], [2, 1, 0], [2, 2, 0], [2, 3, 0], [2, 4, 0], [2, 5, 0], [2, 6, 0], [2, 7, 0],
-                [3, 0, 0], [3, 1, 0], [3, 2, 0], [3, 3, 0], [3, 4, 0], [3, 5, 0], [3, 6, 0], [3, 7, 0],
-                [4, 0, 0], [4, 1, 0], [4, 2, 0], [4, 3, 0], [4, 4, 0], [4, 5, 0], [4, 6, 0], [4, 7, 0],
-            ],
+            data: generateHeatmapData(), 
             label: {
                 show: true,
-                fontSize: 12, // Improved readability of data labels
+                fontSize: 12,
             },
             emphasis: {
                 itemStyle: {
@@ -176,6 +184,18 @@ const heatmapChartOption = {
         },
     ],
 };
+
+
+function generateHeatmapData() {
+    const data = [];
+    for (let i = 0; i < 7; i++) {  
+        for (let j = 0; j < 24; j++) {  
+            data.push([i, j, Math.floor(Math.random() * 20)]); 
+        }
+    }
+    return data;
+};
+
 
 </script>
 
