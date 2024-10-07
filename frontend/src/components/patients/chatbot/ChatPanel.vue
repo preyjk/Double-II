@@ -181,10 +181,10 @@ export default {
           try {
             this.isRobotAnimationShow = false;
             let headers = {};
-            const token = localStorage.getItem("authToken");
+            const token = localStorage.getItem("token");
             if (this.sessionId)
               headers = { "x-chatbot-session": this.sessionId, ...headers };
-            if (token) headers = { "x-access-token": token, ...headers };
+            if (token) headers = { "x-access-token": JSON.parse(token), ...headers };
             const prompt = body.messages[0]?.text || "";
             const { data, postData } = usePost("/public/chatbot/");
             await postData({ prompt }, headers);

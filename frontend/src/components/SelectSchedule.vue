@@ -16,15 +16,18 @@
     <div class="w-full md:w-1/3 flex flex-col p-5">
       <div class="title-container">
         <h2 class="text-2xl font-bold mb-2">Available Time Slots</h2>
-        <p class="text-gray-600">Dr. {{ formData.doctor.FirstName }} {{ formData.doctor.LastName }} on {{ selectedDate }}</p>
+        <p class="text-gray-600">Dr. {{ formData.doctor.Name }} on {{ selectedDate }}</p>
       </div>
       <div>
         <div v-if="loading" class="text-gray-600">Loading schedules...</div>
         <div v-if="schedules.length > 0">
           <div v-for="schedule in schedules" :key="schedule.Id" 
-          :class="['p-2 mb-2', schedule.Status === 'available' ? 'cursor-pointer hover:bg-gray-200 bg-white' : 'cursor-not-allowed bg-red-100',
-            formData.schedule && formData.schedule.Id === schedule.Id && 'bg-blue-200 hover:bg-blue-300',
-          ]"
+          :class="['p-2 my-2 border',
+            formData.schedule && formData.schedule.Id === schedule.Id
+                ? 'cursor-pointer bg-blue-200 hover:bg-blue-300'
+                : (schedule.Status === 'available'
+                    ? 'cursor-pointer bg-white hover:bg-gray-200 '
+                    : 'cursor-not-allowed bg-red-100')]"
           @click="selectTimeSlot(schedule)">
             <span class="text-gray-800">Time: {{ schedule.StartTime }} - {{ schedule.EndTime }}</span>
           </div>
@@ -37,129 +40,128 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, watch, defineModel, defineExpose } from 'vue';
 import axios from '@/api/backendApi';
-import { watch } from 'vue';
 
-export default {
-  props: ['modelValue'],
-  data() {
-    return {
-      availableDates: [],
-      schedules: [],
-      selectedDate: this.getTodayDate(),
-      loading: true,
-    };
-  },
-  computed: {
-    formData: {
-      get() {
-        return this.modelValue;
+const formData = defineModel();
+
+const getTodayDate = () => {
+  const date = new Date();
+  return getFormattedDate(date);
+};
+
+const getFormattedDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+// Reactive state
+const availableDates = ref([]);
+const schedules = ref([]);
+const selectedDate = ref(getTodayDate());
+const loading = ref(true);
+
+// Helper methods
+const isAvailableDate = (date) => availableDates.value.includes(date);
+
+const isSelectedDate = (date) => date === selectedDate.value;
+
+const isDisabledDate = (date) => {
+  const today = new Date(getTodayDate());
+  const selected = new Date(date);
+  return selected < today;
+};
+
+// Handle date selection
+const handleDatePick = (date) => {
+  if (isDisabledDate(date)) {
+    return;
+  }
+  selectedDate.value = getFormattedDate(date);
+  formData.value.date = getFormattedDate(date);
+  console.debug('Selected date:', selectedDate.value);
+};
+
+// Fetch available timeslots
+const fetchAvailableTimeslots = async (date) => {
+  loading.value = true;
+  formData.value.schedule = null;
+  try {
+    const response = await axios.get('/public/schedules/available-timeslots', {
+      params: {
+        doctorId: formData.value.doctor.Id,
+        date,
       },
-      set(value) {
-        this.$emit('update:modelValue', value);
+    });
+    schedules.value = response.data.sort((a, b) => a.StartTime < b.StartTime ? -1 : 1);
+  } catch (error) {
+    console.error('Failed to fetch available timeslots:', error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+// Get the end of the month
+const getEndofMonth = () => {
+  const date = new Date();
+  const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+  return getFormattedDate(lastDay);
+};
+
+// Fetch available dates
+const fetchAvailableDate = async () => {
+  try {
+    const response = await axios.get('/public/schedules/available-dates', {
+      params: {
+        doctorId: formData.value.doctor.Id,
+        startDate: getTodayDate(),
+        endDate: getEndofMonth(),
       },
-    }
-  },
-  methods: {
-    isAvailableDate(date) {
-      return this.availableDates.includes(date);
-    },
+    });
+    availableDates.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-    isSelectedDate(date) {
-      return date === this.selectedDate;
-    },
+// Select a time slot
+const selectTimeSlot = (schedule) => {
+  if (schedule.Status !== 'available') {
+    return;
+  }
+  formData.value.schedule = schedule;
+};
 
-    isDisabledDate(date) {
-      const today = new Date(this.getTodayDate());
-      const selected = new Date(date);
-      return selected < today;
-    },
+// Validate form
+const validate = () => {
+  if (!formData.value.schedule) {
+    alert('Please select a time slot');
+    return false;
+  }
+  return true;
+};
 
-    getTodayDate() {
-      const date = new Date();
-      return this.getFormattedDate(date);
-    },
+// Lifecycle hook for fetching data on mount
+onMounted(() => {
+  fetchAvailableDate();
+  fetchAvailableTimeslots(selectedDate.value);
+});
 
-    getFormattedDate(date) {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
-      const day = String(date.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    },
+// Watch selectedDate to refetch available timeslots
+watch(() => selectedDate.value, fetchAvailableTimeslots);
 
-    handleDatePick(date) {
-      if (this.isDisabledDate(date)) {
-        return;
-      }
-      this.selectedDate = this.getFormattedDate(date);
-      this.formData.date = this.getFormattedDate(date);
-      console.debug('Selected date:', this.selectedDate);
-    },
-
-    async fetchAvailableTimeslots(date) {
-      this.loading = true;
-      this.formData.schedule = null;
-      try {
-        const response = await axios.get('/public/schedules/available-timeslots', {
-          params: {
-            doctorId: this.formData.doctor.Id,
-            date,
-          },
-        });
-        this.schedules = response.data;
-      } catch (error) {
-        console.error('Failed to fetch available timeslots:', error);
-      } finally {
-        this.loading = false;
-      }
-    },
-
-    getEndofMonth() {
-      const date = new Date();
-      const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-      return this.getFormattedDate(lastDay);
-    },
-
-    async fetchAvailableDate() {
-      try {
-        const response = await axios.get('/public/schedules/available-dates', {
-          params: {
-            doctorId: this.formData.doctor.Id,
-            startDate: this.getTodayDate(),
-            endDate: this.getEndofMonth(),
-          },
-        });
-        this.availableDates = response.data;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-
-    selectTimeSlot(schedule) {
-      if (schedule.Status !== 'available') {
-        return;
-      }
-      this.formData.schedule = schedule;
-    },
-    validate() {
-      if(!this.formData.schedule) {
-        alert('Please select a time slot');
-        return false;
-      }
-      return true;
-    },
-  },
-  mounted() {
-    this.fetchAvailableDate();
-    this.fetchAvailableTimeslots(this.selectedDate);
-    watch(() => this.selectedDate, this.fetchAvailableTimeslots);
-  },
-}
+defineExpose({
+  validate,
+  
+});
 </script>
 
+
 <style scoped>
-::v-deep .el-calendar-table .el-calendar-day {
+:deep(.el-calendar-table .el-calendar-day) {
   padding: 0 !important;
 }
 </style>

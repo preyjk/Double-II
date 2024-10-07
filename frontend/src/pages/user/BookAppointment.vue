@@ -1,5 +1,5 @@
 <template>
-  <div class="p-5 md:p-10">
+  <div class="p-5 md:overflow-y-auto md:h-screen">
     <div v-if="!created">
       <MultiStepForm :steps="steps" v-model="formData" :submitForm="submitForm" />
       <div v-if="error">{{ error }}</div>
@@ -54,7 +54,11 @@ const submitForm = () => {
 
 const postData = async (data) => {
   try {
-    const response = await axios.post('/public/appointments', data);
+    const response = await axios.post('/user/appointments', data, {
+      headers: {
+        Authorization: `Bearer ${JSON.parse(localStorage.getItem('token'))}`,
+      },
+    });
     appointmentDetail.value = response.data;
     created.value = true;
   } catch (err) {

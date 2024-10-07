@@ -12,13 +12,13 @@ instance.interceptors.response.use(
       && !isRefreshTokenRequest(error.config) 
       && !error.config.isRetryRequest 
       && error.config.headers.Authorization) {
-      const refreshToken = localStorage.getItem('refreshToken');
+      const refreshToken = JSON.parse(localStorage.getItem('refreshToken'));
       if (!refreshToken) {
         return Promise.reject(error);
       }
       try {
         await refreshAccessToken(refreshToken);
-        const newToken = localStorage.getItem('token');
+        const newToken = JSON.parse(localStorage.getItem('token'));
         error.config.headers.Authorization = `Bearer ${newToken}`;
         error.config.isRetryRequest = true;
         return instance(error.config);

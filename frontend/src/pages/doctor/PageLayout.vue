@@ -64,7 +64,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 bg-gray-100">
+    <div class="flex-1 bg-gray-100 p-4">
       <!-- Router View for rendering components -->
       <router-view />
     </div>
@@ -89,9 +89,7 @@ export default {
       isMobileMenuOpen: false, // To control the mobile menu visibility
       // Menu items with associated paths
       menuItems: [
-        { name: 'Appointments', pageName: 'user-appointment' },
-        //{ name: 'Family', pageName: 'user-family' },
-        { name: 'AI Assistant', pageName: 'user-ai' },
+        { name: 'Appointments', pageName: 'doctor-appointment' },
       ],
     };
   },
@@ -111,11 +109,11 @@ export default {
     checkLogin() {
       if ( localStorage.getItem('token') ) {
         const decoded = jwtDecode(JSON.parse(localStorage.getItem('token')));
-        if (decoded.roles?.includes('user')) {
+        if (decoded.roles?.includes('doctor')) {
           return;
         }
       }
-      this.$router.push({ name: 'login' });
+      this.$router.push({ name: 'doctor-login' });
     },
   },
   mounted() {

@@ -4,7 +4,7 @@
     <div class="container_banner">
       <BannerComponent class="banner"></BannerComponent>
     </div>
-    <ChatWidget></ChatWidget>
+    <!-- <ChatWidget></ChatWidget> -->
     <FooterComponent class="container_footer"></FooterComponent>
   </div>
 </template>

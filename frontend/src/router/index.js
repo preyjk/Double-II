@@ -25,64 +25,74 @@ import ResetPassword from "../pages/public/ResetPassword.vue";
 import ForgetPassword from "../pages/public/ForgetPassword.vue";
 import UserPageLayout from "../pages/user/PageLayout.vue";
 import BookAppointment from "../pages/public/BookAppointment.vue";
+import UserAppointments from "../pages/user/UserAppointments.vue";
+import LinkAppointment from "../pages/user/LinkAppointment.vue";
+import UserBookAppointment from "../pages/user/BookAppointment.vue";
+import DoctorPageLayout from "../pages/doctor/PageLayout.vue";
+import DoctorAppointments from "../pages/doctor/Appointments.vue";
+import AdminPageLayout from "../pages/admin/PageLayout.vue";
+import AdminAppointments from "../pages/admin/Appointments.vue";
+import AdminLogin from "../pages/admin/Login.vue";
+import DoctorLogin from "../pages/doctor/Login.vue";
+import ChatPanel from "@/components/patients/chatbot/ChatPanel.vue";
 
 const routes = [
   /*
     user routers
   */
-  {
-    path: "/",
-    name: "Home",
-    component: HomePage,
-  },
+  // {
+  //   path: "/",
+  //   name: "Home",
+  //   component: HomePage,
+  // },
 
-  {
-    path: "/about",
-    name: "about",
-    component: AboutPage,
-  },
+  // {
+  //   path: "/about",
+  //   name: "about",
+  //   component: AboutPage,
+  // },
 
-  {
-    path: "/patient",
-    name: "PatientRegister",
-    component: PatientRegisterPage,
-  },
+  // {
+  //   path: "/patient",
+  //   name: "PatientRegister",
+  //   component: PatientRegisterPage,
+  // },
 
-  {
-    path: "/profile",
-    name: "PersonalProfile",
-    component: PersonalProfilePage,
-  },
+  // {
+  //   path: "/profile",
+  //   name: "PersonalProfile",
+  //   component: PersonalProfilePage,
+  // },
 
-  {
-    path: "/my-booking",
-    name: "MyBooking",
-    component: MyBooking,
-  },
+  // {
+  //   path: "/my-booking",
+  //   name: "MyBooking",
+  //   component: MyBooking,
+  // },
 
-  {
-    path: "/online-booking",
-    name: "OnlineBooking",
-    component: OnlineBookingPage,
-    props: true,
-  },
+  // {
+  //   path: "/online-booking",
+  //   name: "OnlineBooking",
+  //   component: OnlineBookingPage,
+  //   props: true,
+  // },
 
-  {
-    path: "/confirmation",
-    name: "ConfirmationPage",
-    component: ConfirmationPage,
-  },
+  // {
+  //   path: "/confirmation",
+  //   name: "ConfirmationPage",
+  //   component: ConfirmationPage,
+  // },
 
   {
     path: "/chatbot",
     name: "Chatbot",
     component: ChatbotPage,
   },
-  {
-    path: "/my-booking",
-    name: "MyBooking",
-    component: MyBooking,
-  },
+  // {
+  //   path: "/my-booking",
+  //   name: "MyBooking",
+  //   component: MyBooking,
+  // },
 
   {
     path: "/verify-email",
@@ -115,48 +125,31 @@ const routes = [
       }]
   },
 
-  /*
-    admin routers
-  */
   {
-    path: "/admin",
-    name: "Admin",
-    component: AdminPage,
+    path: "/admin/login",
+    name: "admin-login",
+    component: AdminLogin,
   },
 
-
   {
-    path: "/admin/console",
-    component: BasePage,
-    name: "console",
+    path: "/admin",
+    component: AdminPageLayout,
     children: [
-      {
-        path: "dashboard",
-        component: DashboardPage,
-      },
-      {
-        path: "appointments",
-        component: ReservationCalendar,
-      },
-      {
-        path: "schedule",
-        component: WorkingSchedule,
-      },
-      {
-        path: "analysis",
-        component: AnalysisPage,
-      }
+      { path: "appointments", name: "admin-appointment", component: AdminAppointments, },
+      { path: "schedule", name: "admin-schedule", component: WorkingSchedule, },
+      { path: "analysis", name: "admin-analysis", component: AnalysisPage, },
+      { path: "/admin/:pathMatch(.*)*", component: Error404 }
     ]
   },
 
   {
-    path: "/public",
+    path: "/",
     component: PageLayout,
     children: [
       { path: "", name: "home", component: Home },
       { path: "about", name: "aboutus", component: AboutUs },
       { path: "booking", name: "booking", component: BookAppointment },
-      { path: "/public/:pathMatch(.*)*", component: Error404 }
+      { path: "/:pathMatch(.*)*", component: Error404 }
     ]
   },
   { path: "/login", name: "login", component: Login },
@@ -166,10 +159,21 @@ const routes = [
     path: "/user",
     component: UserPageLayout,
     children: [
-      { path: "appointment", name: "user-appointment", },
-      { path: "profile", name: "user-profile", },
+      { path: "appointment", name: "user-appointment", component: UserAppointments },
       { path: "family", name: "user-family", },
+      { path: "link-appointment", name: "link-appointment", component: LinkAppointment },
+      { path: "new-appointment", name: "new-appointment", component: UserBookAppointment },
+      { path: "chatbot", name: "user-ai", component: ChatPanel, props: {isDarkMode: false} },
       { path: "/user/:pathMatch(.*)*", component: Error404 }
+    ]
+  },
+  { path: "/doctor/login", name: "doctor-login", component: DoctorLogin },
+  {
+    path: "/doctor",
+    component: DoctorPageLayout,
+    children: [
+      { path: "appointment", name: "doctor-appointment", component: DoctorAppointments },
+      { path: "/doctor/:pathMatch(.*)*", component: Error404 }
     ]
   },
 ];
