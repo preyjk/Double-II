@@ -2,6 +2,12 @@
 **/node_modules/
 **/.aws-sam/
 **/samconfig.toml
+**/.terraform/
+**/.terraform_build/
+**/.terraform.lock.hcl
+**/terraform.tfstate
+**/terraform.tfstate.backup
+**/credentials.tfvars
 
 .history
 .venv
