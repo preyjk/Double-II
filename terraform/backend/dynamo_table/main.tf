@@ -48,7 +48,7 @@ resource "aws_dynamodb_table" "working_schedule_table" {
   }
 
   global_secondary_index {
-    name               = "DoctorId-Date-index"
+    name               = "DoctorIdAndDateIndex"
     hash_key           = "DoctorId"
     range_key          = "Date"
     projection_type    = "ALL"
@@ -87,7 +87,7 @@ resource "aws_dynamodb_table" "patients_table" {
   }
 
   global_secondary_index {
-    name               = "UserId-index"
+    name               = "UserIdIndex"
     hash_key           = "UserId"
     projection_type    = "ALL"
   }

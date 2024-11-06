@@ -177,7 +177,9 @@ data "aws_iam_policy_document" "allow_access_dynamodb" {
       module.dynamodb_table.users_table.arn,
       module.dynamodb_table.user_index_table.arn,
       module.dynamodb_table.patients_table.arn,
+      "${module.dynamodb_table.patients_table.arn}/index/UserIdIndex",
       module.dynamodb_table.working_schedule_table.arn,
+      "${module.dynamodb_table.working_schedule_table.arn}/index/DoctorIdAndDateIndex",
       module.dynamodb_table.appointment_index_table.arn,
       module.dynamodb_table.distributed_lock_table.arn
     ]
