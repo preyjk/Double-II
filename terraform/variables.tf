@@ -4,7 +4,7 @@ variable "domain_name" {
 }
 
 variable "route53_zone_id" {
-  type    = string
+  type = string
 }
 
 variable "stack_name" {
@@ -13,16 +13,16 @@ variable "stack_name" {
 }
 
 variable "ses_arn" {
-  type    = string
+  type = string
 }
 
 variable "google_client_id" {
-  type    = string
+  type      = string
   sensitive = true
 }
 
 variable "google_client_secret" {
-  type    = string
+  type      = string
   sensitive = true
 }
 

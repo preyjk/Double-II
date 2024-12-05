@@ -57,10 +57,10 @@ module "ai" {
 module "backend" {
   source = "./backend"
 
-  stack_name    = var.stack_name
-  deployment_id = random_string.deployment_id.result
-  source_path   = "${path.module}/../backend/app"
-  ses_arn       = var.ses_arn
+  stack_name      = var.stack_name
+  deployment_id   = random_string.deployment_id.result
+  source_path     = "${path.module}/../backend/app"
+  ses_arn         = var.ses_arn
   certificate_arn = module.certificate.certificate_arn
 
   google_client_id     = var.google_client_id
