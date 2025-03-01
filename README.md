@@ -4,6 +4,11 @@
 
 Double-II is a scalable and feature-rich appointment booking system built for healthcare services. It leverages AWS infrastructure and a Claude 3 AI model to help users efficiently make appointments with doctors. The system consists of a Vue.js-based frontend, a Node.js backend, and multiple AWS services including DynamoDB, Bedrock, Lex, and Connect, which provide AI-driven capabilities for enhanced user experience.
 
+## Demo Videos
+
+- [Chat Widget Demonstration](https://youtu.be/HTp5I6saAh4)  
+- [Full Site Demonstration](https://youtu.be/EquMKZqoXho)
+
 ## Table of Contents
 
 - [Features](#features)
